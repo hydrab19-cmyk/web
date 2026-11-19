@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مساعد دراسة برمجة الويب - المحاضرة الأولى</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-soft: #eff6ff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --success: #16a34a;
+      --success-bg: #dcfce7;
+      --danger: #dc2626;
+      --danger-bg: #fee2e2;
+      --warning: #d97706;
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      padding-bottom: 60px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #fff;
+      padding: 28px 20px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(37, 99, 235, 0.2);
+    }
+
+    header h1 { font-size: 1.8rem; margin-bottom: 6px; }
+    header p { opacity: 0.92; font-size: 0.98rem; }
+
+    .progress-wrap {
+      max-width: 520px;
+      margin: 16px auto 0;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 999px;
+      height: 12px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #4ade80;
+      transition: width 0.35s ease;
+    }
+    .progress-label {
+      font-size: 0.85rem;
+      margin-top: 6px;
+      opacity: 0.95;
+    }
+
+    nav.tabs {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 18px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .tab-btn {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      padding: 10px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    main {
+      max-width: 960px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    .view { display: none; }
+    .view.active { display: block; animation: fadeIn 0.25s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Accordion Cards */
+    .lesson-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+    }
+
+    .lesson-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 20px;
+      cursor: pointer;
+      background: var(--surface);
+      transition: background 0.2s;
+    }
+    .lesson-header:hover { background: #f8fafc; }
+
+    .lesson-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--primary-soft);
+      color: var(--primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .lesson-title { font-size: 1.08rem; font-weight: 700; }
+    .lesson-sub { font-size: 0.85rem; color: var(--muted); direction: ltr; display: inline-block; }
+
+    .done-btn {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--muted);
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .done-btn.completed {
+      background: var(--success-bg);
+      color: var(--success);
+      border-color: #86efac;
+    }
+
+    .lesson-body {
+      display: none;
+      padding: 0 20px 20px;
+      border-top: 1px solid var(--border);
+    }
+    .lesson-card.open .lesson-body { display: block; padding-top: 16px; }
+
+    .lesson-body h3 {
+      color: var(--primary-dark);
+      font-size: 1rem;
+      margin: 14px 0 6px;
+    }
+    .lesson-body ul, .lesson-body ol {
+      padding-right: 20px;
+      margin-bottom: 10px;
+    }
+    .lesson-body li { margin-bottom: 6px; }
+
+    .en {
+      direction: ltr;
+      display: inline-block;
+      font-family: Consolas, monospace;
+      background: #f1f5f9;
+      padding: 1px 6px;
+      border-radius: 6px;
+      font-size: 0.88em;
+      color: #1e293b;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 0.92rem;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 9px 12px;
+      text-align: right;
+    }
+    th { background: var(--primary-soft); color: var(--primary-dark); }
+
+    .note-box {
+      background: #fffbeb;
+      border-right: 4px solid var(--warning);
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-size: 0.92rem;
+    }
+
+    /* Interactive URL Explorer */
+    .url-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+    }
+    .url-display {
+      direction: ltr;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      margin: 20px 0;
+      padding: 16px;
+      background: #0f172a;
+      border-radius: 12px;
+      font-family: Consolas, monospace;
+      font-size: 1.08rem;
+    }
+    .url-part {
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #fff;
+      transition: transform 0.15s, opacity 0.15s;
+      border: 2px solid transparent;
+    }
+    .url-part:hover { transform: translateY(-2px); }
+    .url-part.active { border-color: #fff; box-shadow: 0 0 0 3px rgba(255,255,255,0.25); }
+    .p-proto { background: #2563eb; }
+    .p-domain { background: #7c3aed; }
+    .p-port { background: #0891b2; }
+    .p-path { background: #16a34a; }
+    .p-query { background: #d97706; }
+    .p-frag { background: #dc2626; }
+
+    .url-info {
+      text-align: right;
+      background: var(--primary-soft);
+      border-radius: 12px;
+      padding: 18px;
+      margin-top: 14px;
+    }
+    .tag {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-right: 8px;
+    }
+    .tag-req { background: #fee2e2; color: #b91c1c; }
+    .tag-opt { background: #e0f2fe; color: #0369a1; }
+
+    /* Flashcards */
+    .fc-container {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .fc-filters {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .fc-card {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 18px;
+      min-height: 240px;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      transition: transform 0.2s, border-color 0.2s;
+      user-select: none;
+    }
+    .fc-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+    .fc-side-label {
+      font-size: 0.8rem;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .fc-content { font-size: 1.25rem; font-weight: 700; }
+    .fc-hint { margin-top: 16px; font-size: 0.82rem; color: var(--muted); }
+    .fc-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .btn:hover { background: var(--primary-dark); }
+    .btn-outline {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { background: #f1f5f9; }
+
+    /* Quiz */
+    .quiz-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .quiz-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 14px;
+    }
+    .quiz-q { font-size: 1.12rem; font-weight: 700; margin-bottom: 18px; }
+    .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+    .opt-btn {
+      text-align: right;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg);
+      cursor: pointer;
+      font-size: 0.96rem;
+      transition: all 0.15s;
+    }
+    .opt-btn:hover:not(:disabled) { border-color: var(--primary); background: var(--primary-soft); }
+    .opt-btn.correct { background: var(--success-bg); border-color: var(--success); color: #14532d; font-weight: 600; }
+    .opt-btn.wrong { background: var(--danger-bg); border-color: var(--danger); color: #7f1d1d; }
+    .quiz-feedback {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      display: none;
+      font-size: 0.94rem;
+    }
+    .quiz-footer {
+      margin-top: 18px;
+      display: flex;
+      justify-content: flex-end;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>برمجة الويب — المحاضرة الأولى</h1>
+  <p>كيف يعمل الويب (How the Web Works) • منصة دراسة تفاعلية</p>
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="progress-label" id="progressLabel">أتممت 0 من 7 أقسام</div>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-view="lessons">📚 ملخص الأقسام (7)</button>
+  <button class="tab-btn" data-view="url">🔗 مفكك الـ URL</button>
+  <button class="tab-btn" data-view="flashcards">🃏 بطاقات الاستذكار</button>
+  <button class="tab-btn" data-view="quiz">📝 اختبار ذاتي</button>
+</nav>
+
+<main>
+  <!-- VIEW 1: LESSONS -->
+  <section id="view-lessons" class="view active">
+    <div id="lessonsList"></div>
+  </section>
+
+  <!-- VIEW 2: URL EXPLORER -->
+  <section id="view-url" class="view">
+    <div class="url-box">
+      <h2>مفكك محدد موقع المورد الموحد (URL)</h2>
+      <p style="color: var(--muted); margin-top: 4px;">انقر على أي جزء من الرابط لفهم وظيفته وحالته (إلزامي / اختياري)</p>
+
+      <div class="url-display">
+        <span class="url-part p-proto active" data-part="protocol">http://</span>
+        <span class="url-part p-domain" data-part="domain">www.funwebdev.com</span>
+        <span class="url-part p-port" data-part="port">:80</span>
+        <span class="url-part p-path" data-part="path">/index.php</span>
+        <span class="url-part p-query" data-part="query">?page=17</span>
+        <span class="url-part p-frag" data-part="fragment">#article</span>
+      </div>
+
+      <div class="url-info" id="urlInfo"></div>
+    </div>
+  </section>
+
+  <!-- VIEW 3: FLASHCARDS -->
+  <section id="view-flashcards" class="view">
+    <div class="fc-container">
+      <div class="fc-filters">
+        <button class="tab-btn active" onclick="filterCards('all', this)">الكل</button>
+        <button class="tab-btn" onclick="filterCards('terms', this)">المصطلحات الأساسية</button>
+        <button class="tab-btn" onclick="filterCards('http', this)">رموز HTTP</button>
+        <button class="tab-btn" onclick="filterCards('metrics', this)">مقاييس المتصفح</button>
+      </div>
+
+      <div class="fc-card" id="fcCard" onclick="flipCard()">
+        <div class="fc-side-label" id="fcSideLabel">المصطلح</div>
+        <div class="fc-content" id="fcContent"></div>
+        <div class="fc-hint">انقر على البطاقة لعرض الإجابة</div>
+      </div>
+
+      <div class="fc-controls">
+        <button class="btn btn-outline" onclick="prevCard()">السابق</button>
+        <span id="fcCounter" style="font-weight: 600;">1 / 1</span>
+        <button class="btn" onclick="nextCard()">التالي</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIEW 4: QUIZ -->
+  <section id="view-quiz" class="view">
+    <div class="quiz-card" id="quizBox"></div>
+  </section>
+</main>
+
+<script>
+  // ================== DATA ==================
+  const lessons = [
+    {
+      id: 1,
+      title: "تاريخ الإنترنت والشبكة العنكبوتية العالمية",
+      sub: "The History of the Internet and WWW",
+      html: `
+        <h3>منظومة تطوير الويب</h3>
+        <ul>
+          <li><strong>الواجهة الأمامية <span class="en">Front End</span>:</strong> التقنيات التي تعمل داخل المتصفح (<span class="en">HTML, CSS, JavaScript</span>) وأطر العمل مثل <span class="en">Vue, Angular, React</span>.</li>
+          <li><strong>الواجهة الخلفية <span class="en">Back End</span>:</strong> التقنيات التي تعمل على الخادم مثل <span class="en">PHP</span> و<span class="en">Node</span>، وتشمل <span class="en">APIs</span> وقواعد البيانات.</li>
+        </ul>
+        <h3>الإنترنت مقابل الويب</h3>
+        <p>الويب (<span class="en">WWW</span>) هو مجرد <strong>جزء فرعي (Subset)</strong> من الإنترنت؛ إذ توجد خدمات أخرى مثل البريد الإلكتروني والألعاب و<span class="en">FTP</span>.</p>
+        <h3>تبديل الدوائر مقابل تبديل الحزم</h3>
+        <ul>
+          <li><strong>شبكات تبديل الدوائر <span class="en">Circuit Switched</span>:</strong> تتطلب دائرة اتصال مستمرة ومخصصة؛ عيوبها استخدام غير فعّال لعرض النطاق وصعوبة التوسع.</li>
+          <li><strong>شبكات تبديل الحزم <span class="en">Packet Switched</span>:</strong> تقسّم الرسالة إلى حزم مرقمة، تسلك مسارات مختلفة، وتُعاد تجميعها عند الوجهة.</li>
+        </ul>
+        <h3>محطات تاريخية</h3>
+        <ul>
+          <li><strong>الستينيات:</strong> ظهور <span class="en">ARPANET</span> | <strong>1974:</strong> بروتوكول <span class="en">X.25</span> | <strong>1979:</strong> <span class="en">USENET</span>.</li>
+          <li><strong>1981:</strong> تقديم <span class="en">TCP/IP</span> | <strong>1983:</strong> اعتماد <span class="en">TCP/IP</span> رسمياً على <span class="en">ARPANET</span>.</li>
+          <li><strong>تيم بيرنرز لي:</strong> مقترح النص التشعبي (1989)، ثم نشر مكونات الويب الـ 5 (1992): <span class="en">URL, HTTP, Web Server, HTML, Browser</span>، ثم تأسيس <span class="en">W3C</span> أواخر 1994.</li>
+        </ul>
+        <h3>تطور المواقع (5 مراحل)</h3>
+        <ol>
+          <li><strong>المواقع الثابتة:</strong> صفحات HTML متطابقة لجميع المستخدمين للقراءة فقط.</li>
+          <li><strong>الديناميكية من جهة الخادم:</strong> مثل PHP، تتصل بقاعدة البيانات وتولّد HTML مختلفاً لكل مستخدم.</li>
+          <li><strong>الويب 2.0 (نهاية الألفينيات):</strong> تجربة تفاعلية وانتقال المنطق البرمجي إلى المتصفح عبر <span class="en">JavaScript</span>.</li>
+          <li><strong>خوادم خلفية أخف (أواخر 2010):</strong> تقتصر غالباً على المصادقة وتزويد البيانات بصيغة <span class="en">JSON</span> عبر <span class="en">Web APIs</span> بشكل غير متزامن.</li>
+          <li><strong>العودة للثابت بصيغة سحابية حديثة:</strong> استضافة الأصول الثابتة عالمياً وجلب البيانات من خدمات سحابية خارجية.</li>
+        </ol>
+      `
+    },
+    {
+      id: 2,
+      title: "نموذج العميل والخادم",
+      sub: "The Client-Server Model",
+      html: `
+        <table>
+          <tr><th>الطرف</th><th>التعريف والخصائص</th></tr>
+          <tr>
+            <td><strong>العميل <span class="en">Client</span></strong></td>
+            <td>يرسل الطلبات (<span class="en">Requests</span>) ويستقبل الاستجابات (<span class="en">Responses</span>). يشمل الحواسيب المكتبية والمحمولة والهواتف والأجهزة اللوحية بمواصفات متفاوتة.</td>
+          </tr>
+          <tr>
+            <td><strong>الخادم <span class="en">Server</span></strong></td>
+            <td>نشط عادةً 24/7، يستمع للطلبات ويرد عليها، يستضيف التطبيقات والبيانات، وينفذ الأمان والتفويض (<span class="en">Security & Authorization</span>)، ويتحمل حركة مرور عالية.</td>
+          </tr>
+        </table>
+        <h3>أنواع الخوادم السبعة (<span class="en">Server Types</span>)</h3>
+        <ul>
+          <li>خوادم الويب (<span class="en">Web Servers</span>)</li>
+          <li>خوادم التطبيقات (<span class="en">Application Servers</span>)</li>
+          <li>خوادم قواعد البيانات (<span class="en">Database Servers</span>)</li>
+          <li>خوادم البريد الإلكتروني (<span class="en">Mail/Email Servers</span>)</li>
+          <li>خوادم الوسائط (<span class="en">Media Servers</span>)</li>
+          <li>خوادم المصادقة (<span class="en">Authentication Servers</span>)</li>
+          <li>خوادم التحليلات (<span class="en">Analytics Servers</span>)</li>
+        </ul>
+      `
+    },
+    {
+      id: 3,
+      title: "بروتوكولات الإنترنت",
+      sub: "Internet Protocols (TCP/IP)",
+      html: `
+        <p><strong>البروتوكول:</strong> مجموعة القواعد التي يستخدمها شركاء الاتصال عند التواصل فيما بينهم.</p>
+        <h3>طبقات حزمة <span class="en">TCP/IP</span> الأربع</h3>
+        <table>
+          <tr><th>الطبقة</th><th>الوظيفة الأساسية</th><th>أمثلة</th></tr>
+          <tr><td>طبقة التطبيقات <span class="en">Application</span></td><td>تتيح للتطبيقات التفاعل مع طبقة النقل</td><td><span class="en">HTTP, FTP, POP</span></td></tr>
+          <tr><td>طبقة النقل <span class="en">Transport</span></td><td>ضمان وصول الإرسالات بالترتيب وبدون أخطاء</td><td><span class="en">TCP, UDP</span></td></tr>
+          <tr><td>طبقة الإنترنت <span class="en">Internet</span></td><td>إنشاء الاتصال والتوجيه والعنونة</td><td><span class="en">IPv4, IPv6</span></td></tr>
+          <tr><td>طبقة الربط <span class="en">Link</span></td><td>النقل الفيزيائي للبتات الخام (<span class="en">Raw Bits</span>)</td><td><span class="en">MAC</span></td></tr>
+        </table>
+        <h3>مقارنة <span class="en">IPv4</span> و<span class="en">IPv6</span></h3>
+        <table>
+          <tr><th>الإصدار</th><th>عدد العناوين</th><th>البنية والحجم</th><th>مثال</th></tr>
+          <tr><td><span class="en">IPv4</span></td><td>2<sup>32</sup> عنوان</td><td>4 مكونات × 8 بت (32 بت)</td><td><span class="en">192.168.123.254</span></td></tr>
+          <tr><td><span class="en">IPv6</span></td><td>2<sup>128</sup> عنوان</td><td>8 مكونات × 16 بت (128 بت)</td><td><span class="en">3fae:7a10:4545:9:291:e8ff:fe21:37ca</span></td></tr>
+        </table>
+        <h3>كيف يضمن <span class="en">TCP</span> النقل الموثوق؟</h3>
+        <ol>
+          <li><strong>الترقيم وإعادة الترتيب:</strong> كل حزمة تحمل رقماً تسلسلياً (<span class="en">Sequence Number</span>) لإعادة التجميع بالترتيب الصحيح.</li>
+          <li><strong>الإقرار وإعادة الإرسال:</strong> يُرسل المستقبل إقراراً (<span class="en">ACK</span>) لكل حزمة، وإذا لم يصل يعيد المرسل إرسالها.</li>
+        </ol>
+      `
+    },
+    {
+      id: 4,
+      title: "نظام أسماء النطاقات",
+      sub: "Domain Name System - DNS",
+      html: `
+        <p>بدأ الربط قديماً بملف <span class="en">hosts</span> من معهد ستانفورد، ثم استُبدل بنظام <span class="en">DNS</span> الموزّع والقابل للتوسع لربط أسماء النطاقات بعناوين <span class="en">IP</span>.</p>
+        <h3>آلية عمل <span class="en">DNS</span> في 4 خطوات</h3>
+        <ol>
+          <li>يسأل المتصفح خادم النطاقات: ما عنوان <span class="en">IP</span> للموقع <span class="en">www.funwebdev.com</span>؟</li>
+          <li>يرد خادم <span class="en">DNS</span> بالعنوان: <span class="en">66.147.244.79</span>.</li>
+          <li>يتواصل المتصفح مع خادم الويب طالباً الصفحة الافتراضية لهذا العنوان.</li>
+          <li>يعيد خادم الويب كود الصفحة.</li>
+        </ol>
+        <div class="note-box">
+          <strong>فائدة إضافية مهمة:</strong> فصل اسم النطاق عن عنوان <span class="en">IP</span> الفعلي يتيح لأي موقع الانتقال إلى خادم جديد دون الحاجة لتغيير اسمه.
+        </div>
+      `
+    },
+    {
+      id: 5,
+      title: "محدد موقع المورد الموحد",
+      sub: "Uniform Resource Locator - URL",
+      html: `
+        <p>آلية تسمية لطلب موارد محددة من الخادم، يتكوّن من <strong>مكونين إلزاميين</strong> (البروتوكول، النطاق/IP) و<strong>4 مكونات اختيارية</strong> (المنفذ، المسار، سلسلة الاستعلام، المعرف الجزئي).</p>
+        <ul>
+          <li><strong>البروتوكول (إلزامي):</strong> يحدد البروتوكول والمنفذ الافتراضي (مثل <span class="en">FTP</span> على المنفذ 21، و<span class="en">HTTP</span> على المنفذ 80).</li>
+          <li><strong>النطاق (إلزامي):</strong> اسم النطاق أو عنوان <span class="en">IP</span> للخادم.</li>
+          <li><strong>المنفذ (اختياري):</strong> نقطة اتصال برمجية (مثل رقم الباب داخل المبنى).</li>
+          <li><strong>المسار (اختياري):</strong> يحدد الملف أو المجلد المطلوب على الخادم.</li>
+          <li><strong>سلسلة الاستعلام (اختياري):</strong> تمرير بيانات كأزواج مفتاح-قيمة تبدأ بـ <span class="en">?</span> وتُفصل بـ <span class="en">&</span>.</li>
+          <li><strong>المعرف الجزئي (اختياري):</strong> يبدأ بـ <span class="en">#</span> للانتقال إلى جزء محدد داخل الصفحة.</li>
+        </ul>
+        <p>💡 جرّب تبويب <strong>«مفكك الـ URL»</strong> بالأعلى للتطبيق العملي.</p>
+      `
+    },
+    {
+      id: 6,
+      title: "بروتوكول نقل النص التشعبي",
+      sub: "Hypertext Transfer Protocol - HTTP",
+      html: `
+        <p>ينشئ <span class="en">HTTP</span> اتصال <span class="en">TCP</span> على المنفذ <strong>80</strong> افتراضياً، ويرد الخادم برمز استجابة وترويسات ورسالة اختيارية.</p>
+        <h3>طرق الطلب الأشهر (<span class="en">HTTP Methods / Verbs</span>)</h3>
+        <ul>
+          <li><strong><span class="en">GET</span>:</strong> لاسترجاع مورد عند <span class="en">URL</span> محدد؛ يمكن تمرير بيانات عبر <span class="en">Query String</span>.</li>
+          <li><strong><span class="en">POST</span>:</strong> لإرسال بيانات عبر نموذج <span class="en">HTML Form</span> داخل جسم الطلب (لا تخضع لقيود طول الرابط).</li>
+          <li><strong><span class="en">HEAD</span>:</strong> مثل <span class="en">GET</span> لكن يعيد الترويسات (<span class="en">Headers</span>) فقط دون جسم المحتوى لتوفير عرض النطاق (تستخدمه محركات البحث).</li>
+        </ul>
+        <div class="note-box">
+          <strong>قاعدة هامة:</strong> لا يجوز استخدام <span class="en">GET</span> لإجراءات تغيّر حالة البيانات (مثل التعديل أو الحذف)؛ بل يُستخدم <span class="en">POST</span> أو <span class="en">PUT / DELETE</span>.
+        </div>
+        <h3>فئات رموز الاستجابة (<span class="en">Response Codes</span>)</h3>
+        <ul>
+          <li><strong>2xx:</strong> النجاح (مثل <span class="en">200 OK</span>).</li>
+          <li><strong>3xx:</strong> إعادة التوجيه أو التخزين المؤقت (<span class="en">301</span> دائم، <span class="en">304</span> غير معدل، <span class="en">307</span> مؤقت).</li>
+          <li><strong>4xx:</strong> أخطاء العميل (<span class="en">400</span> طلب خاطئ، <span class="en">401</span> غير مصرح، <span class="en">404</span> غير موجود، <span class="en">414</span> الرابط طويل جداً).</li>
+          <li><strong>5xx:</strong> أخطاء الخادم (<span class="en">500</span> خطأ خادم داخلي).</li>
+        </ul>
+      `
+    },
+    {
+      id: 7,
+      title: "متصفحات الويب",
+      sub: "Web Browsers",
+      html: `
+        <h3>جلب الصفحة (<span class="en">Fetching</span>) والتصيير (<span class="en">Rendering</span>)</h3>
+        <p>يطلب المتصفح ملف <span class="en">HTML</span> أولاً، ثم يحلله (<span class="en">Parses</span>) ويرسل طلبات <span class="en">HTTP</span> إضافية للصور وCSS وJS. تختلف خوارزميات التصيير بين المتصفحات مما يفسر اختلاف الشكل والسرعة.</p>
+        <h3>مقاييس التصيير المحسوسة بالترتيب</h3>
+        <ul>
+          <li><strong><span class="en">TTFB</span>:</strong> زمن وصول أول بايت (يقيس التأخير <span class="en">Latency</span>).</li>
+          <li><strong><span class="en">FP</span>:</strong> أول تغيير مرئي على الشاشة الفارغة.</li>
+          <li><strong><span class="en">FCP</span>:</strong> رسم أول محتوى من الصفحة.</li>
+          <li><strong><span class="en">FMP</span>:</strong> إتمام رسم المحتوى الأساسي المفيد.</li>
+          <li><strong><span class="en">LCP</span>:</strong> رسم أكبر عنصر على الشاشة (أهم مقاييس التحميل).</li>
+          <li><strong><span class="en">TTI</span>:</strong> جاهزية الصفحة الكاملة للاستجابة لمدخلات المستخدم.</li>
+          <li><strong><span class="en">On Load</span>:</strong> اكتمال تحميل كل شيء في الصفحة.</li>
+          <li><strong><span class="en">CLS</span>:</strong> يقيس <strong>الاستقرار البصري</strong> ومقدار إزاحة العناصر أثناء التحميل.</li>
+        </ul>
+        <h3>التخزين المؤقت (<span class="en">Browser Caching</span>)</h3>
+        <p>يقلل حركة البيانات عبر الشبكة: يتحقق المتصفح إن كانت النسخة المخزنة لكل مورد لا تزال حديثة (<span class="en">Fresh</span>) فيستخدمها مباشرة، وإلا يطلبها من الخادم ويحفظها للاستخدام المستقبلي.</p>
+      `
+    }
+  ];
+
+  const urlPartsData = {
+    protocol: {
+      title: "البروتوكول (Protocol)",
+      required: true,
+      desc: "الجزء الأول من الرابط ويحدد البروتوكول والمنفذ الافتراضي؛ مثلاً http يستخدم المنفذ 80، بينما ftp يستخدم المنفذ 21."
+    },
+    domain: {
+      title: "النطاق (Domain / IP)",
+      required: true,
+      desc: "يحدد الخادم المستهدف باسم النطاق (مثل www.funwebdev.com) أو بعنوان IP مباشرة."
+    },
+    port: {
+      title: "المنفذ (Port)",
+      required: false,
+      desc: "نقطة اتصال برمجية يستخدمها TCP/IP. إذا كان عنوان IP يماثل عنوان المبنى، فإن المنفذ يماثل رقم الباب داخل المبنى."
+    },
+    path: {
+      title: "المسار (Path)",
+      required: false,
+      desc: "يحدد الملف أو المجلد المطلوب على الخادم. عند طلب الصفحة الرئيسية فقط يختار الخادم الملف الافتراضي."
+    },
+    query: {
+      title: "سلسلة الاستعلام (Query String)",
+      required: false,
+      desc: "طريقة لتمرير معلومات من العميل للخادم كأزواج مفتاح-قيمة مسبوقة بـ ? ومفصولة بـ & (مثل ?page=17)."
+    },
+    fragment: {
+      title: "المعرف الجزئي (Fragment)",
+      required: false,
+      desc: "الجزء الأخير في الرابط ويبدأ بـ #، ويُستخدم للانتقال إلى قسم محدد داخل الصفحة نفسها."
+    }
+  };
+
+  const allFlashcards = [
+    { cat: "terms", front: "WWW vs Internet", back: "الويب (WWW) جزء فرعي (Subset) من الإنترنت، إلى جانب خدمات أخرى مثل البريد الإلكتروني والألعاب وFTP." },
+    { cat: "terms", front: "Packet Switching", back: "تقسيم الرسالة إلى حزم مرقمة تنتقل عبر مسارات مختلفة وتُعاد تجميعها عند الوجهة." },
+    { cat: "terms", front: "W3C (1994)", back: "رابطة الشبكة العالمية: المنظمة الدولية للمعايير المسؤولة عن الإشراف على تطوير الويب، ساهم تيم بيرنرز لي في تأسيسها." },
+    { cat: "terms", front: "TCP (Sequence Number & ACK)", back: "يضمن النقل الموثوق عبر ترقيم الحزم لإعادة ترتيبها، وإرسال إقرار استلام (ACK) وإعادة إرسال الحزم المفقودة." },
+    { cat: "terms", front: "DNS Benefit", back: "يربط أسماء النطاقات بعناوين IP، ويتيح نقل الموقع لخادم جديد دون تغيير اسم النطاق." },
+    { cat: "terms", front: "HEAD Method", back: "طلب يشبه GET لكنه يعيد الترويسات (Headers) فقط دون جسم المحتوى لتوفير عرض النطاق الترددي." },
+    { cat: "http", front: "200 OK", back: "تم تنفيذ الطلب بنجاح." },
+    { cat: "http", front: "301 vs 307", back: "301: نقل دائم للمورد (Moved Permanently) | 307: إعادة توجيه مؤقتة (Temporary Redirect)." },
+    { cat: "http", front: "304 Not Modified", back: "النسخة على الخادم ليست أحدث من النسخة المخزنة مؤقتاً لدى العميل (تُعاد ترويسة فقط)." },
+    { cat: "http", front: "400 / 401 / 404 / 414", back: "400 طلب خاطئ | 401 يحتاج بيانات اعتماد | 404 غير موجود | 414 الرابط طويل جداً." },
+    { cat: "http", front: "500 Internal Server Error", back: "واجه الخادم خطأً داخلياً دون تقديم تفاصيل إضافية للعميل." },
+    { cat: "metrics", front: "TTFB (Time to First Byte)", back: "الزمن اللازم لوصول أول بايت من الصفحة؛ يقيس زمن التأخير (Latency)." },
+    { cat: "metrics", front: "LCP (Largest Contentful Paint)", back: "اللحظة التي يُرسم فيها أكبر عنصر على الشاشة؛ من أهم مقاييس التحميل المحسوسة." },
+    { cat: "metrics", front: "TTI (Time to Interactive)", back: "الوقت الذي تصبح فيه الصفحة جاهزة بالكامل وقادرة على الاستجابة لمدخلات المستخدم." },
+    { cat: "metrics", front: "CLS (Cumulative Layout Shift)", back: "يقيس الاستقرار البصري ومقدار إزاحة العناصر أثناء تجهيز العرض النهائي." }
+  ];
+
+  const quizQuestions = [
+    {
+      q: "أي من المكونات التالية يُعد مكوناً إلزامياً في بنية الـ URL؟",
+      options: ["المسار (Path) والمنفذ (Port)", "البروتوكول (Protocol) والنطاق أو عنوان IP", "سلسلة الاستعلام (Query String) والمعرف الجزئي", "البروتوكول والمعرف الجزئي (#)"],
+      answer: 1,
+      explain: "يتكوّن الـ URL من مكونين إلزاميين فقط هما البروتوكول والنطاق (أو عنوان IP)، بينما باقي المكونات اختيارية."
+    },
+    {
+      q: "ما المنفذ الافتراضي الذي يستخدمه بروتوكول HTTP عبر اتصال TCP؟",
+      options: ["21", "443", "80", "25"],
+      answer: 2,
+      explain: "يستخدم HTTP المنفذ 80 افتراضياً، بينما يستخدم FTP المنفذ 21."
+    },
+    {
+      q: "ما المقياس الذي يقيس الاستقرار البصري للصفحة وليس سرعة التحميل؟",
+      options: ["TTFB", "LCP", "TTI", "CLS"],
+      answer: 3,
+      explain: "CLS (Cumulative Layout Shift) يرصد مقدار إزاحة العناصر أثناء التحميل، مثل ظهور إعلان مفاجئ يزيح الأزرار."
+    },
+    {
+      q: "أي رمز استجابة HTTP يُستخدم لإخبار المتصفح باستخدام النسخة المخزنة مؤقتاً لأن النسخة على الخادم لم تتغير؟",
+      options: ["301", "304", "307", "200"],
+      answer: 1,
+      explain: "الرمز 304 Not Modified يعني أن النسخة على الخادم ليست أحدث من النسخة المخزنة لدى العميل."
+    },
+    {
+      q: "لماذا تستخدم محركات البحث طلب HEAD أحياناً بدلاً من GET؟",
+      options: ["لتعديل بيانات الصفحة", "لإرسال كلمات المرور بأمان", "لجلب الترويسات فقط دون جسم الصفحة لتوفير عرض النطاق", "لتجاوز جدار الحماية"],
+      answer: 2,
+      explain: "طلب HEAD يعيد الترويسات فقط لمعرفة إن كانت الصفحة تحتاج إعادة فهرسة دون استهلاك عرض النطاق بجلب الجسم الكامل."
+    },
+    {
+      q: "كم يبلغ حجم عنوان IPv6 وبنيته؟",
+      options: ["32 بت (4 مكونات × 8 بت)", "64 بت (4 مكونات × 16 بت)", "128 بت (8 مكونات × 16 بت)", "256 بت (16 مكوناً × 16 بت)"],
+      answer: 2,
+      explain: "يتكون IPv6 من 8 مكونات × 16 بت = 128 بت، مما يوفر 2^128 عنواناً."
+    },
+    {
+      q: "ما القاعدة الهامة بخصوص استخدام طلب GET؟",
+      options: ["يجب استخدامه دائماً مع النماذج السرية", "يجب عدم استخدامه لتنفيذ إجراءات تغيّر حالة البيانات مثل التعديل أو الحذف", "لا يمكن تمرير أي بيانات معه", "يعمل فقط مع المواقع الثابتة"],
+      answer: 1,
+      explain: "الإجراءات التي تغيّر حالة البيانات يجب أن تستخدم POST (أو PUT وDELETE في واجهات API)."
+    },
+    {
+      q: "أي طبقة في حزمة TCP/IP مسؤولة عن النقل الفيزيائي للبتات الخام (Raw Bits)؟",
+      options: ["طبقة التطبيقات (Application)", "طبقة النقل (Transport)", "طبقة الإنترنت (Internet)", "طبقة الربط (Link)"],
+      answer: 3,
+      explain: "طبقة الربط (Link Layer) مثل بروتوكول MAC مسؤولة عن النقل الفيزيائي للبتات الخام."
+    }
+  ];
+
+  // ================== LESSONS & PROGRESS ==================
+  let completed = JSON.parse(localStorage.getItem("web_lec1_done") || "[]");
+
+  function renderLessons() {
+    const container = document.getElementById("lessonsList");
+    container.innerHTML = lessons.map((l, idx) => {
+      const isDone = completed.includes(l.id);
+      return `
+        <div class="lesson-card ${idx === 0 ? 'open' : ''}" id="card-${l.id}">
+          <div class="lesson-header" onclick="toggleLesson(${l.id})">
+            <div class="lesson-title-wrap">
+              <span class="badge-num">${l.id}</span>
+              <div>
+                <div class="lesson-title">${l.title}</div>
+                <span class="lesson-sub">${l.sub}</span>
+              </div>
+            </div>
+            <button class="done-btn ${isDone ? 'completed' : ''}" onclick="toggleDone(event, ${l.id})">
+              ${isDone ? '✓ تمت الدراسة' : 'تحديد كمكتمل'}
+            </button>
+          </div>
+          <div class="lesson-body">${l.html}</div>
+        </div>
+      `;
+    }).join("");
+    updateProgress();
+  }
+
+  function toggleLesson(id) {
+    document.getElementById(`card-${id}`).classList.toggle("open");
+  }
+
+  function toggleDone(e, id) {
+    e.stopPropagation();
+    if (completed.includes(id)) {
+      completed = completed.filter(x => x !== id);
+    } else {
+      completed.push(id);
+    }
+    localStorage.setItem("web_lec1_done", JSON.stringify(completed));
+    renderLessons();
+  }
+
+  function updateProgress() {
+    const pct = Math.round((completed.length / lessons.length) * 100);
+    document.getElementById("progressBar").style.width = pct + "%";
+    document.getElementById("progressLabel").textContent =
+      `أتممت ${completed.length} من ${lessons.length} أقسام (${pct}%)`;
+  }
+
+  // ================== TABS ==================
+  document.querySelectorAll("nav.tabs .tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("nav.tabs .tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById("view-" + btn.dataset.view).classList.add("active");
+    });
+  });
+
+  // ================== URL EXPLORER ==================
+  function showUrlPart(key) {
+    const d = urlPartsData[key];
+    document.getElementById("urlInfo").innerHTML = `
+      <h3 style="margin-bottom:8px;">
+        ${d.title}
+        <span class="tag ${d.required ? 'tag-req' : 'tag-opt'}">${d.required ? 'إلزامي' : 'اختياري'}</span>
+      </h3>
+      <p>${d.desc}</p>
+    `;
+  }
+
+  document.querySelectorAll(".url-part").forEach(el => {
+    el.addEventListener("click", () => {
+      document.querySelectorAll(".url-part").forEach(p => p.classList.remove("active"));
+      el.classList.add("active");
+      showUrlPart(el.dataset.part);
+    });
+  });
+
+  // ================== FLASHCARDS ==================
+  let filteredCards = [...allFlashcards];
+  let fcIndex = 0;
+  let fcFlipped = false;
+
+  function renderCard() {
+    const card = filteredCards[fcIndex];
+    document.getElementById("fcSideLabel").textContent = fcFlipped ? "الشرح والإجابة" : "المصطلح / السؤال";
+    document.getElementById("fcContent").textContent = fcFlipped ? card.back : card.front;
+    document.getElementById("fcCounter").textContent = `${fcIndex + 1} / ${filteredCards.length}`;
+  }
+
+  function flipCard() { fcFlipped = !fcFlipped; renderCard(); }
+  function nextCard() { fcIndex = (fcIndex + 1) % filteredCards.length; fcFlipped = false; renderCard(); }
+  function prevCard() { fcIndex = (fcIndex - 1 + filteredCards.length) % filteredCards.length; fcFlipped = false; renderCard(); }
+
+  function filterCards(cat, btn) {
+    document.querySelectorAll(".fc-filters .tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    filteredCards = cat === "all" ? [...allFlashcards] : allFlashcards.filter(c => c.cat === cat);
+    fcIndex = 0;
+    fcFlipped = false;
+    renderCard();
+  }
+
+  // ================== QUIZ ==================
+  let qIndex = 0;
+  let score = 0;
+  let answered = false;
+
+  function renderQuiz() {
+    const box = document.getElementById("quizBox");
+    if (qIndex >= quizQuestions.length) {
+      const pct = Math.round((score / quizQuestions.length) * 100);
+      box.innerHTML = `
+        <div style="text-align:center; padding: 20px 0;">
+          <h2>انتهى الاختبار!</h2>
+          <p style="font-size:1.3rem; margin:14px 0; font-weight:700; color: var(--primary);">
+            نتيجتك: ${score} من ${quizQuestions.length} (${pct}%)
+          </p>
+          <p style="color:var(--muted); margin-bottom:20px;">
+            ${pct >= 80 ? 'ممتاز! مستوعب المحاضرة الأولى بشكل رائع.' : 'جيد، راجع بطاقات الاستذكار وجرّب مرة أخرى.'}
+          </p>
+          <button class="btn" onclick="restartQuiz()">إعادة الاختبار</button>
+        </div>
+      `;
+      return;
+    }
+
+    const q = quizQuestions[qIndex];
+    answered = false;
+    box.innerHTML = `
+      <div class="quiz-meta">
+        <span>سؤال ${qIndex + 1} من ${quizQuestions.length}</span>
+        <span>النقاط: ${score}</span>
+      </div>
+      <div class="quiz-q">${q.q}</div>
+      <div class="quiz-options">
+        ${q.options.map((opt, i) => `<button class="opt-btn" onclick="selectOption(${i}, this)">${opt}</button>`).join("")}
+      </div>
+      <div class="quiz-feedback" id="qFeedback"></div>
+      <div class="quiz-footer">
+        <button class="btn" id="nextQBtn" style="display:none;" onclick="nextQuestion()">السؤال التالي</button>
+      </div>
+    `;
+  }
+
+  function selectOption(idx, btn) {
+    if (answered) return;
+    answered = true;
+    const q = quizQuestions[qIndex];
+    const buttons = document.querySelectorAll(".opt-btn");
+    buttons.forEach(b => b.disabled = true);
+
+    const fb = document.getElementById("qFeedback");
+    fb.style.display = "block";
+
+    if (idx === q.answer) {
+      score++;
+      btn.classList.add("correct");
+      fb.style.background = "var(--success-bg)";
+      fb.innerHTML = `<strong>✓ إجابة صحيحة!</strong> ${q.explain}`;
+    } else {
+      btn.classList.add("wrong");
+      buttons[q.answer].classList.add("correct");
+      fb.style.background = "var(--danger-bg)";
+      fb.innerHTML = `<strong>✗ إجابة غير صحيحة.</strong> ${q.explain}`;
+    }
+    document.getElementById("nextQBtn").style.display = "inline-block";
+  }
+
+  function nextQuestion() { qIndex++; renderQuiz(); }
+  function restartQuiz() { qIndex = 0; score = 0; renderQuiz(); }
+
+  // ================== INIT ==================
+  renderLessons();
+  showUrlPart("protocol");
+  renderCard();
+  renderQuiz();
+</script>
+</body>
+</html>
