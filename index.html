@@ -1,0 +1,1918 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>منصة دراسة برمجة الويب التفاعلية | مقرر الشمري</title>
+<style>
+  :root {
+    --bg: #f4f6fb;
+    --surface: #ffffff;
+    --surface-alt: #eef2f9;
+    --text: #1e293b;
+    --text-muted: #64748b;
+    --border: #dce3f0;
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --primary-soft: #dbeafe;
+    --accent: #0ea5e9;
+    --success: #10b981;
+    --success-soft: #d1fae5;
+    --danger: #ef4444;
+    --danger-soft: #fee2e2;
+    --warning: #f59e0b;
+    --warning-soft: #fef3c7;
+    --purple: #7c3aed;
+    --purple-soft: #ede9fe;
+    --code-bg: #0f172a;
+    --code-text: #e2e8f0;
+    --shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+    --radius: 14px;
+    --sidebar-w: 280px;
+  }
+
+  [data-theme="dark"] {
+    --bg: #0b1120;
+    --surface: #131c31;
+    --surface-alt: #1b2742;
+    --text: #f1f5f9;
+    --text-muted: #94a3b8;
+    --border: #253453;
+    --primary: #3b82f6;
+    --primary-hover: #60a5fa;
+    --primary-soft: rgba(59, 130, 246, 0.16);
+    --accent: #38bdf8;
+    --success: #34d399;
+    --success-soft: rgba(16, 185, 129, 0.16);
+    --danger: #f87171;
+    --danger-soft: rgba(239, 68, 68, 0.16);
+    --warning: #fbbf24;
+    --warning-soft: rgba(245, 158, 11, 0.16);
+    --purple: #a78bfa;
+    --purple-soft: rgba(139, 92, 246, 0.16);
+    --code-bg: #070b14;
+    --code-text: #e2e8f0;
+    --shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, 'Noto Sans Arabic', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    min-height: 100vh;
+    transition: background 0.25s, color 0.25s;
+  }
+
+  /* Layout */
+  .app-shell {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    padding: 22px 16px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px 18px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 18px;
+  }
+
+  .brand-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+  }
+
+  .brand-text h1 { font-size: 1.05rem; font-weight: 800; line-height: 1.3; }
+  .brand-text span { font-size: 0.78rem; color: var(--text-muted); }
+
+  .nav-group-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    padding: 6px 12px;
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+
+  .nav-btn {
+    width: 100%;
+    text-align: right;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    padding: 11px 13px;
+    border-radius: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.92rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 5px;
+    transition: all 0.2s;
+  }
+
+  .nav-btn:hover { background: var(--surface-alt); }
+  .nav-btn.active {
+    background: var(--primary-soft);
+    color: var(--primary);
+  }
+
+  .nav-btn .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+  }
+
+  .nav-badge {
+    font-size: 0.72rem;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: var(--surface-alt);
+    color: var(--text-muted);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .nav-badge.done {
+    background: var(--success-soft);
+    color: var(--success);
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .progress-box {
+    background: var(--surface-alt);
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-bottom: 7px;
+  }
+
+  .progress-bar {
+    height: 8px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--success));
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  .theme-toggle {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .theme-toggle:hover { background: var(--surface-alt); }
+
+  /* Main Content */
+  .main {
+    flex: 1;
+    margin-right: var(--sidebar-w);
+    padding: 28px 34px 60px;
+    max-width: 1180px;
+  }
+
+  .mobile-topbar {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 90;
+  }
+
+  .menu-btn {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 12px;
+    border-radius: 9px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 95;
+  }
+  .overlay.show { display: block; }
+
+  /* Hero & Headers */
+  .page-hero {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #0ea5e9 100%);
+    color: #fff;
+    padding: 28px 30px;
+    border-radius: 18px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+  }
+  .page-hero .tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .page-hero h2 { font-size: 1.65rem; font-weight: 800; margin-bottom: 6px; }
+  .page-hero p { opacity: 0.92; font-size: 0.96rem; max-width: 720px; }
+
+  /* Dashboard Grid */
+  .dash-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .lecture-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, border-color 0.2s;
+    cursor: pointer;
+  }
+  .lecture-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary);
+  }
+  .lecture-card .lec-num {
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--primary);
+    background: var(--primary-soft);
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    width: fit-content;
+    margin-bottom: 10px;
+  }
+  .lecture-card h3 { font-size: 1.12rem; margin-bottom: 6px; }
+  .lecture-card p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 14px; flex: 1; }
+  .lecture-card .card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.82rem;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  /* Sub-Tabs inside each lecture */
+  .subtabs {
+    display: flex;
+    gap: 8px;
+    background: var(--surface);
+    padding: 7px;
+    border-radius: 13px;
+    border: 1px solid var(--border);
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+
+  .subtab-btn {
+    flex: 1;
+    min-width: 130px;
+    padding: 11px 16px;
+    border: none;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 0.94rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .subtab-btn:hover { color: var(--text); background: var(--surface-alt); }
+  .subtab-btn.active {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(37, 99, 235, 0.25);
+  }
+
+  /* Cards & Sections */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+  }
+
+  .card h3 {
+    font-size: 1.18rem;
+    margin-bottom: 12px;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card h4 {
+    font-size: 1rem;
+    margin: 14px 0 8px;
+    color: var(--text);
+  }
+
+  .en-term {
+    direction: ltr;
+    unicode-bidi: isolate;
+    display: inline-block;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.86em;
+    background: var(--surface-alt);
+    color: var(--primary);
+    padding: 1px 6px;
+    border-radius: 6px;
+    font-weight: 700;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 12px;
+    margin: 12px 0;
+  }
+
+  .mini-box {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 14px;
+  }
+  .mini-box strong { display: block; margin-bottom: 4px; color: var(--primary); }
+
+  .callout {
+    background: var(--warning-soft);
+    border-right: 4px solid var(--warning);
+    padding: 13px 16px;
+    border-radius: 10px;
+    margin: 14px 0;
+    font-size: 0.93rem;
+  }
+  .callout.tip {
+    background: var(--success-soft);
+    border-right-color: var(--success);
+  }
+  .callout.info {
+    background: var(--primary-soft);
+    border-right-color: var(--primary);
+  }
+
+  /* Accordion */
+  details.acc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  details.acc summary {
+    padding: 15px 18px;
+    font-weight: 700;
+    font-size: 1.02rem;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--surface);
+  }
+  details.acc summary::-webkit-details-marker { display: none; }
+  details.acc summary::after {
+    content: "▾";
+    font-size: 1.1rem;
+    color: var(--primary);
+    transition: transform 0.2s;
+  }
+  details.acc[open] summary::after { transform: rotate(180deg); }
+  details.acc[open] summary { border-bottom: 1px solid var(--border); background: var(--surface-alt); }
+  .acc-body { padding: 18px 20px; }
+
+  /* Tables */
+  .table-wrap { overflow-x: auto; margin: 12px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  th, td {
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    text-align: right;
+  }
+  th {
+    background: var(--surface-alt);
+    font-weight: 700;
+    color: var(--primary);
+  }
+  tr:nth-child(even) td { background: rgba(148, 163, 184, 0.04); }
+
+  /* Code Blocks */
+  pre.code {
+    direction: ltr;
+    text-align: left;
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 15px 18px;
+    border-radius: 11px;
+    overflow-x: auto;
+    font-family: Consolas, 'Fira Code', monospace;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin: 10px 0;
+  }
+
+  /* Interactive Labs */
+  .lab-box {
+    background: var(--surface);
+    border: 2px solid var(--primary-soft);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .lab-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .lab-title h3 { font-size: 1.12rem; color: var(--primary); }
+
+  .btn {
+    padding: 9px 16px;
+    border-radius: 9px;
+    border: none;
+    background: var(--primary);
+    color: #fff;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn:hover { background: var(--primary-hover); }
+  .btn.secondary {
+    background: var(--surface-alt);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn.secondary:hover { border-color: var(--primary); color: var(--primary); }
+  .btn.active-pill {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+  .btn.success { background: var(--success); }
+
+  .pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0 14px;
+  }
+
+  .input-ltr {
+    width: 100%;
+    direction: ltr;
+    text-align: left;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-alt);
+    color: var(--text);
+    font-family: Consolas, monospace;
+    font-size: 0.94rem;
+    margin-bottom: 12px;
+  }
+
+  .url-parts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .url-part {
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: var(--surface-alt);
+    border-top: 4px solid var(--primary);
+  }
+  .url-part small { display: block; color: var(--text-muted); font-size: 0.78rem; }
+  .url-part code {
+    direction: ltr;
+    display: block;
+    font-family: Consolas, monospace;
+    font-weight: 700;
+    margin-top: 4px;
+    word-break: break-all;
+  }
+
+  /* Split Editor */
+  .split-editor {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .editor-area {
+    width: 100%;
+    min-height: 240px;
+    direction: ltr;
+    text-align: left;
+    background: var(--code-bg);
+    color: var(--code-text);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 14px;
+    font-family: Consolas, monospace;
+    font-size: 0.86rem;
+    resize: vertical;
+  }
+  .preview-frame {
+    width: 100%;
+    min-height: 240px;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+  }
+
+  /* Selector Lab */
+  .selector-demo {
+    direction: ltr;
+    text-align: left;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    font-family: Consolas, monospace;
+    font-size: 0.88rem;
+  }
+  .sel-node {
+    padding: 5px 10px;
+    margin: 4px 0;
+    border-radius: 7px;
+    border: 1px dashed transparent;
+    transition: all 0.25s;
+  }
+  .sel-node.hit {
+    background: var(--warning-soft);
+    border-color: var(--warning);
+    color: #92400e;
+    font-weight: 800;
+    transform: translateX(4px);
+  }
+  [data-theme="dark"] .sel-node.hit { color: #fef3c7; }
+
+  /* Box Model Simulator */
+  .slider-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .slider-item {
+    background: var(--surface-alt);
+    padding: 10px 12px;
+    border-radius: 10px;
+  }
+  .slider-item label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .slider-item input[type="range"] { width: 100%; accent-color: var(--primary); }
+
+  .box-stage {
+    background: var(--surface-alt);
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+    min-height: 220px;
+  }
+  .bm-margin {
+    background: rgba(245, 158, 11, 0.28);
+    border: 2px dashed #f59e0b;
+    display: inline-block;
+    position: relative;
+  }
+  .bm-border {
+    background: #2563eb;
+    display: block;
+  }
+  .bm-padding {
+    background: rgba(16, 185, 129, 0.28);
+    display: block;
+  }
+  .bm-content {
+    background: #3b82f6;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+
+  /* Quiz UI */
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .q-title { font-weight: 700; font-size: 1rem; margin-bottom: 12px; }
+  .q-options { display: grid; gap: 8px; }
+  .q-opt {
+    text-align: right;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-alt);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.93rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .q-opt:hover:not(:disabled) { border-color: var(--primary); }
+  .q-opt.correct {
+    background: var(--success-soft);
+    border-color: var(--success);
+    color: var(--success);
+    font-weight: 700;
+  }
+  .q-opt.wrong {
+    background: var(--danger-soft);
+    border-color: var(--danger);
+    color: var(--danger);
+    font-weight: 700;
+  }
+  .q-explain {
+    margin-top: 10px;
+    padding: 10px 13px;
+    border-radius: 9px;
+    background: var(--primary-soft);
+    font-size: 0.88rem;
+    display: none;
+  }
+  .q-explain.show { display: block; }
+
+  .score-banner {
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    color: #fff;
+    padding: 20px 24px;
+    border-radius: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .sidebar { transform: translateX(100%); }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-right: 0; padding: 18px 16px 50px; }
+    .mobile-topbar { display: flex; }
+    .split-editor { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="mobile-topbar">
+  <strong>منصة برمجة الويب</strong>
+  <button class="menu-btn" onclick="toggleSidebar()">☰ القائمة</button>
+</div>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">&lt;/&gt;</div>
+      <div class="brand-text">
+        <h1>برمجة الويب</h1>
+        <span>مقرر الشمري • د. إيفا هريكيس</span>
+      </div>
+    </div>
+
+    <div class="nav-group-label">التنقل الرئيسي</div>
+    <button class="nav-btn active" data-view="home" onclick="switchView('home')">
+      <span class="nav-left">🏠 الرئيسية ولوحة التقدم</span>
+    </button>
+
+    <div class="nav-group-label">المحاضرات المنفصلة</div>
+    <button class="nav-btn" data-view="lec1" onclick="switchView('lec1')">
+      <span class="nav-left">🌐 م1: كيف يعمل الويب</span>
+      <span class="nav-badge" id="badge-lec1">جديد</span>
+    </button>
+    <button class="nav-btn" data-view="lec2" onclick="switchView('lec2')">
+      <span class="nav-left">📄 م2: مقدمة في HTML</span>
+      <span class="nav-badge" id="badge-lec2">جديد</span>
+    </button>
+    <button class="nav-btn" data-view="lec3" onclick="switchView('lec3')">
+      <span class="nav-left">🎨 م3: CSS 1 والمحددات</span>
+      <span class="nav-badge" id="badge-lec3">جديد</span>
+    </button>
+    <button class="nav-btn" data-view="lec4" onclick="switchView('lec4')">
+      <span class="nav-left">📦 م4: CSS 2 والصندوق</span>
+      <span class="nav-badge" id="badge-lec4">جديد</span>
+    </button>
+
+    <div class="nav-group-label">مراجعة شاملة</div>
+    <button class="nav-btn" data-view="finalQuiz" onclick="switchView('finalQuiz')">
+      <span class="nav-left">🏆 الاختبار الشامل للمادة</span>
+      <span class="nav-badge" id="badge-final">16 سؤال</span>
+    </button>
+
+    <div class="sidebar-footer">
+      <div class="progress-box">
+        <div class="progress-header">
+          <span>التقدم الكلي</span>
+          <span id="overall-pct">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="overall-fill"></div>
+        </div>
+      </div>
+      <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙 الوضع الليلي</button>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="main" id="main-content"></main>
+</div>
+
+<script>
+// ===================== STATE & STORAGE =====================
+const state = {
+  view: 'home',
+  subtab: { lec1: 'study', lec2: 'study', lec3: 'study', lec4: 'study' },
+  scores: JSON.parse(localStorage.getItem('webprog_scores') || '{}'),
+  completed: JSON.parse(localStorage.getItem('webprog_done') || '{}'),
+  theme: localStorage.getItem('webprog_theme') || 'light'
+};
+
+if (state.theme === 'dark') {
+  document.documentElement.setAttribute('data-theme', 'dark');
+}
+
+function saveState() {
+  localStorage.setItem('webprog_scores', JSON.stringify(state.scores));
+  localStorage.setItem('webprog_done', JSON.stringify(state.completed));
+  updateProgressUI();
+}
+
+function toggleTheme() {
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', state.theme);
+  localStorage.setItem('webprog_theme', state.theme);
+  document.getElementById('theme-btn').textContent = state.theme === 'dark' ? '☀️ الوضع النهاري' : '🌙 الوضع الليلي';
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+
+function updateProgressUI() {
+  const lecs = ['lec1', 'lec2', 'lec3', 'lec4'];
+  let doneCount = 0;
+  lecs.forEach(l => {
+    const badge = document.getElementById('badge-' + l);
+    if (!badge) return;
+    if (state.scores[l] !== undefined) {
+      badge.textContent = state.scores[l] + '%';
+      badge.classList.add('done');
+      doneCount++;
+    } else if (state.completed[l]) {
+      badge.textContent = 'مكتمل ✓';
+      badge.classList.add('done');
+      doneCount++;
+    } else {
+      badge.textContent = 'جديد';
+      badge.classList.remove('done');
+    }
+  });
+  const pct = Math.round((doneCount / lecs.length) * 100);
+  document.getElementById('overall-pct').textContent = pct + '%';
+  document.getElementById('overall-fill').style.width = pct + '%';
+  document.getElementById('theme-btn').textContent = state.theme === 'dark' ? '☀️ الوضع النهاري' : '🌙 الوضع الليلي';
+}
+
+// ===================== QUIZZES DATA =====================
+const QUIZZES = {
+  lec1: [
+    {
+      q: "ما العلاقة الصحيحة بين الإنترنت (Internet) والشبكة العنكبوتية العالمية (WWW)؟",
+      opts: ["الإنترنت والويب هما نفس الشيء تماماً", "الويب (WWW) هو جزء فرعي (Subset) من الإنترنت", "الإنترنت هو جزء فرعي من الويب", "الويب يعمل بدون بروتوكولات الإنترنت"],
+      ans: 1,
+      exp: "الويب (WWW) مجرد جزء فرعي من الإنترنت؛ وهناك خدمات أخرى تعمل فوق الإنترنت مثل Email و FTP و Online Gaming."
+    },
+    {
+      q: "ما أبرز ميزة لشبكات تبديل الحزم (Packet Switching) مقارنةً بتبديل الدوائر؟",
+      opts: ["تتطلب توصيلاً فيزيائياً مستمراً طوال المكالمة", "تقسم الرسالة إلى حزم مرقمة يمكن أن تسلك مسارات مختلفة ويعاد تجميعها عند الوجهة", "لا تستخدم عناوين وجهة", "تستخدم فقط للاتصالات الهاتفية القديمة"],
+      ans: 1,
+      exp: "في Packet Switching تُقسّم الرسالة إلى حزم مرقمة تسلك مسارات مختلفة ثم يُعاد تجميعها عند الوجهة، مما يحل مشكلات عرض النطاق وقابلية التوسع."
+    },
+    {
+      q: "في أي عام اعتُمدت حزمة TCP/IP رسمياً عبر كامل شبكة ARPANET؟",
+      opts: ["1960", "1974", "1983", "1994"],
+      ans: 2,
+      exp: "قُدّمت TCP/IP عام 1981 واعتُمدت رسمياً في 1 يناير 1983 عبر كامل شبكة ARPANET."
+    },
+    {
+      q: "أي طبقة في حزمة TCP/IP مسؤولة عن ضمان وصول الحزم بالترتيب الصحيح وبدون أخطاء (مثل TCP و UDP)؟",
+      opts: ["طبقة التطبيقات (Application Layer)", "طبقة النقل (Transport Layer)", "طبقة الإنترنت (Internet Layer)", "طبقة الربط (Link Layer)"],
+      ans: 1,
+      exp: "طبقة النقل (Transport Layer) تضم TCP و UDP وتضمن وصول الإرسالات بالترتيب الصحيح وبدون أخطاء."
+    },
+    {
+      q: "كم يبلغ طول عنوان IPv6 بالبتات؟",
+      opts: ["32 بت", "64 بت", "128 بت", "256 بت"],
+      ans: 2,
+      exp: "عنوان IPv4 يتكون من 32 بت (4×8 بت)، بينما IPv6 يتكون من 128 بت (8×16 بت) مما يوفر 2^128 عنواناً."
+    },
+    {
+      q: "ما المكونان الإلزاميان في أي عنوان URL؟",
+      opts: ["المسار (Path) والمعرف الجزئي (Fragment)", "البروتوكول (Protocol) والنطاق أو عنوان IP (Domain)", "المنفذ (Port) وسلسلة الاستعلام (Query String)", "البروتوكول والمنفذ فقط"],
+      ans: 1,
+      exp: "يتكون الـ URL من مكونين إلزاميين هما البروتوكول والنطاق (أو عنوان IP)، بينما المنفذ والمسار وسلسلة الاستعلام والمعرف الجزئي مكونات اختيارية."
+    },
+    {
+      q: "أي طريقة طلب HTTP تُستخدم لجلب الترويسات (Headers) فقط دون جسم الصفحة (Body) لتوفير عرض النطاق؟",
+      opts: ["GET", "POST", "HEAD", "PUT"],
+      ans: 2,
+      exp: "طلب HEAD يشبه GET تماماً لكنه يعيد الترويسات فقط بدون Body، وتستخدمه محركات البحث للتحقق من الحاجة لإعادة الفهرسة."
+    },
+    {
+      q: "ماذا يعني رمز الاستجابة HTTP 304 (Not Modified)؟",
+      opts: ["المورد غير موجود على الخادم", "حدث خطأ داخلي في الخادم", "النسخة على الخادم ليست أحدث من النسخة المخزنة مؤقتاً لدى العميل", "تم نقل المورد بشكل دائم"],
+      ans: 2,
+      exp: "الرمز 304 يخبر المتصفح بأن نسخته المخزنة مؤقتاً (Cached) لا تزال حديثة فيستخدمها دون إعادة تنزيل الملف."
+    },
+    {
+      q: "ما المقياس الذي يرصد الاستقرار البصري ومقدار إزاحة العناصر أثناء تحميل الصفحة؟",
+      opts: ["TTFB", "LCP", "CLS", "TTI"],
+      ans: 2,
+      exp: "مقياس CLS (Cumulative Layout Shift) يقيس الاستقرار البصري ومدى إزاحة المحتوى أثناء التحميل."
+    }
+  ],
+  lec2: [
+    {
+      q: "أي عبارة تصف لغة HTML بشكل صحيح؟",
+      opts: ["لغة برمجة حساسة لحالة الأحرف", "لغة ترميز قياسية (Markup Language) غير حساسة لحالة الأحرف وتصف هيكل ومحتوى الصفحة", "لغة لتنسيق الألوان والخطوط فقط", "تعمل فقط على الخادم (Back End)"],
+      ans: 1,
+      exp: "HTML ليست لغة برمجة بل لغة ترميز قياسية تصف الهيكل والمحتوى، ووسومها غير حساسة لحالة الأحرف (<P> مثل <p>)."
+    },
+    {
+      q: "أي مما يلي يُعد مثالاً على عنصر فارغ (Empty Element) لا يحتاج لوسم إغلاق؟",
+      opts: ["<p>", "<div>", "<img /> و <br />", "<a>"],
+      ans: 2,
+      exp: "العناصر الفارغة مثل <img> و <br> و <hr> لا تحتوي على محتوى داخلي ولا وسم إغلاق."
+    },
+    {
+      q: "في الشجرة الهرمية: إذا كان <span> داخل <p>، و <p> داخل <div>، و <div> داخل <body>، فما هي أسلاف (Ancestors) العنصر <span>؟",
+      opts: ["<p> فقط", "<div> و <body> فقط", "<p> و <div> و <body>", "العناصر الشقيقة لـ <p>"],
+      ans: 2,
+      exp: "الأسلاف (Ancestors) هي جميع العناصر الحاوية التي يقع بداخلها العنصر صعوداً حتى الجذر."
+    },
+    {
+      q: "أي من أمثلة التداخل التالية يُعد تداخلاً صحيحاً (Correct Nesting)؟",
+      opts: ["<h1>Share Your <strong>Travels</h1></strong>", "<h1>Share Your <strong>Travels</strong></h1>", "<p>Hello <b>World</p></b>", "<div><p>Text</div></p>"],
+      ans: 1,
+      exp: "قاعدة التداخل الصحيح: يجب إغلاق وسم الابن (</strong>) قبل إغلاق وسم الأب (</h1>)."
+    },
+    {
+      q: "للانتقال من ملف داخل مجلد فرعي إلى ملف آخر موجود في المجلد الشقيق `images`، ما المسار النسبي الصحيح؟",
+      opts: ["images/logo.gif", "../images/logo.gif", "/images/logo.gif", "./logo.gif"],
+      ans: 1,
+      exp: "نستخدم `../` للصعود مجلداً واحداً إلى الأب، ثم `images/logo.gif` للدخول إلى المجلد الشقيق."
+    },
+    {
+      q: "أي قيمة لخاصية `target` في الوسم `<a>` تفتح الرابط في تبويب أو نافذة جديدة؟",
+      opts: ["_self", "_parent", "_blank", "_top"],
+      ans: 2,
+      exp: "القيمة `_blank` تفتح الرابط في تبويب أو نافذة جديدة، بينما `_self` هي الافتراضية في نفس التبويب."
+    },
+    {
+      q: "أي كيان حرفي (Character Entity) يُستخدم لإظهار مسافة غير قابلة للكسر في HTML؟",
+      opts: ["&lt;", "&copy;", "&nbsp;", "&gt;"],
+      ans: 2,
+      exp: "الكيان `&nbsp;` (أو `&#160;`) يمثل مسافة غير قابلة للكسر لإظهار مسافات متعددة."
+    },
+    {
+      q: "ما القاعدة الصحيحة للعنصر الدلالي `<main>` في HTML5؟",
+      opts: ["يمكن تكراره عدة مرات في نفس المستند", "يُوضع داخل `<header>` أو `<footer>`", "يُستخدم مرة واحدة فقط في المستند ولا يتداخل داخل `<article>` أو `<aside>` أو `<header>` أو `<footer>` أو `<nav>`", "يُستخدم لتجميع روابط التنقل فقط"],
+      ans: 2,
+      exp: "يجب وجود عنصر `<main>` واحد فقط للمحتوى الرئيسي الفريد، ولا يجوز وضعه داخل `<header>`, `<footer>`, `<nav>`, `<article>`, `<aside>`."
+    },
+    {
+      q: "أي مجموعة تحتوي على عناصر سطرية (Inline Elements) فقط؟",
+      opts: ["<div>, <p>, <h1>", "<span>, <a>, <strong>, <em>", "<section>, <article>, <ul>", "<pre>, <hr>, <footer>"],
+      ans: 1,
+      exp: "العناصر `<span>`, `<a>`, `<strong>`, `<em>` كلها عناصر سطرية تتدفق أفقياً ولا تبدأ سطراً جديداً."
+    }
+  ],
+  lec3: [
+    {
+      q: "أي موقع لكتابة CSS يُعد الأفضل والأكثر شيوعاً لصيانة المواقع وتحسين الأداء عبر التخزين المؤقت (Cache)؟",
+      opts: ["النمط السطري (Inline Style)", "النمط المضمّن (Embedded Style)", "الملف الخارجي (External Style Sheet)", "صفحة أنماط المتصفح"],
+      ans: 2,
+      exp: "الملف الخارجي (.css) المربوط بوسم `<link>` يسهل توحيد التنسيق عبر كل الصفحات ويسمح للمتصفح بتخزينه مؤقتاً."
+    },
+    {
+      q: "إذا كان `html { font-size: 16px; }` و `.card { font-size: 20px; }` وبداخلها `.label { font-size: 1.2em; }` وبداخلها `.nested { font-size: 1.2em; }`، فما حجم الخط المحسوب لـ `.nested`؟",
+      opts: ["19.2px", "24px", "28.8px", "16px"],
+      ans: 2,
+      exp: "وحدة `em` تتراكم (Compounds): الأب `.card` هو 20px ← `.label` يصبح 20×1.2 = 24px ← `.nested` يصبح 24×1.2 = 28.8px."
+    },
+    {
+      q: "في نفس المثال السابق، إذا استبدلنا `1.2em` بـ `1.2rem` على `.nested`، فما الحجم المحسوب؟",
+      opts: ["28.8px", "24px", "19.2px", "20px"],
+      ans: 2,
+      exp: "وحدة `rem` تعني Root em، وتُحسب دائماً نسبةً لحجم خط الجذر `<html>` (16px × 1.2 = 19.2px) ولا تتراكم أبداً."
+    },
+    {
+      q: "ما الصيغة الصحيحة لكتابة تعليق (Comment) داخل ملف CSS؟",
+      opts: ["<!-- comment -->", "// comment", "/* comment */", "# comment"],
+      ans: 2,
+      exp: "التعليقات في CSS تُكتب دائماً بين `/*` و `*/` ويمكن أن تمتد لعدة أسطر."
+    },
+    {
+      q: "ماذا يطابق محدد الخاصية `a[href$='.pdf']`؟",
+      opts: ["الروابط التي تبدأ بـ .pdf", "الروابط التي تنتهي بـ .pdf", "الروابط التي تساوي .pdf تماماً", "أي عنصر يحتوي على خاصية href"],
+      ans: 1,
+      exp: "الرمز `$=` يطابق القيم التي تنتهي بنص محدد (أما `^=` فيطابق البداية و `*=` يطابق أي نص فرعي)."
+    },
+    {
+      q: "أي مما يلي يُعد محدد عنصر زائف (Pseudo-Element) وليس فئة زائفة (Pseudo-Class)؟",
+      opts: [":hover", ":focus", ":first-letter", ":nth-child(2n)"],
+      ans: 2,
+      exp: "`:first-letter` و `:first-line` هي عناصر زائفة لأنها تحدد جزءاً لا يوجد كعنصر مستقل في شجرة HTML."
+    },
+    {
+      q: "ما الفرق بين `div p` و `div > p`؟",
+      opts: ["لا يوجد فرق بينهما", "`div p` يختار أي `<p>` داخل `<div>` (ابن أو حفيد)، بينما `div > p` يختار الابن المباشر فقط", "`div > p` يختار الفقرة التالية لـ `<div>`", "`div p` يختار الابن المباشر فقط"],
+      ans: 1,
+      exp: "المسافة الفارغة هي محدد الحفيد (Descendant)، بينما الرمز `>` هو محدد الابن المباشر (Direct Child)."
+    },
+    {
+      q: "ماذا يختار المحدد `hr + p`؟",
+      opts: ["جميع فقرات `<p>` التي تأتي بعد `<hr>`", "أول فقرة `<p>` تأتي مباشرةً بعد `<hr>` (الشقيق المجاور)", "أي `<p>` بداخل `<hr>`", "آخر فقرة `<p>` في الصفحة"],
+      ans: 1,
+      exp: "الرمز `+` هو محدد الشقيق المجاور (Adjacent Sibling)، بينما `~` هو الشقيق العام (General Sibling)."
+    }
+  ],
+  lec4: [
+    {
+      q: "أي من الخصائص التالية قابلة للوراثة (Inheritable) تلقائياً من العنصر الأب إلى الأحفاد في CSS؟",
+      opts: ["border و margin", "padding و background-color", "color و font-family", "width و height"],
+      ans: 2,
+      exp: "خصائص الخط واللون والنصوص والقوائم قابلة للوراثة، بينما الحدود والهوامش والحشو والخلفيات والأبعاد لا تُورَّث تلقائياً."
+    },
+    {
+      q: "ما الترتيب التصاعدي الصحيح للأولوية/التخصيص (Specificity) من الأضعف إلى الأقوى؟",
+      opts: ["ID ← Class ← Element ← Inheritance", "Inheritance ← Element ← Class ← ID", "Element ← Inheritance ← ID ← Class", "Class ← Element ← ID ← Inheritance"],
+      ans: 1,
+      exp: "الأضعف هو الوراثة، ثم محدد العنصر (Element)، ثم الفئة (Class)، والأقوى محدد المعرّف (ID)."
+    },
+    {
+      q: "عند تساوي قاعدتين في درجة التخصيص (Specificity)، أي مبدأ يحسم النتيجة؟",
+      opts: ["الوراثة (Inheritance)", "الموقع (Location) حيث تفوز القاعدة الأحدث/الأخيرة", "ترتيب الحروف الأبجدية", "يلغي المتصفح القاعدتين معاً"],
+      ans: 1,
+      exp: "عند تساوي التخصيص يُطبق مبدأ الموقع (Location)، فتفوز القاعدة الأحدث، والنمط السطري يتغلب على المضمن والخارجي."
+    },
+    {
+      q: "لعنصر بخصائص `width: 200px; padding: 5px; border: 2px solid; margin: 10px;` مع القيمة الافتراضية `box-sizing: content-box`، ما عرضه الكلي (Total Width)؟",
+      opts: ["200px", "214px", "220px", "234px"],
+      ans: 3,
+      exp: "العرض الكلي = 200 + (5+5) padding + (2+2) border + (10+10) margin = 234px."
+    },
+    {
+      q: "في السؤال السابق، لو أضفنا `box-sizing: border-box;` فكم يصبح العرض الكلي مع الهامش؟",
+      opts: ["200px", "220px", "234px", "210px"],
+      ans: 1,
+      exp: "مع `border-box` يصبح الـ width (200px) شاملاً للحشو والحدود، فنضيف الهامش فقط (10+10) = 220px."
+    },
+    {
+      q: "عند تطبيق `border-color: red green orange blue;` ما الترتيب الصحيح للجهات (قاعدة TRBL)؟",
+      opts: ["أعلى، يسار، أسفل، يمين", "أعلى، يمين، أسفل، يسار", "يمين، يسار، أعلى، أسفل", "أسفل، أعلى، يمين، يسار"],
+      ans: 1,
+      exp: "تُطبق القيم باتجاه عقارب الساعة بدءاً من الأعلى: Top, Right, Bottom, Left (TRBL)."
+    },
+    {
+      q: "إذا كان لعنصر `<div>` علوي `margin-bottom: 90px` ولعنصر `<div>` تحته `margin-top: 50px`، فما المسافة العمودية الفعلية بينهما بسبب انهيار الهوامش (Collapsing Margins)؟",
+      opts: ["140px", "90px", "50px", "40px"],
+      ans: 1,
+      exp: "في انهيار الهوامش العمودية يُعتمد الهامش الأكبر فقط (90px) وينهار الأصغر، بينما الهوامش الأفقية لا تنهار أبداً."
+    },
+    {
+      q: "أي قيمة لخاصية `overflow` تضيف أشرطة تمرير (Scrollbars) فقط عند الحاجة (إذا فاض المحتوى)؟",
+      opts: ["visible", "hidden", "scroll", "auto"],
+      ans: 3,
+      exp: "القيمة `auto` تضيف أشرطة تمرير عند فيضان المحتوى فقط، بينما `scroll` تعرضها دائماً."
+    }
+  ]
+};
+
+// ===================== VIEW RENDERERS =====================
+function switchView(view) {
+  state.view = view;
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.view === view);
+  });
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setSubtab(lec, tab) {
+  state.subtab[lec] = tab;
+  if (tab === 'study') {
+    state.completed[lec] = true;
+    saveState();
+  }
+  render();
+}
+
+function render() {
+  const main = document.getElementById('main-content');
+  if (state.view === 'home') {
+    main.innerHTML = renderHome();
+  } else if (state.view === 'finalQuiz') {
+    main.innerHTML = renderFinalQuiz();
+  } else {
+    main.innerHTML = renderLectureShell(state.view);
+    initInteractiveWidgets(state.view);
+  }
+  updateProgressUI();
+}
+
+function renderHome() {
+  const cards = [
+    { id: 'lec1', num: 'المحاضرة الأولى', title: 'كيف يعمل الويب (How the Web Works)', desc: 'تاريخ الإنترنت، Client-Server، بروتوكولات TCP/IP، نظام DNS، بنية URL، بروتوكول HTTP، وتصيير المتصفح.', topics: '7 أقسام • 9 أسئلة' },
+    { id: 'lec2', num: 'المحاضرة الثانية', title: 'مقدمة في HTML (HTML 1: Introduction)', desc: 'بناء الجملة، التداخل وشجرة المستند، هيكل HTML5، الروابط والمسارات النسبية، العناصر الدلالية، و Block vs Inline.', topics: '5 أقسام • 9 أسئلة' },
+    { id: 'lec3', num: 'المحاضرة الثالثة', title: 'CSS 1: المحددات والتنسيق الأساسي', desc: 'قواعد CSS، الألوان، وحدات القياس (em/rem)، مواقع الأنماط، ومحددات CSS (الفئات، الخصائص، الزائفة، السياقية).', topics: '4 أقسام • 8 أسئلة' },
+    { id: 'lec4', num: 'المحاضرة الرابعة', title: 'CSS 2: التتالي، الصندوق، وتنسيق النصوص', desc: 'مبادئ التتالي (Inheritance, Specificity, Location)، نموذج الصندوق (Box Model)، انهيار الهوامش، وتنسيق النصوص.', topics: '3 أقسام • 8 أسئلة' }
+  ];
+
+  return `
+    <div class="page-hero">
+      <span class="tag">بيئة دراسة تفاعلية شاملة</span>
+      <h2>مرحباً بك في منصة برمجة الويب 🌐</h2>
+      <p>تم فصل كل محاضرة من مقرر الشمري (إعداد د. إيفا هريكيس) في وحدة مستقلة تضم شرحاً منظماً، ومختبراً تطبيقياً حياً، واختباراً تفاعلياً مع التصحيح والشرح الفوري.</p>
+    </div>
+
+    <div class="dash-grid">
+      ${cards.map(c => {
+        const sc = state.scores[c.id];
+        const status = sc !== undefined ? `النتيجة: ${sc}% ✅` : (state.completed[c.id] ? 'تمت المراجعة 📖' : 'ابدأ الدراسة ←');
+        return `
+          <div class="lecture-card" onclick="switchView('${c.id}')">
+            <span class="lec-num">${c.num}</span>
+            <h3>${c.title}</h3>
+            <p>${c.desc}</p>
+            <div class="card-meta">
+              <span>${c.topics}</span>
+              <strong style="color:var(--primary)">${status}</strong>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+
+    <div class="card">
+      <h3>🧭 كيف تحقق أقصى استفادة من الموقع؟</h3>
+      <div class="info-grid">
+        <div class="mini-box"><strong>1. اقرأ بتركيز (تبويب الشرح)</strong>كل محاضرة مقسمة لأقسام قابلة للطي مع جداول مقارنة ومصطلحات إنجليزية دقيقة كما في المقرر.</div>
+        <div class="mini-box"><strong>2. جرّب بيدك (تبويب المختبر)</strong>عدّل الكود، جرّب محددات CSS، حرّك أشرطة Box Model، وحلّل روابط URL مباشرةً لترسيخ الفهم.</div>
+        <div class="mini-box"><strong>3. اختبر نفسك (تبويب الاختبار)</strong>أجب عن الأسئلة واحصل على شرح فوري لكل إجابة، ثم اختبر نفسك في الاختبار الشامل للمادة.</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderLectureShell(lecId) {
+  const meta = {
+    lec1: { tag: 'المحاضرة الأولى • 7 أقسام', title: 'كيف يعمل الويب (How the Web Works)', sub: 'التأسيس الشبكي للويب: الإنترنت، العميل والخادم، TCP/IP، DNS، URL، HTTP، والمتصفحات.' },
+    lec2: { tag: 'المحاضرة الثانية • 5 أقسام', title: 'مقدمة في HTML (HTML 1: Introduction)', sub: 'لغة ترميز النص التشعبي، الهيكل الهرمي، العناصر الدلالية، المسارات، و Block مقابل Inline.' },
+    lec3: { tag: 'المحاضرة الثالثة • 4 أقسام', title: 'CSS 1: المحددات والتنسيق الأساسي', sub: 'بناء جملة CSS، الألوان، وحدات em و rem، مواقع الأنماط، وجميع أنواع المحددات.' },
+    lec4: { tag: 'المحاضرة الرابعة • 3 أقسام', title: 'CSS 2: التتالي ونموذج الصندوق وتنسيق النصوص', sub: 'كيف يحسم المتصفح التعارضات (Cascade)، أبعاد الصندوق و box-sizing، وتنسيق الخطوط والفقرات.' }
+  }[lecId];
+
+  const tab = state.subtab[lecId] || 'study';
+  let bodyHTML = '';
+  if (tab === 'study') bodyHTML = getStudyHTML(lecId);
+  else if (tab === 'lab') bodyHTML = getLabHTML(lecId);
+  else if (tab === 'quiz') bodyHTML = renderQuizHTML(lecId);
+
+  return `
+    <div class="page-hero">
+      <span class="tag">${meta.tag}</span>
+      <h2>${meta.title}</h2>
+      <p>${meta.sub}</p>
+    </div>
+
+    <div class="subtabs">
+      <button class="subtab-btn ${tab==='study'?'active':''}" onclick="setSubtab('${lecId}','study')">📖 الشرح المنظم</button>
+      <button class="subtab-btn ${tab==='lab'?'active':''}" onclick="setSubtab('${lecId}','lab')">🧪 المختبر والأمثلة التفاعلية</button>
+      <button class="subtab-btn ${tab==='quiz'?'active':''}" onclick="setSubtab('${lecId}','quiz')">📝 اختبار المحاضرة (${QUIZZES[lecId].length} أسئلة)</button>
+    </div>
+
+    ${bodyHTML}
+  `;
+}
+
+// ===================== STUDY CONTENT FOR EACH LECTURE =====================
+function getStudyHTML(lecId) {
+  if (lecId === 'lec1') return `
+    <details class="acc" open>
+      <summary>القسم 1: تاريخ الإنترنت والشبكة العنكبوتية العالمية (History of Internet & WWW)</summary>
+      <div class="acc-body">
+        <p>يركز المساق على التقنيات الثلاث للواجهة الأمامية: <span class="en-term">HTML</span> للهيكل، <span class="en-term">CSS</span> للتنسيق، و <span class="en-term">JavaScript</span> للتفاعل. بينما تشمل منظومة الويب طرفين:</p>
+        <div class="info-grid">
+          <div class="mini-box"><strong>الواجهة الأمامية (Front End)</strong>تعمل داخل المتصفح: HTML, CSS, JavaScript وأطر عمل مثل React, Vue, Angular.</div>
+          <div class="mini-box"><strong>الواجهة الخلفية (Back End)</strong>تعمل على الخادم: PHP, Node، وتشمل APIs وقواعد البيانات والأمان.</div>
+        </div>
+        <h4>تبديل الدوائر مقابل تبديل الحزم</h4>
+        <div class="table-wrap"><table>
+          <tr><th>النوع</th><th>آلية العمل</th><th>الخصائص / العيوب</th></tr>
+          <tr><td><strong>تبديل الدوائر (Circuit Switched)</strong></td><td>ربط فيزيائي مستمر ومخصص عبر لوحة مفاتيح طوال الاتصال.</td><td>استخدام غير فعّال لعرض النطاق الترددي وصعوبة التوسع.</td></tr>
+          <tr><td><strong>تبديل الحزم (Packet Switched)</strong></td><td>تقسيم الرسالة إلى حزم مرقمة تسلك مسارات مختلفة وتُجمع عند الوجهة.</td><td>لا يتطلب اتصالاً مستمراً، مرن وقابل للتوسع (أساس الإنترنت الحديث).</td></tr>
+        </table></div>
+        <h4>المحطات التاريخية</h4>
+        <div class="table-wrap"><table>
+          <tr><th>السنة</th><th>المحطة التاريخية</th></tr>
+          <tr><td>الستينيات (1960s)</td><td>ظهور شبكة <span class="en-term">ARPANET</span></td></tr>
+          <tr><td>1974 / 1979</td><td>بروتوكول <span class="en-term">X.25</span> (1974) ثم ظهور شبكة <span class="en-term">USENET</span> (1979)</td></tr>
+          <tr><td>1981 / 1983</td><td>تقديم حزمة <span class="en-term">TCP/IP</span> (1981) واعتمادها رسمياً في 1 يناير 1983</td></tr>
+          <tr><td>1989 – 1994</td><td>مقترح تيم بيرنرز لي (1989)، نشر مكونات الويب (URL, HTTP, HTML, Server, Browser) عام 1992، وتأسيس <span class="en-term">W3C</span> عام 1994</td></tr>
+        </table></div>
+        <div class="callout info"><strong>تطور مواقع الويب (5 مراحل):</strong> المواقع الثابتة (Static) ← الديناميكية على الخادم (Dynamic PHP + DB) ← الويب 2.0 (انتقال المنطق لـ JS) ← خوادم خلفية أخف (Thinner Back Ends + JSON APIs) ← العودة للمواقع الثابتة السحابية الحديثة.</div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary>القسم 2: نموذج العميل والخادم (The Client-Server Model)</summary>
+      <div class="acc-body">
+        <div class="info-grid">
+          <div class="mini-box"><strong>العميل (Client)</strong>يرسل الطلبات (Requests) ويستقبل الاستجابات (Responses). يشمل الحواسيب والهواتف والأجهزة اللوحية بمواصفات متفاوتة.</div>
+          <div class="mini-box"><strong>الخادم (Server)</strong>يعمل 24/7، يستمع للطلبات ويرد عليها، يستضيف التطبيقات والبيانات وينفذ مهام الأمان والتفويض.</div>
+        </div>
+        <p><strong>أنواع الخوادم:</strong> خوادم الويب (Web)، التطبيقات (Application)، قواعد البيانات (Database)، البريد (Mail)، الوسائط (Media)، المصادقة (Authentication)، والتحليلات (Analytics).</p>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary>القسم 3: بروتوكولات الإنترنت (TCP/IP, IPv4/IPv6)</summary>
+      <div class="acc-body">
+        <div class="table-wrap"><table>
+          <tr><th>الطبقة</th><th>الوظيفة الأساسية</th><th>أمثلة</th></tr>
+          <tr><td>التطبيقات (Application)</td><td>تتيح للتطبيقات التفاعل مع طبقة النقل.</td><td>HTTP, FTP, POP</td></tr>
+          <tr><td>النقل (Transport)</td><td>تضمن وصول الإرسالات بالترتيب وبدون أخطاء (عبر Sequence Number و ACK).</td><td>TCP, UDP</td></tr>
+          <tr><td>الإنترنت (Internet)</td><td>التوجيه (Routing) والعنونة (Addressing).</td><td>IPv4 (32-bit), IPv6 (128-bit)</td></tr>
+          <tr><td>الربط (Link)</td><td>النقل الفيزيائي للبتات الخام (Raw Bits).</td><td>MAC</td></tr>
+        </table></div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary>القسم 4 و 5: نظام أسماء النطاقات (DNS) وبنية الـ URL</summary>
+      <div class="acc-body">
+        <p><strong>نظام DNS:</strong> يربط الأسماء المقروءة (مثل <span class="en-term">www.funwebdev.com</span>) بعناوين IP الرقمية (مثل <span class="en-term">66.147.244.79</span>). حَلَّ محل ملف <span class="en-term">hosts</span> القديم، ويتيح نقل الموقع لخادم جديد دون تغيير اسمه.</p>
+        <p style="margin-top:10px;"><strong>مكونات الـ URL:</strong></p>
+        <div class="table-wrap"><table>
+          <tr><th>المكون</th><th>الحالة</th><th>الوظيفة</th></tr>
+          <tr><td>البروتوكول (Protocol)</td><td>إلزامي</td><td>يحدد البروتوكول والمنفذ الافتراضي (HTTP=80, FTP=21).</td></tr>
+          <tr><td>النطاق (Domain)</td><td>إلزامي</td><td>اسم الخادم أو عنوان IP.</td></tr>
+          <tr><td>المنفذ (Port)</td><td>اختياري</td><td>نقطة اتصال برمجية (مثل رقم الباب داخل المبنى).</td></tr>
+          <tr><td>المسار (Path)</td><td>اختياري</td><td>الملف أو المجلد المطلوب على الخادم.</td></tr>
+          <tr><td>سلسلة الاستعلام (Query String)</td><td>اختياري</td><td>أزواج مفتاح=قيمة تبدأ بـ <span class="en-term">?</span> وتفصل بـ <span class="en-term">&amp;</span>.</td></tr>
+          <tr><td>المعرف الجزئي (Fragment)</td><td>اختياري</td><td>يبدأ بـ <span class="en-term">#</span> للانتقال لجزء محدد داخل الصفحة.</td></tr>
+        </table></div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary>القسم 6 و 7: بروتوكول HTTP ومتصفحات الويب (Rendering & Caching)</summary>
+      <div class="acc-body">
+        <p><strong>طرق طلب HTTP:</strong> <span class="en-term">GET</span> (استرجاع مورد وتمرير بيانات بالـ URL)، <span class="en-term">POST</span> (إرسال بيانات داخل جسم الطلب بلا قيود طول)، <span class="en-term">HEAD</span> (جلب الترويسات فقط بدون Body).</p>
+        <div class="callout"><strong>قاعدة هامة:</strong> لا تستخدم GET أبداً لتغيير حالة البيانات (التعديل أو الحذف)، بل استخدم POST أو PUT/DELETE.</div>
+        <p><strong>فئات رموز الاستجابة:</strong> <span class="en-term">2xx</span> نجاح (200 OK) • <span class="en-term">3xx</span> إعادة توجيه/تخزين مؤقت (301, 304, 307) • <span class="en-term">4xx</span> أخطاء العميل (400, 401, 404, 414) • <span class="en-term">5xx</span> أخطاء الخادم (500).</p>
+        <p style="margin-top:10px;"><strong>مقاييس التصيير (Browser Rendering):</strong> <span class="en-term">TTFB</span> (أول بايت) ← <span class="en-term">FP</span> (أول تغيير مرئي) ← <span class="en-term">FCP</span> (أول محتوى) ← <span class="en-term">FMP</span> (المحتوى الأساسي) ← <span class="en-term">LCP</span> (أكبر عنصر) ← <span class="en-term">TTI</span> (الجاهزية للتفاعل) ← <span class="en-term">On Load</span>. بينما <span class="en-term">CLS</span> يقيس الاستقرار البصري.</p>
+        <p style="margin-top:8px;"><strong>التخزين المؤقت (Browser Caching):</strong> يتحقق المتصفح إن كانت النسخة المخزنة حديثة (Fresh) فيستخدمها مباشرة لتقليل حركة الشبكة.</p>
+      </div>
+    </details>
+  `;
+
+  if (lecId === 'lec2') return `
+    <details class="acc" open>
+      <summary>القسم 1 و 2: ما هي HTML وبناء الجملة والتداخل (Syntax & Nesting)</summary>
+      <div class="acc-body">
+        <p><span class="en-term">HTML</span> هي لغة ترميز قياسية (ليست لغة برمجة) تصف هيكل ومحتوى صفحة الويب، ووسومها <strong>غير حساسة لحالة الأحرف</strong>. تشمل خصائص العناصر أزواج <span class="en-term">name="value"</span> (القيم الرقمية مثل <span class="en-term">width="80"</span> لا تكتب فيها وحدة px).</p>
+        <div class="info-grid">
+          <div class="mini-box"><strong>الأب والابن (Parent & Child)</strong>العنصر الحاوي المباشر هو الأب، وما بداخله مباشرةً هو الابن.</div>
+          <div class="mini-box"><strong>الأشقاء (Siblings)</strong>العناصر التي تشترك في نفس الأب المباشر.</div>
+          <div class="mini-box"><strong>الأحفاد (Descendants)</strong>جميع العناصر الموجودة داخل عنصر على أي مستوى.</div>
+          <div class="mini-box"><strong>الأسلاف (Ancestors)</strong>جميع العناصر الحاوية لعنصر صعوداً حتى الجذر.</div>
+        </div>
+        <div class="callout tip"><strong>قاعدة التداخل الصحيح:</strong> أغلق وسم الابن دائماً قبل إغلاق وسم الأب: <span class="en-term">&lt;h1&gt;Hi &lt;strong&gt;Web&lt;/strong&gt;&lt;/h1&gt;</span></div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary>القسم 3: هيكل مستند HTML5 الكامل</summary>
+      <div class="acc-body">
+<pre class="code">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;title&gt;Page Title&lt;/title&gt;
+    &lt;link rel="stylesheet" href="css/main.css" /&gt;
+    &lt;script src="js/app.js"&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Main heading goes here&lt;/h1&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+        <p><span class="en-term">&lt;!DOCTYPE html&gt;</span> يحدد نوع المستند، <span class="en-term">&lt;html&gt;</span> العنصر الجذر، <span class="en-term">&lt;head&gt;</span> بيانات وصفية لا تظهر في الجسم، و <span class="en-term">&lt;body&gt;</span> المحتوى المرئي.</p>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary>القسم 4: جولة في العناصر، المسارات النسبية، والعناصر الدلالية</summary>
+      <div class="acc-body">
+        <ul>
+          <li><strong>العناوين والفقرات:</strong> <span class="en-term">&lt;h1&gt;–&lt;h6&gt;</span>، والفقرة <span class="en-term">&lt;p&gt;</span> (يتجاهل المتصفح المسافات الإضافية داخلها، بخلاف <span class="en-term">&lt;pre&gt;</span>).</li>
+          <li><strong>الحاويات والفواصل:</strong> <span class="en-term">&lt;div&gt;</span> (كتلية)، <span class="en-term">&lt;span&gt;</span> (سطرية)، <span class="en-term">&lt;hr&gt;</span> (خط أفقي)، <span class="en-term">&lt;br&gt;</span> (كسر سطر).</li>
+          <li><strong>الروابط و target:</strong> <span class="en-term">_blank</span> (تبويب جديد)، <span class="en-term">_self</span> (الافتراضي)، <span class="en-term">_parent</span>، <span class="en-term">_top</span>، أو اسم <span class="en-term">&lt;iframe&gt;</span>.</li>
+          <li><strong>الصور:</strong> <span class="en-term">&lt;img src="..." alt="..." title="..." /&gt;</span> عنصر فارغ.</li>
+          <li><strong>كيانات الأحرف:</strong> <span class="en-term">&amp;nbsp;</span> مسافة، <span class="en-term">&amp;lt;</span> (&lt;)، <span class="en-term">&amp;gt;</span> (&gt;)، <span class="en-term">&amp;copy;</span> (©)، <span class="en-term">&amp;euro;</span> (€).</li>
+        </ul>
+        <h4>المسارات النسبية (Relative URLs)</h4>
+        <div class="table-wrap"><table>
+          <tr><th>النوع</th><th>مثال</th><th>القاعدة</th></tr>
+          <tr><td>نفس المجلد</td><td><span class="en-term">example.html</span></td><td>اسم الملف مباشرة</td></tr>
+          <tr><td>مجلد فرعي</td><td><span class="en-term">images/logo.gif</span></td><td>اسم المجلد ثم / ثم الملف</td></tr>
+          <tr><td>مجلد أب</td><td><span class="en-term">../about.html</span></td><td>استخدام ../ للصعود مستوى</td></tr>
+          <tr><td>مجلد شقيق</td><td><span class="en-term">../images/logo.gif</span></td><td>الصعود ثم الدخول للمجلد الشقيق</td></tr>
+          <tr><td>الإشارة للجذر</td><td><span class="en-term">/about.html</span></td><td>يعمل على خادم الويب فقط</td></tr>
+        </table></div>
+        <h4>العناصر الدلالية في HTML5</h4>
+        <p><span class="en-term">&lt;header&gt;</span>، <span class="en-term">&lt;footer&gt;</span>، <span class="en-term">&lt;nav&gt;</span>، <span class="en-term">&lt;main&gt;</span> (واحد فقط بالمستند)، <span class="en-term">&lt;section&gt;</span>، <span class="en-term">&lt;article&gt;</span>، <span class="en-term">&lt;figure&gt;/&lt;figcaption&gt;</span>، <span class="en-term">&lt;aside&gt;</span>، و <span class="en-term">&lt;details&gt;/&lt;summary&gt;</span> (أداة كشف تفاعلية في HTML 5.1).</p>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary>القسم 5: العناصر الكتلية مقابل السطرية (Block vs Inline)</summary>
+      <div class="acc-body">
+        <div class="table-wrap"><table>
+          <tr><th>الفئة</th><th>السلوك</th><th>أمثلة</th></tr>
+          <tr><td><strong>كتلية (Block-level)</strong></td><td>تبدأ سطراً جديداً، تملأ عرض الأب، تقبل width و height.</td><td>div, p, h1-h6, ul, ol, table, form, section, article</td></tr>
+          <tr><td><strong>سطرية (Inline)</strong></td><td>تتدفق أفقياً داخل السطر، ليس لها width أو height محدد.</td><td>span, a, em, strong, code, small, time, br</td></tr>
+          <tr><td><strong>سطرية-كتلية (Inline-block)</strong></td><td>سطرية ولكنها تقبل تحديد العرض والارتفاع.</td><td>img</td></tr>
+        </table></div>
+        <p>يمكن تغيير سلوك أي عنصر عبر خاصية CSS: <span class="en-term">display: block / inline / inline-block</span>.</p>
+      </div>
+    </details>
+  `;
+
+  if (lecId === 'lec3') return `
+    <details class="acc" open>
+      <summary>القسم 1 و 2: ما هي CSS، فوائدها، بناء الجملة، الألوان، ووحدات القياس</summary>
+      <div class="acc-body">
+        <p><strong>فوائد CSS الخمس:</strong> تحكم أفضل في التنسيق، قابلية صيانة عالية، تحسين إمكانية الوصول (Accessibility)، سرعة تحميل الصفحات، ومرونة المخرجات (Responsive Design).</p>
+        <p style="margin-top:8px;"><strong>بناء الجملة:</strong> <span class="en-term">selector { property: value; }</span>، والتعليقات تُكتب بـ <span class="en-term">/* comment */</span>.</p>
+        <h4>طرق وصف الألوان</h4>
+        <p>الأسماء القياسية (<span class="en-term">red</span>)، <span class="en-term">rgb(255,0,0)</span>، السداسي عشر <span class="en-term">#FF0000</span>، الشفافية <span class="en-term">rgba(255,0,0,0.5)</span>، و <span class="en-term">hsl / hsla</span> في CSS3.</p>
+        <h4>وحدات القياس النسبية مقابل المطلقة</h4>
+        <div class="table-wrap"><table>
+          <tr><th>الوحدة</th><th>النوع</th><th>الشرح</th></tr>
+          <tr><td><span class="en-term">px</span></td><td>نسبي (CSS2) / مطلق (CSS3)</td><td>بكسل واحد يساوي 1/96 بوصة في CSS3.</td></tr>
+          <tr><td><span class="en-term">em</span></td><td>نسبي</td><td>منسوب لحجم خط الأب — <strong>يتراكم (Compounds)</strong> مع التداخل.</td></tr>
+          <tr><td><span class="en-term">rem</span></td><td>نسبي (CSS3)</td><td>منسوب لجذر المستند <span class="en-term">&lt;html&gt;</span> — <strong>لا يتراكم</strong>.</td></tr>
+          <tr><td><span class="en-term">%, vw, vh</span></td><td>نسبي</td><td>نسبة من الأب (%) أو من نافذة العرض (vw, vh).</td></tr>
+          <tr><td><span class="en-term">in, cm, mm, pt, pc</span></td><td>مطلق</td><td>قياسات فيزيائية ثابتة (1pt = 1/72 بوصة).</td></tr>
+        </table></div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary>القسم 3: مواقع الأنماط وأنواع صفحات الأنماط</summary>
+      <div class="acc-body">
+        <div class="info-grid">
+          <div class="mini-box"><strong>1. السطري (Inline)</strong>داخل خاصية <span class="en-term">style="..."</span>. يلغي التنسيقات الأخرى لكنه سيء للصيانة.</div>
+          <div class="mini-box"><strong>2. المضمّن (Embedded)</strong>داخل <span class="en-term">&lt;style&gt;</span> في <span class="en-term">&lt;head&gt;</span>. لصفحة واحدة فقط.</div>
+          <div class="mini-box"><strong>3. الخارجي (External)</strong>ملف <span class="en-term">.css</span> عبر <span class="en-term">&lt;link&gt;</span>. الأفضل والأسرع (يدعم الـ Cache).</div>
+        </div>
+        <p><strong>أنواع صفحات الأنماط الثلاثة:</strong> المؤلف (Author)، المستخدم (User)، والمتصفح (Browser Default).</p>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary>القسم 4: جميع أنواع محددات CSS (Selectors)</summary>
+      <div class="acc-body">
+        <div class="table-wrap"><table>
+          <tr><th>النوع</th><th>أمثلة</th><th>الوظيفة</th></tr>
+          <tr><td>العنصر / الشامل / المجمّع</td><td><span class="en-term">p</span> • <span class="en-term">*</span> • <span class="en-term">h1, h2</span></td><td>استهداف نوع عنصر، أو كل العناصر، أو عدة عناصر معاً.</td></tr>
+          <tr><td>الفئة (Class) والمعرّف (ID)</td><td><span class="en-term">.circle</span> • <span class="en-term">#first</span></td><td>الفئة تتكرر ويمكن دمجها، والمعرف فريد مرة واحدة بالصفحة.</td></tr>
+          <tr><td>محددات الخصائص</td><td><span class="en-term">[title]</span> • <span class="en-term">[href^="mailto"]</span> • <span class="en-term">[href$=".pdf"]</span> • <span class="en-term">[src*="flag"]</span></td><td>المطابقة حسب وجود الخاصية أو بدايتها (^) أو نهايتها ($) أو احتوائها (*).</td></tr>
+          <tr><td>الفئات والعناصر الزائفة</td><td><span class="en-term">:hover</span> • <span class="en-term">:focus</span> • <span class="en-term">:nth-child(2n)</span> • <span class="en-term">:first-letter</span></td><td>الفئات الزائفة لحالة العنصر، والعناصر الزائفة لجزء من النص.</td></tr>
+          <tr><td>السياقية (Combinators)</td><td><span class="en-term">div p</span> (حفيد) • <span class="en-term">div &gt; p</span> (ابن مباشر) • <span class="en-term">hr + p</span> (شقيق مجاور) • <span class="en-term">h3 ~ p</span> (شقيق عام)</td><td>اختيار العناصر بناءً على علاقاتها في شجرة المستند.</td></tr>
+        </table></div>
+      </div>
+    </details>
+  `;
+
+  if (lecId === 'lec4') return `
+    <details class="acc" open>
+      <summary>القسم 1: التتالي في CSS (The Cascade: Inheritance, Specificity, Location)</summary>
+      <div class="acc-body">
+        <div class="info-grid">
+          <div class="mini-box"><strong>1. الوراثة (Inheritance)</strong>تُورّث خصائص الخط واللون والنصوص والقوائم. لا تُورّث الحدود والهوامش والحشو والخلفيات (ويمكن إجبارها بـ <span class="en-term">inherit</span>).</div>
+          <div class="mini-box"><strong>2. التخصيص (Specificity)</strong>الوزن التصاعدي: الوراثة ← Element ← Class ← ID. الأكثر تحديداً يفوز.</div>
+          <div class="mini-box"><strong>3. الموقع (Location)</strong>عند تساوي التخصيص، القاعدة الأحدث تفوز: Browser ← User ← External ← Embedded ← Inline.</div>
+        </div>
+        <div class="callout"><strong>استثناء <span class="en-term">!important</span>:</strong> تلغي أي قاعدة مؤلف أخرى بغض النظر عن موقعها.</div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary>القسم 2: نموذج الصندوق (The Box Model) ومشكلاته الأربع</summary>
+      <div class="acc-body">
+        <p>يتكون كل عنصر من 4 طبقات من الداخل للخارج: <strong>Content</strong> ← <strong>Padding</strong> (تظهر فيه خلفية العنصر) ← <strong>Border</strong> ← <strong>Margin</strong> (شفاف تظهر فيه خلفية الأب).</p>
+        <pre class="code">Total Width  = width  + padding(L+R) + border(L+R) + margin(L+R)
+Total Height = height + padding(T+B) + border(T+B) + margin(T+B)</pre>
+        <ul>
+          <li><strong>قاعدة عقارب الساعة (TRBL):</strong> <span class="en-term">Top, Right, Bottom, Left</span>.</li>
+          <li><strong>انهيار الهوامش العمودية (Collapsing Margins):</strong> عند تلامس هامشين عموديين يُعرض الأكبر فقط (الأفقية لا تنهار أبداً).</li>
+          <li><strong>المشكلات الأربع لـ width/height:</strong> (1) لا تُطبّق على السطرية النصية. (2) افتراضياً <span class="en-term">content-box</span> يزيد الأبعاد؛ الحل <span class="en-term">box-sizing: border-box</span>. (3) فيضان المحتوى يُعالج بـ <span class="en-term">overflow: visible | hidden | scroll | auto</span>. (4) الأبعاد بـ % تحتاج قيود <span class="en-term">min-width / max-width</span>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary>القسم 3: تنسيق النصوص والخطوط (Text & Font Styling)</summary>
+      <div class="acc-body">
+        <p><strong>مكدس الخطوط (Web Font Stack):</strong> توفير بدائل مرتبة بالأولوية تنتهي بعائلة عامة (<span class="en-term">serif, sans-serif, monospace, cursive, fantasy</span>)، ويمكن تحميل خط مخصص عبر <span class="en-term">@font-face</span>.</p>
+        <p style="margin-top:8px;"><strong>خصائص الخط:</strong> <span class="en-term">font-family, font-size, font-style, font-variant, font-weight</span> (من 100 إلى 900).</p>
+        <p style="margin-top:8px;"><strong>خصائص الفقرة:</strong> <span class="en-term">letter-spacing, word-spacing, line-height, text-align, text-decoration, direction (rtl/ltr), text-indent, text-shadow, text-transform, vertical-align</span>.</p>
+      </div>
+    </details>
+  `;
+}
+
+// ===================== INTERACTIVE LABS =====================
+function getLabHTML(lecId) {
+  if (lecId === 'lec1') return `
+    <div class="lab-box">
+      <div class="lab-title">
+        <h3>🔍 1. محلل الـ URL التفاعلي</h3>
+        <div class="pill-row" style="margin:0">
+          <button class="btn secondary" onclick="setSampleURL('http://www.funwebdev.com/index.php?page=17#article')">مثال المحاضرة</button>
+          <button class="btn secondary" onclick="setSampleURL('https://shop.example.com:8443/products/view?cat=web&sort=asc#reviews')">مثال مع Port</button>
+          <button class="btn secondary" onclick="setSampleURL('ftp://files.uni.edu/lectures/lec1.pdf')">رابط FTP</button>
+        </div>
+      </div>
+      <input type="text" class="input-ltr" id="url-input" value="http://www.funwebdev.com/index.php?page=17#article" oninput="analyzeURL()" />
+      <div class="url-parts" id="url-output"></div>
+    </div>
+
+    <div class="lab-box">
+      <div class="lab-title">
+        <h3>📡 2. محاكي طلبات واستجابات HTTP</h3>
+      </div>
+      <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:8px;">اختر طريقة الطلب (Method) ورمز الاستجابة (Status Code) لمعاينة ترويسات HTTP الحقيقية:</p>
+      <div class="pill-row">
+        <button class="btn secondary active-pill" data-method="GET" onclick="setHttpMethod('GET', this)">GET</button>
+        <button class="btn secondary" data-method="POST" onclick="setHttpMethod('POST', this)">POST</button>
+        <button class="btn secondary" data-method="HEAD" onclick="setHttpMethod('HEAD', this)">HEAD</button>
+      </div>
+      <div class="pill-row">
+        <button class="btn secondary active-pill" onclick="setHttpCode(200, this)">200 OK</button>
+        <button class="btn secondary" onclick="setHttpCode(301, this)">301 Moved</button>
+        <button class="btn secondary" onclick="setHttpCode(304, this)">304 Not Modified</button>
+        <button class="btn secondary" onclick="setHttpCode(401, this)">401 Unauthorized</button>
+        <button class="btn secondary" onclick="setHttpCode(404, this)">404 Not Found</button>
+        <button class="btn secondary" onclick="setHttpCode(414, this)">414 URI Too Long</button>
+        <button class="btn secondary" onclick="setHttpCode(500, this)">500 Server Error</button>
+      </div>
+      <div class="split-editor">
+        <div>
+          <strong style="font-size:0.86rem;">طلب العميل (HTTP Request):</strong>
+          <pre class="code" id="http-req-box"></pre>
+        </div>
+        <div>
+          <strong style="font-size:0.86rem;">استجابة الخادم (HTTP Response):</strong>
+          <pre class="code" id="http-res-box"></pre>
+        </div>
+      </div>
+      <div class="callout info" id="http-explain"></div>
+    </div>
+  `;
+
+  if (lecId === 'lec2') return `
+    <div class="lab-box">
+      <div class="lab-title">
+        <h3>⚡ محرر HTML الحي (Live Sandbox)</h3>
+        <div class="pill-row" style="margin:0">
+          <button class="btn secondary" onclick="loadHtmlPreset('semantic')">HTML5 الدلالية</button>
+          <button class="btn secondary" onclick="loadHtmlPreset('blockinline')">Block vs Inline</button>
+          <button class="btn secondary" onclick="loadHtmlPreset('details')">أداة details/summary</button>
+          <button class="btn secondary" onclick="loadHtmlPreset('entities')">كيانات الأحرف</button>
+        </div>
+      </div>
+      <div class="split-editor">
+        <div>
+          <strong style="font-size:0.86rem;">اكتب أو عدّل كود HTML هنا:</strong>
+          <textarea class="editor-area" id="html-editor" oninput="runHtmlSandbox()"></textarea>
+        </div>
+        <div>
+          <strong style="font-size:0.86rem;">المعاينة الفورية (المتصفح):</strong>
+          <iframe class="preview-frame" id="html-preview"></iframe>
+        </div>
+      </div>
+    </div>
+  `;
+
+  if (lecId === 'lec3') return `
+    <div class="lab-box">
+      <div class="lab-title">
+        <h3>🎯 1. مختبر محددات CSS السياقية (مثال الشريحة 46)</h3>
+      </div>
+      <p style="font-size:0.9rem;color:var(--text-muted);">اضغط على أي محدد لترى العناصر التي يطابقها تتوهج فوراً داخل شجرة HTML:</p>
+      <div class="pill-row" id="sel-pills">
+        <button class="btn secondary active-pill" onclick="testSelector('ul a', this)">ul a:link (حفيد)</button>
+        <button class="btn secondary" onclick="testSelector('#main > time', this)">#main &gt; time (ابن مباشر)</button>
+        <button class="btn secondary" onclick="testSelector('div time', this)">div time (حفيد)</button>
+        <button class="btn secondary" onclick="testSelector('hr + p', this)">hr + p (شقيق مجاور)</button>
+        <button class="btn secondary" onclick="testSelector('h3 ~ p', this)">h3 ~ p (شقيق عام)</button>
+      </div>
+      <div class="selector-demo" id="selector-tree">
+        <div>&lt;nav&gt; &lt;ul&gt;</div>
+        <div class="sel-node" data-tags="ul-a" style="margin-left:20px;">&lt;li&gt;&lt;a href="#"&gt;Canada&lt;/a&gt;&lt;/li&gt;</div>
+        <div class="sel-node" data-tags="ul-a" style="margin-left:20px;">&lt;li&gt;&lt;a href="#"&gt;Germany&lt;/a&gt;&lt;/li&gt;</div>
+        <div>&lt;/ul&gt; &lt;/nav&gt;</div>
+        <div style="margin-top:8px;">&lt;div id="main"&gt;</div>
+        <div class="sel-node" data-tags="main-child-time div-time" style="margin-left:20px;">&lt;time&gt;2019-12-25&lt;/time&gt;</div>
+        <div style="margin-left:20px;">&lt;hr&gt;</div>
+        <div class="sel-node" data-tags="hr-plus-p div-time" style="margin-left:20px;">&lt;p&gt;By Ricardo on &lt;time&gt;2020-05-23&lt;/time&gt;&lt;/p&gt;</div>
+        <div class="sel-node" data-tags="" style="margin-left:20px;">&lt;p&gt;Easy on the HDR buddy.&lt;/p&gt;</div>
+        <div style="margin-left:20px;">&lt;hr&gt;</div>
+        <div class="sel-node" data-tags="hr-plus-p" style="margin-left:20px;">&lt;p&gt;Usage stats are here&lt;/p&gt;</div>
+        <div style="margin-left:20px;">&lt;h3&gt;Social&lt;/h3&gt;</div>
+        <div class="sel-node" data-tags="h3-tilde-p" style="margin-left:20px;">&lt;p&gt;Visits: 2300&lt;/p&gt;</div>
+        <div class="sel-node" data-tags="h3-tilde-p" style="margin-left:20px;">&lt;p&gt;Shares: 5&lt;/p&gt;</div>
+        <div>&lt;/div&gt;</div>
+      </div>
+      <div class="callout info" id="sel-explain" style="margin-top:12px;"></div>
+    </div>
+
+    <div class="lab-box">
+      <div class="lab-title">
+        <h3>📏 2. حاسبة وحدات القياس (em مقابل rem)</h3>
+      </div>
+      <div class="slider-grid">
+        <div class="slider-item">
+          <label><span>حجم خط الجذر (html)</span><span id="val-root">16px</span></label>
+          <input type="range" id="rng-root" min="12" max="24" value="16" oninput="updateUnitsLab()" />
+        </div>
+        <div class="slider-item">
+          <label><span>حجم خط الأب (.card)</span><span id="val-card">20px</span></label>
+          <input type="range" id="rng-card" min="14" max="30" value="20" oninput="updateUnitsLab()" />
+        </div>
+      </div>
+      <div class="info-grid" id="units-result"></div>
+    </div>
+  `;
+
+  if (lecId === 'lec4') return `
+    <div class="lab-box">
+      <div class="lab-title">
+        <h3>📦 1. محاكي نموذج الصندوق (Interactive Box Model)</h3>
+        <div class="pill-row" style="margin:0">
+          <button class="btn secondary active-pill" id="btn-content-box" onclick="setBoxSizing('content-box')">content-box (افتراضي)</button>
+          <button class="btn secondary" id="btn-border-box" onclick="setBoxSizing('border-box')">border-box</button>
+        </div>
+      </div>
+      <div class="slider-grid">
+        <div class="slider-item"><label><span>width</span><span id="bm-v-w">200px</span></label><input type="range" id="bm-w" min="100" max="320" value="200" oninput="updateBoxModel()"></div>
+        <div class="slider-item"><label><span>padding</span><span id="bm-v-p">15px</span></label><input type="range" id="bm-p" min="0" max="40" value="15" oninput="updateBoxModel()"></div>
+        <div class="slider-item"><label><span>border</span><span id="bm-v-b">4px</span></label><input type="range" id="bm-b" min="0" max="20" value="4" oninput="updateBoxModel()"></div>
+        <div class="slider-item"><label><span>margin</span><span id="bm-v-m">16px</span></label><input type="range" id="bm-m" min="0" max="40" value="16" oninput="updateBoxModel()"></div>
+      </div>
+      <div class="box-stage" id="bm-stage"></div>
+      <div class="callout info" id="bm-math" style="margin-top:14px;"></div>
+    </div>
+
+    <div class="lab-box">
+      <div class="lab-title">
+        <h3>🌊 2. تجربة خاصية Overflow</h3>
+        <div class="pill-row" style="margin:0">
+          <button class="btn secondary active-pill" onclick="setOverflowDemo('visible', this)">visible</button>
+          <button class="btn secondary" onclick="setOverflowDemo('hidden', this)">hidden</button>
+          <button class="btn secondary" onclick="setOverflowDemo('scroll', this)">scroll</button>
+          <button class="btn secondary" onclick="setOverflowDemo('auto', this)">auto</button>
+        </div>
+      </div>
+      <div style="padding:20px 10px 45px;">
+        <div id="overflow-box" style="width:260px;height:75px;border:2px solid var(--primary);padding:10px;background:var(--surface-alt);overflow:visible;margin:auto;border-radius:8px;font-size:0.88rem;">
+          هذا نص طويل يتجاوز ارتفاع الصندوق المحدد (75px) لتوضيح كيف تتعامل خاصية overflow مع فيضان المحتوى داخل عناصر HTML الكتلية في CSS. جرّب التبديل بين القيم الأربع أعلاه ولاحظ الفرق فوراً!
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ===================== QUIZ ENGINE =====================
+let activeQuizAnswers = {};
+
+function renderQuizHTML(lecId, customQuestions = null, title = null) {
+  const qs = customQuestions || QUIZZES[lecId];
+  activeQuizAnswers = {};
+  return `
+    <div class="card">
+      <div class="quiz-header">
+        <h3>📝 ${title || 'اختبار المحاضرة التفاعلي'}</h3>
+        <button class="btn secondary" onclick="resetQuiz('${lecId}', ${customQuestions ? 'true' : 'false'})">🔄 إعادة الاختبار</button>
+      </div>
+      <div id="quiz-list">
+        ${qs.map((item, idx) => `
+          <div class="q-card" id="qcard-${idx}">
+            <div class="q-title">${idx + 1}. ${item.q}</div>
+            <div class="q-options">
+              ${item.opts.map((opt, oIdx) => `
+                <button class="q-opt" onclick="answerQuestion('${lecId}', ${idx}, ${oIdx}, ${item.ans}, ${qs.length}, ${customQuestions ? 'true' : 'false'})">${opt}</button>
+              `).join('')}
+            </div>
+            <div class="q-explain" id="qexp-${idx}">💡 <strong>التوضيح:</strong> ${item.exp}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="score-banner" id="score-banner" style="display:none;">
+        <div>
+          <h3 style="color:#fff;margin:0;" id="score-title">نتيجتك</h3>
+          <p style="margin:4px 0 0;opacity:0.9;" id="score-msg"></p>
+        </div>
+        <button class="btn" style="background:#fff;color:var(--primary);" onclick="resetQuiz('${lecId}', ${customQuestions ? 'true' : 'false'})">محاولة جديدة</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderFinalQuiz() {
+  const all = [
+    ...QUIZZES.lec1.slice(0, 4),
+    ...QUIZZES.lec2.slice(0, 4),
+    ...QUIZZES.lec3.slice(0, 4),
+    ...QUIZZES.lec4.slice(0, 4)
+  ];
+  window._finalQuestions = all;
+  return `
+    <div class="page-hero">
+      <span class="tag">مراجعة نهائية • 16 سؤالاً</span>
+      <h2>🏆 الاختبار الشامل لمادة برمجة الويب</h2>
+      <p>يجمع هذا الاختبار أهم الأسئلة من المحاضرات الأربع لقياس جاهزيتك الكاملة للامتحان.</p>
+    </div>
+    ${renderQuizHTML('final', all, 'الاختبار الشامل (المحاضرات 1 إلى 4)')}
+  `;
+}
+
+function answerQuestion(lecId, qIdx, chosen, correct, total, isFinal) {
+  if (activeQuizAnswers[qIdx] !== undefined) return;
+  activeQuizAnswers[qIdx] = (chosen === correct);
+
+  const card = document.getElementById('qcard-' + qIdx);
+  const btns = card.querySelectorAll('.q-opt');
+  btns.forEach((b, i) => {
+    b.disabled = true;
+    if (i === correct) b.classList.add('correct');
+    else if (i === chosen && chosen !== correct) b.classList.add('wrong');
+  });
+  document.getElementById('qexp-' + qIdx).classList.add('show');
+
+  const answeredCount = Object.keys(activeQuizAnswers).length;
+  if (answeredCount === total) {
+    const rightCount = Object.values(activeQuizAnswers).filter(Boolean).length;
+    const pct = Math.round((rightCount / total) * 100);
+    if (!isFinal) {
+      state.scores[lecId] = pct;
+      state.completed[lecId] = true;
+      saveState();
+    }
+    const banner = document.getElementById('score-banner');
+    banner.style.display = 'flex';
+    document.getElementById('score-title').textContent = `نتيجتك: ${rightCount} من ${total} (${pct}%)`;
+    document.getElementById('score-msg').textContent = pct >= 85 ? 'ممتاز جداً! إتقان رائع لمحتوى المحاضرة 🌟' : (pct >= 60 ? 'جيد! راجع الأسئلة التي أخطأت بها لتصل لـ 100% 👍' : 'أنصحك بمراجعة تبويب الشرح والمختبر ثم المحاولة مجدداً 📖');
+  }
+}
+
+function resetQuiz(lecId, isFinal) {
+  if (isFinal) render();
+  else setSubtab(lecId, 'quiz');
+}
+
+// ===================== INTERACTIVE WIDGETS LOGIC =====================
+function initInteractiveWidgets(lecId) {
+  if (state.subtab[lecId] !== 'lab') return;
+  if (lecId === 'lec1') { analyzeURL(); renderHttpSim(); }
+  if (lecId === 'lec2') { loadHtmlPreset('semantic'); }
+  if (lecId === 'lec3') { testSelector('ul a'); updateUnitsLab(); }
+  if (lecId === 'lec4') { updateBoxModel(); }
+}
+
+// --- Lec 1: URL Analyzer ---
+function setSampleURL(u) {
+  document.getElementById('url-input').value = u;
+  analyzeURL();
+}
+function analyzeURL() {
+  const input = document.getElementById('url-input');
+  const out = document.getElementById('url-output');
+  if (!input || !out) return;
+  try {
+    const u = new URL(input.value.trim());
+    const parts = [
+      { label: 'البروتوكول (Protocol) - إلزامي', val: u.protocol.replace(':',''), color: '#2563eb' },
+      { label: 'النطاق (Domain) - إلزامي', val: u.hostname, color: '#0ea5e9' },
+      { label: 'المنفذ (Port) - اختياري', val: u.port || '(افتراضي)', color: '#7c3aed' },
+      { label: 'المسار (Path) - اختياري', val: u.pathname || '/', color: '#10b981' },
+      { label: 'سلسلة الاستعلام (Query) - اختياري', val: u.search || '(لا يوجد)', color: '#f59e0b' },
+      { label: 'المعرف الجزئي (Fragment) - اختياري', val: u.hash || '(لا يوجد)', color: '#ef4444' }
+    ];
+    out.innerHTML = parts.map(p => `
+      <div class="url-part" style="border-top-color:${p.color}">
+        <small>${p.label}</small>
+        <code>${p.val}</code>
+      </div>
+    `).join('');
+  } catch (e) {
+    out.innerHTML = `<div class="callout" style="grid-column:1/-1;">أدخل رابطاً صالحاً يبدأ ببروتوكول مثل <span class="en-term">http://</span> أو <span class="en-term">https://</span></div>`;
+  }
+}
+
+// --- Lec 1: HTTP Simulator ---
+let httpState = { method: 'GET', code: 200 };
+const HTTP_INFO = {
+  200: { text: '200 OK', desc: 'نُفّذ الطلب بنجاح وأعاد الخادم المورد المطلوب.' },
+  301: { text: '301 Moved Permanently', desc: 'تم نقل المورد بشكل دائم إلى عنوان جديد (تُحدّث محركات البحث فهرسها).' },
+  304: { text: '304 Not Modified', desc: 'النسخة المخزنة مؤقتاً (Cache) لدى المتصفح لا تزال حديثة، لذا يعيد الخادم ترويسات فقط.' },
+  401: { text: '401 Unauthorized', desc: 'المورد محمي ويتطلب تقديم بيانات اعتماد (Credentials).' },
+  404: { text: '404 Not Found', desc: 'المورد المطلوب غير موجود على الخادم.' },
+  414: { text: '414 Request URI Too Long', desc: 'الرابط طويل جداً وتجاوز الحد الأقصى للخادم (غالباً بسبب بيانات كثيرة في GET).' },
+  500: { text: '500 Internal Server Error', desc: 'حدث خطأ داخلي غير متوقع في الخادم دون تفاصيل للعميل.' }
+};
+function setHttpMethod(m, btn) {
+  httpState.method = m;
+  btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active-pill'));
+  btn.classList.add('active-pill');
+  renderHttpSim();
+}
+function setHttpCode(c, btn) {
+  httpState.code = c;
+  btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active-pill'));
+  btn.classList.add('active-pill');
+  renderHttpSim();
+}
+function renderHttpSim() {
+  const req = document.getElementById('http-req-box');
+  const res = document.getElementById('http-res-box');
+  const exp = document.getElementById('http-explain');
+  if (!req) return;
+  const path = httpState.method === 'POST' ? '/FormProcess.php' : '/index.html';
+  req.textContent = `${httpState.method} ${path} HTTP/1.1\nHost: example.com\nUser-Agent: Mozilla/5.0\nAccept: text/html\nConnection: keep-alive${httpState.method==='POST' ? '\n\nusername=ali&course=web' : ''}`;
+  const info = HTTP_INFO[httpState.code];
+  const hasBody = httpState.method !== 'HEAD' && httpState.code !== 304;
+  res.textContent = `HTTP/1.1 ${info.text}\nServer: Apache\nContent-Type: text/html\nContent-Length: ${hasBody ? '4538' : '0'}${hasBody ? '\n\n<html><body>...</body></html>' : '\n\n(No Body returned)'}`;
+  exp.innerHTML = `<strong>${httpState.method} + ${info.text}:</strong> ${info.desc}` + (httpState.method === 'HEAD' ? ' — لاحظ أن طريقة <strong>HEAD</strong> تُعيد الترويسات فقط بدون جسم الصفحة لتوفير عرض النطاق.' : '');
+}
+
+// --- Lec 2: HTML Sandbox ---
+const HTML_PRESETS = {
+  semantic: `<header style="background:#1e3a8a;color:#fff;padding:10px;border-radius:6px;">
+  <h2 style="margin:0;">مدونة برمجة الويب</h2>
+</header>
+<nav style="margin:8px 0;">
+  <a href="#sec1">المقال</a> | <a href="#sec2">ملاحظة</a>
+</nav>
+<main>
+  <article id="sec1" style="background:#f1f5f9;padding:10px;border-radius:6px;">
+    <h3>مقال مستقل (article)</h3>
+    <p>نستخدم <strong>HTML5</strong> لكتابة كود دلالي نظيف.</p>
+  </article>
+</main>
+<footer style="margin-top:10px;font-size:12px;color:#64748b;">&copy; 2026 جميع الحقوق محفوظة</footer>`,
+  blockinline: `<h3>الفرق بين Block و Inline:</h3>
+<div style="background:#dbeafe;padding:6px;margin-bottom:6px;">أنا &lt;div&gt; (عنصر كتلي يأخذ كامل السطر)</div>
+<p style="background:#dcfce7;padding:6px;">أنا &lt;p&gt; كتلي، وبداخلي <span style="background:#fef08a;padding:2px 6px;">عنصر &lt;span&gt; سطري</span> و <strong>&lt;strong&gt; سطري</strong> دون كسر السطر.</p>`,
+  details: `<h3>أداة الكشف التفاعلية (HTML 5.1):</h3>
+<details open style="border:1px solid #cbd5e1;padding:10px;border-radius:8px;">
+  <summary style="font-weight:bold;cursor:pointer;color:#2563eb;">اضغط هنا لإظهار/إخفاء المعلومة</summary>
+  <p>وسما &lt;details&gt; و &lt;summary&gt; يتيحان إخفاء وإظهار المحتوى بدون أي سطر JavaScript!</p>
+</details>`,
+  entities: `<h3>كيانات الأحرف (Character Entities):</h3>
+<p>لعرض وسم HTML كنص نكتب: &lt;p&gt;Hello&lt;/p&gt;</p>
+<p>رموز خاصة: &copy; حقوق النشر | &euro; يورو | &trade; علامة تجارية</p>
+<p>مسافات متعددة:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;باستخدام &amp;nbsp;</p>`
+};
+function loadHtmlPreset(key) {
+  const ed = document.getElementById('html-editor');
+  if (!ed) return;
+  ed.value = HTML_PRESETS[key];
+  runHtmlSandbox();
+}
+function runHtmlSandbox() {
+  const ed = document.getElementById('html-editor');
+  const frame = document.getElementById('html-preview');
+  if (!ed || !frame) return;
+  frame.srcdoc = `<html dir="rtl"><body style="font-family:Segoe UI,Tahoma,sans-serif;padding:12px;line-height:1.6;">${ed.value}</body></html>`;
+}
+
+// --- Lec 3: Selector Lab & Units Lab ---
+const SEL_MAP = {
+  'ul a': { tag: 'ul-a', desc: '<strong>Descendant Selector:</strong> يطابق كل الروابط &lt;a&gt; الموجودة في أي مستوى داخل &lt;ul&gt;.' },
+  '#main > time': { tag: 'main-child-time', desc: '<strong>Direct Child (&gt;):</strong> يطابق فقط &lt;time&gt; الابن المباشر لـ #main (2019-12-25) ويتجاهل الموجود داخل &lt;p&gt;.' },
+  'div time': { tag: 'div-time', desc: '<strong>Descendant Selector:</strong> يطابق كل &lt;time&gt; داخل &lt;div&gt; سواء كان ابناً مباشراً أو حفيداً داخل &lt;p&gt;.' },
+  'hr + p': { tag: 'hr-plus-p', desc: '<strong>Adjacent Sibling (+):</strong> يطابق أول فقرة &lt;p&gt; تأتي مباشرةً بعد كل &lt;hr&gt; فقط.' },
+  'h3 ~ p': { tag: 'h3-tilde-p', desc: '<strong>General Sibling (~):</strong> يطابق جميع فقرات &lt;p&gt; التي تأتي بعد &lt;h3&gt; وتشترك معها في نفس الأب.' }
+};
+function testSelector(sel, btn) {
+  if (btn) {
+    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active-pill'));
+    btn.classList.add('active-pill');
+  }
+  const info = SEL_MAP[sel];
+  document.querySelectorAll('#selector-tree .sel-node').forEach(node => {
+    const tags = (node.dataset.tags || '').split(' ');
+    node.classList.toggle('hit', tags.includes(info.tag));
+  });
+  const exp = document.getElementById('sel-explain');
+  if (exp) exp.innerHTML = info.desc;
+}
+
+function updateUnitsLab() {
+  const r = Number(document.getElementById('rng-root').value);
+  const c = Number(document.getElementById('rng-card').value);
+  document.getElementById('val-root').textContent = r + 'px';
+  document.getElementById('val-card').textContent = c + 'px';
+  const em1 = (c * 1.2).toFixed(1);
+  const em2 = (c * 1.2 * 1.2).toFixed(1);
+  const rem = (r * 1.2).toFixed(1);
+  document.getElementById('units-result').innerHTML = `
+    <div class="mini-box"><strong>.label-em (1.2em)</strong><span style="font-size:${em1}px">حجم: ${em1}px</span><small style="display:block;color:var(--text-muted)">${c} × 1.2</small></div>
+    <div class="mini-box"><strong>.nested-em (1.2em متداخل)</strong><span style="font-size:${em2}px;color:var(--danger)">حجم: ${em2}px</span><small style="display:block;color:var(--text-muted)">تراكم! ${em1} × 1.2</small></div>
+    <div class="mini-box"><strong>.label-rem و .nested-rem (1.2rem)</strong><span style="font-size:${rem}px;color:var(--success)">حجم: ${rem}px</span><small style="display:block;color:var(--text-muted)">ثابت نسبة للجذر (${r} × 1.2) — لا تراكم</small></div>
+  `;
+}
+
+// --- Lec 4: Box Model Simulator ---
+let bmSizing = 'content-box';
+function setBoxSizing(mode) {
+  bmSizing = mode;
+  document.getElementById('btn-content-box').classList.toggle('active-pill', mode === 'content-box');
+  document.getElementById('btn-border-box').classList.toggle('active-pill', mode === 'border-box');
+  updateBoxModel();
+}
+function updateBoxModel() {
+  const w = Number(document.getElementById('bm-w').value);
+  const p = Number(document.getElementById('bm-p').value);
+  const b = Number(document.getElementById('bm-b').value);
+  const m = Number(document.getElementById('bm-m').value);
+  document.getElementById('bm-v-w').textContent = w + 'px';
+  document.getElementById('bm-v-p').textContent = p + 'px';
+  document.getElementById('bm-v-b').textContent = b + 'px';
+  document.getElementById('bm-v-m').textContent = m + 'px';
+
+  const contentW = bmSizing === 'content-box' ? w : Math.max(20, w - 2*p - 2*b);
+  const totalW = bmSizing === 'content-box' ? (w + 2*p + 2*b + 2*m) : (w + 2*m);
+
+  document.getElementById('bm-stage').innerHTML = `
+    <div class="bm-margin" style="padding:${m}px;">
+      <div class="bm-border" style="padding:${b}px;">
+        <div class="bm-padding" style="padding:${p}px;">
+          <div class="bm-content" style="width:${contentW}px;height:64px;">
+            Content (${contentW}px)
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('bm-math').innerHTML = bmSizing === 'content-box'
+    ? `<strong>box-sizing: content-box:</strong> العرض الكلي = ${w} (width) + ${2*p} (padding) + ${2*b} (border) + ${2*m} (margin) = <strong>${totalW}px</strong>`
+    : `<strong>box-sizing: border-box:</strong> الـ width (${w}px) يشمل الحشو والحدود، لذا العرض الكلي = ${w} + ${2*m} (margin) = <strong>${totalW}px</strong>`;
+}
+
+function setOverflowDemo(val, btn) {
+  btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active-pill'));
+  btn.classList.add('active-pill');
+  document.getElementById('overflow-box').style.overflow = val;
+}
+
+// Initial Render
+render();
+</script>
+</body>
+</html>
