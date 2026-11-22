@@ -1,1918 +1,1551 @@
-
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" class="light">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>منصة دراسة برمجة الويب التفاعلية | مقرر الشمري</title>
-<style>
-  :root {
-    --bg: #f4f6fb;
-    --surface: #ffffff;
-    --surface-alt: #eef2f9;
-    --text: #1e293b;
-    --text-muted: #64748b;
-    --border: #dce3f0;
-    --primary: #2563eb;
-    --primary-hover: #1d4ed8;
-    --primary-soft: #dbeafe;
-    --accent: #0ea5e9;
-    --success: #10b981;
-    --success-soft: #d1fae5;
-    --danger: #ef4444;
-    --danger-soft: #fee2e2;
-    --warning: #f59e0b;
-    --warning-soft: #fef3c7;
-    --purple: #7c3aed;
-    --purple-soft: #ede9fe;
-    --code-bg: #0f172a;
-    --code-text: #e2e8f0;
-    --shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
-    --radius: 14px;
-    --sidebar-w: 280px;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بنك أسئلة برمجة الويب - ITP</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Cairo & Tajawal for Arabic, JetBrains Mono for Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  [data-theme="dark"] {
-    --bg: #0b1120;
-    --surface: #131c31;
-    --surface-alt: #1b2742;
-    --text: #f1f5f9;
-    --text-muted: #94a3b8;
-    --border: #253453;
-    --primary: #3b82f6;
-    --primary-hover: #60a5fa;
-    --primary-soft: rgba(59, 130, 246, 0.16);
-    --accent: #38bdf8;
-    --success: #34d399;
-    --success-soft: rgba(16, 185, 129, 0.16);
-    --danger: #f87171;
-    --danger-soft: rgba(239, 68, 68, 0.16);
-    --warning: #fbbf24;
-    --warning-soft: rgba(245, 158, 11, 0.16);
-    --purple: #a78bfa;
-    --purple-soft: rgba(139, 92, 246, 0.16);
-    --code-bg: #070b14;
-    --code-text: #e2e8f0;
-    --shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
-  }
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Segoe UI', Tahoma, 'Noto Sans Arabic', Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.75;
-    min-height: 100vh;
-    transition: background 0.25s, color 0.25s;
-  }
-
-  /* Layout */
-  .app-shell {
-    display: flex;
-    min-height: 100vh;
-  }
-
-  /* Sidebar */
-  .sidebar {
-    width: var(--sidebar-w);
-    background: var(--surface);
-    border-left: 1px solid var(--border);
-    padding: 22px 16px;
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 100;
-    overflow-y: auto;
-    transition: transform 0.3s ease;
-  }
-
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 10px 18px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 18px;
-  }
-
-  .brand-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, var(--primary), var(--purple));
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 800;
-    font-size: 1.15rem;
-    flex-shrink: 0;
-  }
-
-  .brand-text h1 { font-size: 1.05rem; font-weight: 800; line-height: 1.3; }
-  .brand-text span { font-size: 0.78rem; color: var(--text-muted); }
-
-  .nav-group-label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    padding: 6px 12px;
-    margin-top: 6px;
-    text-transform: uppercase;
-  }
-
-  .nav-btn {
-    width: 100%;
-    text-align: right;
-    background: transparent;
-    border: none;
-    color: var(--text);
-    padding: 11px 13px;
-    border-radius: 11px;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.92rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 5px;
-    transition: all 0.2s;
-  }
-
-  .nav-btn:hover { background: var(--surface-alt); }
-  .nav-btn.active {
-    background: var(--primary-soft);
-    color: var(--primary);
-  }
-
-  .nav-btn .nav-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    overflow: hidden;
-  }
-
-  .nav-badge {
-    font-size: 0.72rem;
-    padding: 2px 7px;
-    border-radius: 999px;
-    background: var(--surface-alt);
-    color: var(--text-muted);
-    font-weight: 700;
-    flex-shrink: 0;
-  }
-
-  .nav-badge.done {
-    background: var(--success-soft);
-    color: var(--success);
-  }
-
-  .sidebar-footer {
-    margin-top: auto;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-  }
-
-  .progress-box {
-    background: var(--surface-alt);
-    padding: 12px;
-    border-radius: 12px;
-    margin-bottom: 12px;
-  }
-
-  .progress-header {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.82rem;
-    font-weight: 700;
-    margin-bottom: 7px;
-  }
-
-  .progress-bar {
-    height: 8px;
-    background: var(--border);
-    border-radius: 999px;
-    overflow: hidden;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--primary), var(--success));
-    width: 0%;
-    transition: width 0.4s ease;
-  }
-
-  .theme-toggle {
-    width: 100%;
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-    font-family: inherit;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  .theme-toggle:hover { background: var(--surface-alt); }
-
-  /* Main Content */
-  .main {
-    flex: 1;
-    margin-right: var(--sidebar-w);
-    padding: 28px 34px 60px;
-    max-width: 1180px;
-  }
-
-  .mobile-topbar {
-    display: none;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 16px;
-    position: sticky;
-    top: 0;
-    z-index: 90;
-  }
-
-  .menu-btn {
-    background: var(--surface-alt);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 8px 12px;
-    border-radius: 9px;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
-  }
-
-  .overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    z-index: 95;
-  }
-  .overlay.show { display: block; }
-
-  /* Hero & Headers */
-  .page-hero {
-    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #0ea5e9 100%);
-    color: #fff;
-    padding: 28px 30px;
-    border-radius: 18px;
-    margin-bottom: 24px;
-    box-shadow: var(--shadow);
-  }
-  .page-hero .tag {
-    display: inline-block;
-    background: rgba(255,255,255,0.2);
-    padding: 4px 12px;
-    border-radius: 999px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-  }
-  .page-hero h2 { font-size: 1.65rem; font-weight: 800; margin-bottom: 6px; }
-  .page-hero p { opacity: 0.92; font-size: 0.96rem; max-width: 720px; }
-
-  /* Dashboard Grid */
-  .dash-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 18px;
-    margin-bottom: 24px;
-  }
-
-  .lecture-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    box-shadow: var(--shadow);
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.2s, border-color 0.2s;
-    cursor: pointer;
-  }
-  .lecture-card:hover {
-    transform: translateY(-3px);
-    border-color: var(--primary);
-  }
-  .lecture-card .lec-num {
-    font-size: 0.78rem;
-    font-weight: 800;
-    color: var(--primary);
-    background: var(--primary-soft);
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 999px;
-    width: fit-content;
-    margin-bottom: 10px;
-  }
-  .lecture-card h3 { font-size: 1.12rem; margin-bottom: 6px; }
-  .lecture-card p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 14px; flex: 1; }
-  .lecture-card .card-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.82rem;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-    color: var(--text-muted);
-  }
-
-  /* Sub-Tabs inside each lecture */
-  .subtabs {
-    display: flex;
-    gap: 8px;
-    background: var(--surface);
-    padding: 7px;
-    border-radius: 13px;
-    border: 1px solid var(--border);
-    margin-bottom: 22px;
-    flex-wrap: wrap;
-  }
-
-  .subtab-btn {
-    flex: 1;
-    min-width: 130px;
-    padding: 11px 16px;
-    border: none;
-    border-radius: 9px;
-    background: transparent;
-    color: var(--text-muted);
-    font-family: inherit;
-    font-size: 0.94rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .subtab-btn:hover { color: var(--text); background: var(--surface-alt); }
-  .subtab-btn.active {
-    background: var(--primary);
-    color: #fff;
-    box-shadow: 0 3px 10px rgba(37, 99, 235, 0.25);
-  }
-
-  /* Cards & Sections */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 22px 24px;
-    margin-bottom: 18px;
-    box-shadow: var(--shadow);
-  }
-
-  .card h3 {
-    font-size: 1.18rem;
-    margin-bottom: 12px;
-    color: var(--primary);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .card h4 {
-    font-size: 1rem;
-    margin: 14px 0 8px;
-    color: var(--text);
-  }
-
-  .en-term {
-    direction: ltr;
-    unicode-bidi: isolate;
-    display: inline-block;
-    font-family: Consolas, 'Courier New', monospace;
-    font-size: 0.86em;
-    background: var(--surface-alt);
-    color: var(--primary);
-    padding: 1px 6px;
-    border-radius: 6px;
-    font-weight: 700;
-  }
-
-  .info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    gap: 12px;
-    margin: 12px 0;
-  }
-
-  .mini-box {
-    background: var(--surface-alt);
-    border: 1px solid var(--border);
-    border-radius: 11px;
-    padding: 14px;
-  }
-  .mini-box strong { display: block; margin-bottom: 4px; color: var(--primary); }
-
-  .callout {
-    background: var(--warning-soft);
-    border-right: 4px solid var(--warning);
-    padding: 13px 16px;
-    border-radius: 10px;
-    margin: 14px 0;
-    font-size: 0.93rem;
-  }
-  .callout.tip {
-    background: var(--success-soft);
-    border-right-color: var(--success);
-  }
-  .callout.info {
-    background: var(--primary-soft);
-    border-right-color: var(--primary);
-  }
-
-  /* Accordion */
-  details.acc {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    margin-bottom: 12px;
-    overflow: hidden;
-  }
-  details.acc summary {
-    padding: 15px 18px;
-    font-weight: 700;
-    font-size: 1.02rem;
-    cursor: pointer;
-    list-style: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--surface);
-  }
-  details.acc summary::-webkit-details-marker { display: none; }
-  details.acc summary::after {
-    content: "▾";
-    font-size: 1.1rem;
-    color: var(--primary);
-    transition: transform 0.2s;
-  }
-  details.acc[open] summary::after { transform: rotate(180deg); }
-  details.acc[open] summary { border-bottom: 1px solid var(--border); background: var(--surface-alt); }
-  .acc-body { padding: 18px 20px; }
-
-  /* Tables */
-  .table-wrap { overflow-x: auto; margin: 12px 0; }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9rem;
-  }
-  th, td {
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-    text-align: right;
-  }
-  th {
-    background: var(--surface-alt);
-    font-weight: 700;
-    color: var(--primary);
-  }
-  tr:nth-child(even) td { background: rgba(148, 163, 184, 0.04); }
-
-  /* Code Blocks */
-  pre.code {
-    direction: ltr;
-    text-align: left;
-    background: var(--code-bg);
-    color: var(--code-text);
-    padding: 15px 18px;
-    border-radius: 11px;
-    overflow-x: auto;
-    font-family: Consolas, 'Fira Code', monospace;
-    font-size: 0.88rem;
-    line-height: 1.6;
-    margin: 10px 0;
-  }
-
-  /* Interactive Labs */
-  .lab-box {
-    background: var(--surface);
-    border: 2px solid var(--primary-soft);
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow);
-  }
-  .lab-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 14px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
-  }
-  .lab-title h3 { font-size: 1.12rem; color: var(--primary); }
-
-  .btn {
-    padding: 9px 16px;
-    border-radius: 9px;
-    border: none;
-    background: var(--primary);
-    color: #fff;
-    font-family: inherit;
-    font-weight: 700;
-    font-size: 0.88rem;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn:hover { background: var(--primary-hover); }
-  .btn.secondary {
-    background: var(--surface-alt);
-    color: var(--text);
-    border: 1px solid var(--border);
-  }
-  .btn.secondary:hover { border-color: var(--primary); color: var(--primary); }
-  .btn.active-pill {
-    background: var(--primary);
-    color: #fff;
-    border-color: var(--primary);
-  }
-  .btn.success { background: var(--success); }
-
-  .pill-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 10px 0 14px;
-  }
-
-  .input-ltr {
-    width: 100%;
-    direction: ltr;
-    text-align: left;
-    padding: 11px 14px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: var(--surface-alt);
-    color: var(--text);
-    font-family: Consolas, monospace;
-    font-size: 0.94rem;
-    margin-bottom: 12px;
-  }
-
-  .url-parts {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 10px;
-    margin-top: 10px;
-  }
-  .url-part {
-    padding: 10px 12px;
-    border-radius: 10px;
-    background: var(--surface-alt);
-    border-top: 4px solid var(--primary);
-  }
-  .url-part small { display: block; color: var(--text-muted); font-size: 0.78rem; }
-  .url-part code {
-    direction: ltr;
-    display: block;
-    font-family: Consolas, monospace;
-    font-weight: 700;
-    margin-top: 4px;
-    word-break: break-all;
-  }
-
-  /* Split Editor */
-  .split-editor {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
-  .editor-area {
-    width: 100%;
-    min-height: 240px;
-    direction: ltr;
-    text-align: left;
-    background: var(--code-bg);
-    color: var(--code-text);
-    border: 1px solid var(--border);
-    border-radius: 11px;
-    padding: 14px;
-    font-family: Consolas, monospace;
-    font-size: 0.86rem;
-    resize: vertical;
-  }
-  .preview-frame {
-    width: 100%;
-    min-height: 240px;
-    background: #ffffff;
-    border: 1px solid var(--border);
-    border-radius: 11px;
-  }
-
-  /* Selector Lab */
-  .selector-demo {
-    direction: ltr;
-    text-align: left;
-    background: var(--surface-alt);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px;
-    font-family: Consolas, monospace;
-    font-size: 0.88rem;
-  }
-  .sel-node {
-    padding: 5px 10px;
-    margin: 4px 0;
-    border-radius: 7px;
-    border: 1px dashed transparent;
-    transition: all 0.25s;
-  }
-  .sel-node.hit {
-    background: var(--warning-soft);
-    border-color: var(--warning);
-    color: #92400e;
-    font-weight: 800;
-    transform: translateX(4px);
-  }
-  [data-theme="dark"] .sel-node.hit { color: #fef3c7; }
-
-  /* Box Model Simulator */
-  .slider-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-  .slider-item {
-    background: var(--surface-alt);
-    padding: 10px 12px;
-    border-radius: 10px;
-  }
-  .slider-item label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.85rem;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-  .slider-item input[type="range"] { width: 100%; accent-color: var(--primary); }
-
-  .box-stage {
-    background: var(--surface-alt);
-    border: 1px dashed var(--border);
-    border-radius: 12px;
-    padding: 24px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: auto;
-    min-height: 220px;
-  }
-  .bm-margin {
-    background: rgba(245, 158, 11, 0.28);
-    border: 2px dashed #f59e0b;
-    display: inline-block;
-    position: relative;
-  }
-  .bm-border {
-    background: #2563eb;
-    display: block;
-  }
-  .bm-padding {
-    background: rgba(16, 185, 129, 0.28);
-    display: block;
-  }
-  .bm-content {
-    background: #3b82f6;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 0.85rem;
-    text-align: center;
-  }
-
-  /* Quiz UI */
-  .quiz-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-  .q-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 13px;
-    padding: 18px 20px;
-    margin-bottom: 14px;
-  }
-  .q-title { font-weight: 700; font-size: 1rem; margin-bottom: 12px; }
-  .q-options { display: grid; gap: 8px; }
-  .q-opt {
-    text-align: right;
-    padding: 11px 14px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: var(--surface-alt);
-    color: var(--text);
-    font-family: inherit;
-    font-size: 0.93rem;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .q-opt:hover:not(:disabled) { border-color: var(--primary); }
-  .q-opt.correct {
-    background: var(--success-soft);
-    border-color: var(--success);
-    color: var(--success);
-    font-weight: 700;
-  }
-  .q-opt.wrong {
-    background: var(--danger-soft);
-    border-color: var(--danger);
-    color: var(--danger);
-    font-weight: 700;
-  }
-  .q-explain {
-    margin-top: 10px;
-    padding: 10px 13px;
-    border-radius: 9px;
-    background: var(--primary-soft);
-    font-size: 0.88rem;
-    display: none;
-  }
-  .q-explain.show { display: block; }
-
-  .score-banner {
-    background: linear-gradient(135deg, var(--primary), var(--purple));
-    color: #fff;
-    padding: 20px 24px;
-    border-radius: 14px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 18px;
-  }
-
-  /* Responsive */
-  @media (max-width: 900px) {
-    .sidebar { transform: translateX(100%); }
-    .sidebar.open { transform: translateX(0); }
-    .main { margin-right: 0; padding: 18px 16px 50px; }
-    .mobile-topbar { display: flex; }
-    .split-editor { grid-template-columns: 1fr; }
-  }
-</style>
+    <style>
+        /* Custom scrollbar and smooth transitions */
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        pre, code {
+            font-family: 'JetBrains Mono', monospace;
+            direction: ltr !important;
+            text-align: left !important;
+        }
+        .code-block {
+            background: #1e293b;
+            color: #f8fafc;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            border: 1px solid #334155;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.25);
+        }
+        /* Syntax highlighting subtle classes */
+        .tok-tag { color: #f472b6; }
+        .tok-attr { color: #38bdf8; }
+        .tok-str { color: #a3e635; }
+        .tok-kw { color: #c084fc; }
+        .tok-num { color: #fb923c; }
+        .tok-com { color: #94a3b8; font-style: italic; }
+        
+        /* Custom animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.35s ease-out forwards;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex flex-col">
 
-<div class="mobile-topbar">
-  <strong>منصة برمجة الويب</strong>
-  <button class="menu-btn" onclick="toggleSidebar()">☰ القائمة</button>
-</div>
-<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
-
-<div class="app-shell">
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <div class="brand">
-      <div class="brand-icon">&lt;/&gt;</div>
-      <div class="brand-text">
-        <h1>برمجة الويب</h1>
-        <span>مقرر الشمري • د. إيفا هريكيس</span>
-      </div>
-    </div>
-
-    <div class="nav-group-label">التنقل الرئيسي</div>
-    <button class="nav-btn active" data-view="home" onclick="switchView('home')">
-      <span class="nav-left">🏠 الرئيسية ولوحة التقدم</span>
-    </button>
-
-    <div class="nav-group-label">المحاضرات المنفصلة</div>
-    <button class="nav-btn" data-view="lec1" onclick="switchView('lec1')">
-      <span class="nav-left">🌐 م1: كيف يعمل الويب</span>
-      <span class="nav-badge" id="badge-lec1">جديد</span>
-    </button>
-    <button class="nav-btn" data-view="lec2" onclick="switchView('lec2')">
-      <span class="nav-left">📄 م2: مقدمة في HTML</span>
-      <span class="nav-badge" id="badge-lec2">جديد</span>
-    </button>
-    <button class="nav-btn" data-view="lec3" onclick="switchView('lec3')">
-      <span class="nav-left">🎨 م3: CSS 1 والمحددات</span>
-      <span class="nav-badge" id="badge-lec3">جديد</span>
-    </button>
-    <button class="nav-btn" data-view="lec4" onclick="switchView('lec4')">
-      <span class="nav-left">📦 م4: CSS 2 والصندوق</span>
-      <span class="nav-badge" id="badge-lec4">جديد</span>
-    </button>
-
-    <div class="nav-group-label">مراجعة شاملة</div>
-    <button class="nav-btn" data-view="finalQuiz" onclick="switchView('finalQuiz')">
-      <span class="nav-left">🏆 الاختبار الشامل للمادة</span>
-      <span class="nav-badge" id="badge-final">16 سؤال</span>
-    </button>
-
-    <div class="sidebar-footer">
-      <div class="progress-box">
-        <div class="progress-header">
-          <span>التقدم الكلي</span>
-          <span id="overall-pct">0%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="overall-fill"></div>
-        </div>
-      </div>
-      <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙 الوضع الليلي</button>
-    </div>
-  </aside>
-
-  <!-- Main Content Area -->
-  <main class="main" id="main-content"></main>
-</div>
-
-<script>
-// ===================== STATE & STORAGE =====================
-const state = {
-  view: 'home',
-  subtab: { lec1: 'study', lec2: 'study', lec3: 'study', lec4: 'study' },
-  scores: JSON.parse(localStorage.getItem('webprog_scores') || '{}'),
-  completed: JSON.parse(localStorage.getItem('webprog_done') || '{}'),
-  theme: localStorage.getItem('webprog_theme') || 'light'
-};
-
-if (state.theme === 'dark') {
-  document.documentElement.setAttribute('data-theme', 'dark');
-}
-
-function saveState() {
-  localStorage.setItem('webprog_scores', JSON.stringify(state.scores));
-  localStorage.setItem('webprog_done', JSON.stringify(state.completed));
-  updateProgressUI();
-}
-
-function toggleTheme() {
-  state.theme = state.theme === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', state.theme);
-  localStorage.setItem('webprog_theme', state.theme);
-  document.getElementById('theme-btn').textContent = state.theme === 'dark' ? '☀️ الوضع النهاري' : '🌙 الوضع الليلي';
-}
-
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('overlay').classList.toggle('show');
-}
-
-function updateProgressUI() {
-  const lecs = ['lec1', 'lec2', 'lec3', 'lec4'];
-  let doneCount = 0;
-  lecs.forEach(l => {
-    const badge = document.getElementById('badge-' + l);
-    if (!badge) return;
-    if (state.scores[l] !== undefined) {
-      badge.textContent = state.scores[l] + '%';
-      badge.classList.add('done');
-      doneCount++;
-    } else if (state.completed[l]) {
-      badge.textContent = 'مكتمل ✓';
-      badge.classList.add('done');
-      doneCount++;
-    } else {
-      badge.textContent = 'جديد';
-      badge.classList.remove('done');
-    }
-  });
-  const pct = Math.round((doneCount / lecs.length) * 100);
-  document.getElementById('overall-pct').textContent = pct + '%';
-  document.getElementById('overall-fill').style.width = pct + '%';
-  document.getElementById('theme-btn').textContent = state.theme === 'dark' ? '☀️ الوضع النهاري' : '🌙 الوضع الليلي';
-}
-
-// ===================== QUIZZES DATA =====================
-const QUIZZES = {
-  lec1: [
-    {
-      q: "ما العلاقة الصحيحة بين الإنترنت (Internet) والشبكة العنكبوتية العالمية (WWW)؟",
-      opts: ["الإنترنت والويب هما نفس الشيء تماماً", "الويب (WWW) هو جزء فرعي (Subset) من الإنترنت", "الإنترنت هو جزء فرعي من الويب", "الويب يعمل بدون بروتوكولات الإنترنت"],
-      ans: 1,
-      exp: "الويب (WWW) مجرد جزء فرعي من الإنترنت؛ وهناك خدمات أخرى تعمل فوق الإنترنت مثل Email و FTP و Online Gaming."
-    },
-    {
-      q: "ما أبرز ميزة لشبكات تبديل الحزم (Packet Switching) مقارنةً بتبديل الدوائر؟",
-      opts: ["تتطلب توصيلاً فيزيائياً مستمراً طوال المكالمة", "تقسم الرسالة إلى حزم مرقمة يمكن أن تسلك مسارات مختلفة ويعاد تجميعها عند الوجهة", "لا تستخدم عناوين وجهة", "تستخدم فقط للاتصالات الهاتفية القديمة"],
-      ans: 1,
-      exp: "في Packet Switching تُقسّم الرسالة إلى حزم مرقمة تسلك مسارات مختلفة ثم يُعاد تجميعها عند الوجهة، مما يحل مشكلات عرض النطاق وقابلية التوسع."
-    },
-    {
-      q: "في أي عام اعتُمدت حزمة TCP/IP رسمياً عبر كامل شبكة ARPANET؟",
-      opts: ["1960", "1974", "1983", "1994"],
-      ans: 2,
-      exp: "قُدّمت TCP/IP عام 1981 واعتُمدت رسمياً في 1 يناير 1983 عبر كامل شبكة ARPANET."
-    },
-    {
-      q: "أي طبقة في حزمة TCP/IP مسؤولة عن ضمان وصول الحزم بالترتيب الصحيح وبدون أخطاء (مثل TCP و UDP)؟",
-      opts: ["طبقة التطبيقات (Application Layer)", "طبقة النقل (Transport Layer)", "طبقة الإنترنت (Internet Layer)", "طبقة الربط (Link Layer)"],
-      ans: 1,
-      exp: "طبقة النقل (Transport Layer) تضم TCP و UDP وتضمن وصول الإرسالات بالترتيب الصحيح وبدون أخطاء."
-    },
-    {
-      q: "كم يبلغ طول عنوان IPv6 بالبتات؟",
-      opts: ["32 بت", "64 بت", "128 بت", "256 بت"],
-      ans: 2,
-      exp: "عنوان IPv4 يتكون من 32 بت (4×8 بت)، بينما IPv6 يتكون من 128 بت (8×16 بت) مما يوفر 2^128 عنواناً."
-    },
-    {
-      q: "ما المكونان الإلزاميان في أي عنوان URL؟",
-      opts: ["المسار (Path) والمعرف الجزئي (Fragment)", "البروتوكول (Protocol) والنطاق أو عنوان IP (Domain)", "المنفذ (Port) وسلسلة الاستعلام (Query String)", "البروتوكول والمنفذ فقط"],
-      ans: 1,
-      exp: "يتكون الـ URL من مكونين إلزاميين هما البروتوكول والنطاق (أو عنوان IP)، بينما المنفذ والمسار وسلسلة الاستعلام والمعرف الجزئي مكونات اختيارية."
-    },
-    {
-      q: "أي طريقة طلب HTTP تُستخدم لجلب الترويسات (Headers) فقط دون جسم الصفحة (Body) لتوفير عرض النطاق؟",
-      opts: ["GET", "POST", "HEAD", "PUT"],
-      ans: 2,
-      exp: "طلب HEAD يشبه GET تماماً لكنه يعيد الترويسات فقط بدون Body، وتستخدمه محركات البحث للتحقق من الحاجة لإعادة الفهرسة."
-    },
-    {
-      q: "ماذا يعني رمز الاستجابة HTTP 304 (Not Modified)؟",
-      opts: ["المورد غير موجود على الخادم", "حدث خطأ داخلي في الخادم", "النسخة على الخادم ليست أحدث من النسخة المخزنة مؤقتاً لدى العميل", "تم نقل المورد بشكل دائم"],
-      ans: 2,
-      exp: "الرمز 304 يخبر المتصفح بأن نسخته المخزنة مؤقتاً (Cached) لا تزال حديثة فيستخدمها دون إعادة تنزيل الملف."
-    },
-    {
-      q: "ما المقياس الذي يرصد الاستقرار البصري ومقدار إزاحة العناصر أثناء تحميل الصفحة؟",
-      opts: ["TTFB", "LCP", "CLS", "TTI"],
-      ans: 2,
-      exp: "مقياس CLS (Cumulative Layout Shift) يقيس الاستقرار البصري ومدى إزاحة المحتوى أثناء التحميل."
-    }
-  ],
-  lec2: [
-    {
-      q: "أي عبارة تصف لغة HTML بشكل صحيح؟",
-      opts: ["لغة برمجة حساسة لحالة الأحرف", "لغة ترميز قياسية (Markup Language) غير حساسة لحالة الأحرف وتصف هيكل ومحتوى الصفحة", "لغة لتنسيق الألوان والخطوط فقط", "تعمل فقط على الخادم (Back End)"],
-      ans: 1,
-      exp: "HTML ليست لغة برمجة بل لغة ترميز قياسية تصف الهيكل والمحتوى، ووسومها غير حساسة لحالة الأحرف (<P> مثل <p>)."
-    },
-    {
-      q: "أي مما يلي يُعد مثالاً على عنصر فارغ (Empty Element) لا يحتاج لوسم إغلاق؟",
-      opts: ["<p>", "<div>", "<img /> و <br />", "<a>"],
-      ans: 2,
-      exp: "العناصر الفارغة مثل <img> و <br> و <hr> لا تحتوي على محتوى داخلي ولا وسم إغلاق."
-    },
-    {
-      q: "في الشجرة الهرمية: إذا كان <span> داخل <p>، و <p> داخل <div>، و <div> داخل <body>، فما هي أسلاف (Ancestors) العنصر <span>؟",
-      opts: ["<p> فقط", "<div> و <body> فقط", "<p> و <div> و <body>", "العناصر الشقيقة لـ <p>"],
-      ans: 2,
-      exp: "الأسلاف (Ancestors) هي جميع العناصر الحاوية التي يقع بداخلها العنصر صعوداً حتى الجذر."
-    },
-    {
-      q: "أي من أمثلة التداخل التالية يُعد تداخلاً صحيحاً (Correct Nesting)؟",
-      opts: ["<h1>Share Your <strong>Travels</h1></strong>", "<h1>Share Your <strong>Travels</strong></h1>", "<p>Hello <b>World</p></b>", "<div><p>Text</div></p>"],
-      ans: 1,
-      exp: "قاعدة التداخل الصحيح: يجب إغلاق وسم الابن (</strong>) قبل إغلاق وسم الأب (</h1>)."
-    },
-    {
-      q: "للانتقال من ملف داخل مجلد فرعي إلى ملف آخر موجود في المجلد الشقيق `images`، ما المسار النسبي الصحيح؟",
-      opts: ["images/logo.gif", "../images/logo.gif", "/images/logo.gif", "./logo.gif"],
-      ans: 1,
-      exp: "نستخدم `../` للصعود مجلداً واحداً إلى الأب، ثم `images/logo.gif` للدخول إلى المجلد الشقيق."
-    },
-    {
-      q: "أي قيمة لخاصية `target` في الوسم `<a>` تفتح الرابط في تبويب أو نافذة جديدة؟",
-      opts: ["_self", "_parent", "_blank", "_top"],
-      ans: 2,
-      exp: "القيمة `_blank` تفتح الرابط في تبويب أو نافذة جديدة، بينما `_self` هي الافتراضية في نفس التبويب."
-    },
-    {
-      q: "أي كيان حرفي (Character Entity) يُستخدم لإظهار مسافة غير قابلة للكسر في HTML؟",
-      opts: ["&lt;", "&copy;", "&nbsp;", "&gt;"],
-      ans: 2,
-      exp: "الكيان `&nbsp;` (أو `&#160;`) يمثل مسافة غير قابلة للكسر لإظهار مسافات متعددة."
-    },
-    {
-      q: "ما القاعدة الصحيحة للعنصر الدلالي `<main>` في HTML5؟",
-      opts: ["يمكن تكراره عدة مرات في نفس المستند", "يُوضع داخل `<header>` أو `<footer>`", "يُستخدم مرة واحدة فقط في المستند ولا يتداخل داخل `<article>` أو `<aside>` أو `<header>` أو `<footer>` أو `<nav>`", "يُستخدم لتجميع روابط التنقل فقط"],
-      ans: 2,
-      exp: "يجب وجود عنصر `<main>` واحد فقط للمحتوى الرئيسي الفريد، ولا يجوز وضعه داخل `<header>`, `<footer>`, `<nav>`, `<article>`, `<aside>`."
-    },
-    {
-      q: "أي مجموعة تحتوي على عناصر سطرية (Inline Elements) فقط؟",
-      opts: ["<div>, <p>, <h1>", "<span>, <a>, <strong>, <em>", "<section>, <article>, <ul>", "<pre>, <hr>, <footer>"],
-      ans: 1,
-      exp: "العناصر `<span>`, `<a>`, `<strong>`, `<em>` كلها عناصر سطرية تتدفق أفقياً ولا تبدأ سطراً جديداً."
-    }
-  ],
-  lec3: [
-    {
-      q: "أي موقع لكتابة CSS يُعد الأفضل والأكثر شيوعاً لصيانة المواقع وتحسين الأداء عبر التخزين المؤقت (Cache)؟",
-      opts: ["النمط السطري (Inline Style)", "النمط المضمّن (Embedded Style)", "الملف الخارجي (External Style Sheet)", "صفحة أنماط المتصفح"],
-      ans: 2,
-      exp: "الملف الخارجي (.css) المربوط بوسم `<link>` يسهل توحيد التنسيق عبر كل الصفحات ويسمح للمتصفح بتخزينه مؤقتاً."
-    },
-    {
-      q: "إذا كان `html { font-size: 16px; }` و `.card { font-size: 20px; }` وبداخلها `.label { font-size: 1.2em; }` وبداخلها `.nested { font-size: 1.2em; }`، فما حجم الخط المحسوب لـ `.nested`؟",
-      opts: ["19.2px", "24px", "28.8px", "16px"],
-      ans: 2,
-      exp: "وحدة `em` تتراكم (Compounds): الأب `.card` هو 20px ← `.label` يصبح 20×1.2 = 24px ← `.nested` يصبح 24×1.2 = 28.8px."
-    },
-    {
-      q: "في نفس المثال السابق، إذا استبدلنا `1.2em` بـ `1.2rem` على `.nested`، فما الحجم المحسوب؟",
-      opts: ["28.8px", "24px", "19.2px", "20px"],
-      ans: 2,
-      exp: "وحدة `rem` تعني Root em، وتُحسب دائماً نسبةً لحجم خط الجذر `<html>` (16px × 1.2 = 19.2px) ولا تتراكم أبداً."
-    },
-    {
-      q: "ما الصيغة الصحيحة لكتابة تعليق (Comment) داخل ملف CSS؟",
-      opts: ["<!-- comment -->", "// comment", "/* comment */", "# comment"],
-      ans: 2,
-      exp: "التعليقات في CSS تُكتب دائماً بين `/*` و `*/` ويمكن أن تمتد لعدة أسطر."
-    },
-    {
-      q: "ماذا يطابق محدد الخاصية `a[href$='.pdf']`؟",
-      opts: ["الروابط التي تبدأ بـ .pdf", "الروابط التي تنتهي بـ .pdf", "الروابط التي تساوي .pdf تماماً", "أي عنصر يحتوي على خاصية href"],
-      ans: 1,
-      exp: "الرمز `$=` يطابق القيم التي تنتهي بنص محدد (أما `^=` فيطابق البداية و `*=` يطابق أي نص فرعي)."
-    },
-    {
-      q: "أي مما يلي يُعد محدد عنصر زائف (Pseudo-Element) وليس فئة زائفة (Pseudo-Class)؟",
-      opts: [":hover", ":focus", ":first-letter", ":nth-child(2n)"],
-      ans: 2,
-      exp: "`:first-letter` و `:first-line` هي عناصر زائفة لأنها تحدد جزءاً لا يوجد كعنصر مستقل في شجرة HTML."
-    },
-    {
-      q: "ما الفرق بين `div p` و `div > p`؟",
-      opts: ["لا يوجد فرق بينهما", "`div p` يختار أي `<p>` داخل `<div>` (ابن أو حفيد)، بينما `div > p` يختار الابن المباشر فقط", "`div > p` يختار الفقرة التالية لـ `<div>`", "`div p` يختار الابن المباشر فقط"],
-      ans: 1,
-      exp: "المسافة الفارغة هي محدد الحفيد (Descendant)، بينما الرمز `>` هو محدد الابن المباشر (Direct Child)."
-    },
-    {
-      q: "ماذا يختار المحدد `hr + p`؟",
-      opts: ["جميع فقرات `<p>` التي تأتي بعد `<hr>`", "أول فقرة `<p>` تأتي مباشرةً بعد `<hr>` (الشقيق المجاور)", "أي `<p>` بداخل `<hr>`", "آخر فقرة `<p>` في الصفحة"],
-      ans: 1,
-      exp: "الرمز `+` هو محدد الشقيق المجاور (Adjacent Sibling)، بينما `~` هو الشقيق العام (General Sibling)."
-    }
-  ],
-  lec4: [
-    {
-      q: "أي من الخصائص التالية قابلة للوراثة (Inheritable) تلقائياً من العنصر الأب إلى الأحفاد في CSS؟",
-      opts: ["border و margin", "padding و background-color", "color و font-family", "width و height"],
-      ans: 2,
-      exp: "خصائص الخط واللون والنصوص والقوائم قابلة للوراثة، بينما الحدود والهوامش والحشو والخلفيات والأبعاد لا تُورَّث تلقائياً."
-    },
-    {
-      q: "ما الترتيب التصاعدي الصحيح للأولوية/التخصيص (Specificity) من الأضعف إلى الأقوى؟",
-      opts: ["ID ← Class ← Element ← Inheritance", "Inheritance ← Element ← Class ← ID", "Element ← Inheritance ← ID ← Class", "Class ← Element ← ID ← Inheritance"],
-      ans: 1,
-      exp: "الأضعف هو الوراثة، ثم محدد العنصر (Element)، ثم الفئة (Class)، والأقوى محدد المعرّف (ID)."
-    },
-    {
-      q: "عند تساوي قاعدتين في درجة التخصيص (Specificity)، أي مبدأ يحسم النتيجة؟",
-      opts: ["الوراثة (Inheritance)", "الموقع (Location) حيث تفوز القاعدة الأحدث/الأخيرة", "ترتيب الحروف الأبجدية", "يلغي المتصفح القاعدتين معاً"],
-      ans: 1,
-      exp: "عند تساوي التخصيص يُطبق مبدأ الموقع (Location)، فتفوز القاعدة الأحدث، والنمط السطري يتغلب على المضمن والخارجي."
-    },
-    {
-      q: "لعنصر بخصائص `width: 200px; padding: 5px; border: 2px solid; margin: 10px;` مع القيمة الافتراضية `box-sizing: content-box`، ما عرضه الكلي (Total Width)؟",
-      opts: ["200px", "214px", "220px", "234px"],
-      ans: 3,
-      exp: "العرض الكلي = 200 + (5+5) padding + (2+2) border + (10+10) margin = 234px."
-    },
-    {
-      q: "في السؤال السابق، لو أضفنا `box-sizing: border-box;` فكم يصبح العرض الكلي مع الهامش؟",
-      opts: ["200px", "220px", "234px", "210px"],
-      ans: 1,
-      exp: "مع `border-box` يصبح الـ width (200px) شاملاً للحشو والحدود، فنضيف الهامش فقط (10+10) = 220px."
-    },
-    {
-      q: "عند تطبيق `border-color: red green orange blue;` ما الترتيب الصحيح للجهات (قاعدة TRBL)؟",
-      opts: ["أعلى، يسار، أسفل، يمين", "أعلى، يمين، أسفل، يسار", "يمين، يسار، أعلى، أسفل", "أسفل، أعلى، يمين، يسار"],
-      ans: 1,
-      exp: "تُطبق القيم باتجاه عقارب الساعة بدءاً من الأعلى: Top, Right, Bottom, Left (TRBL)."
-    },
-    {
-      q: "إذا كان لعنصر `<div>` علوي `margin-bottom: 90px` ولعنصر `<div>` تحته `margin-top: 50px`، فما المسافة العمودية الفعلية بينهما بسبب انهيار الهوامش (Collapsing Margins)؟",
-      opts: ["140px", "90px", "50px", "40px"],
-      ans: 1,
-      exp: "في انهيار الهوامش العمودية يُعتمد الهامش الأكبر فقط (90px) وينهار الأصغر، بينما الهوامش الأفقية لا تنهار أبداً."
-    },
-    {
-      q: "أي قيمة لخاصية `overflow` تضيف أشرطة تمرير (Scrollbars) فقط عند الحاجة (إذا فاض المحتوى)؟",
-      opts: ["visible", "hidden", "scroll", "auto"],
-      ans: 3,
-      exp: "القيمة `auto` تضيف أشرطة تمرير عند فيضان المحتوى فقط، بينما `scroll` تعرضها دائماً."
-    }
-  ]
-};
-
-// ===================== VIEW RENDERERS =====================
-function switchView(view) {
-  state.view = view;
-  document.querySelectorAll('.nav-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.view === view);
-  });
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('overlay').classList.remove('show');
-  render();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function setSubtab(lec, tab) {
-  state.subtab[lec] = tab;
-  if (tab === 'study') {
-    state.completed[lec] = true;
-    saveState();
-  }
-  render();
-}
-
-function render() {
-  const main = document.getElementById('main-content');
-  if (state.view === 'home') {
-    main.innerHTML = renderHome();
-  } else if (state.view === 'finalQuiz') {
-    main.innerHTML = renderFinalQuiz();
-  } else {
-    main.innerHTML = renderLectureShell(state.view);
-    initInteractiveWidgets(state.view);
-  }
-  updateProgressUI();
-}
-
-function renderHome() {
-  const cards = [
-    { id: 'lec1', num: 'المحاضرة الأولى', title: 'كيف يعمل الويب (How the Web Works)', desc: 'تاريخ الإنترنت، Client-Server، بروتوكولات TCP/IP، نظام DNS، بنية URL، بروتوكول HTTP، وتصيير المتصفح.', topics: '7 أقسام • 9 أسئلة' },
-    { id: 'lec2', num: 'المحاضرة الثانية', title: 'مقدمة في HTML (HTML 1: Introduction)', desc: 'بناء الجملة، التداخل وشجرة المستند، هيكل HTML5، الروابط والمسارات النسبية، العناصر الدلالية، و Block vs Inline.', topics: '5 أقسام • 9 أسئلة' },
-    { id: 'lec3', num: 'المحاضرة الثالثة', title: 'CSS 1: المحددات والتنسيق الأساسي', desc: 'قواعد CSS، الألوان، وحدات القياس (em/rem)، مواقع الأنماط، ومحددات CSS (الفئات، الخصائص، الزائفة، السياقية).', topics: '4 أقسام • 8 أسئلة' },
-    { id: 'lec4', num: 'المحاضرة الرابعة', title: 'CSS 2: التتالي، الصندوق، وتنسيق النصوص', desc: 'مبادئ التتالي (Inheritance, Specificity, Location)، نموذج الصندوق (Box Model)، انهيار الهوامش، وتنسيق النصوص.', topics: '3 أقسام • 8 أسئلة' }
-  ];
-
-  return `
-    <div class="page-hero">
-      <span class="tag">بيئة دراسة تفاعلية شاملة</span>
-      <h2>مرحباً بك في منصة برمجة الويب 🌐</h2>
-      <p>تم فصل كل محاضرة من مقرر الشمري (إعداد د. إيفا هريكيس) في وحدة مستقلة تضم شرحاً منظماً، ومختبراً تطبيقياً حياً، واختباراً تفاعلياً مع التصحيح والشرح الفوري.</p>
-    </div>
-
-    <div class="dash-grid">
-      ${cards.map(c => {
-        const sc = state.scores[c.id];
-        const status = sc !== undefined ? `النتيجة: ${sc}% ✅` : (state.completed[c.id] ? 'تمت المراجعة 📖' : 'ابدأ الدراسة ←');
-        return `
-          <div class="lecture-card" onclick="switchView('${c.id}')">
-            <span class="lec-num">${c.num}</span>
-            <h3>${c.title}</h3>
-            <p>${c.desc}</p>
-            <div class="card-meta">
-              <span>${c.topics}</span>
-              <strong style="color:var(--primary)">${status}</strong>
+    <!-- Top Sticky Header -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-white/85 dark:bg-slate-900/85 border-b border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <!-- Logo & Title -->
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-code text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-extrabold tracking-tight bg-gradient-to-l from-indigo-600 to-violet-500 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">
+                        بنك أسئلة برمجة الويب
+                    </h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 font-semibold">
+                        نموذج ITP الشامل • محلول ومُدقّق بدقة
+                    </p>
+                </div>
             </div>
-          </div>
-        `;
-      }).join('')}
-    </div>
 
-    <div class="card">
-      <h3>🧭 كيف تحقق أقصى استفادة من الموقع؟</h3>
-      <div class="info-grid">
-        <div class="mini-box"><strong>1. اقرأ بتركيز (تبويب الشرح)</strong>كل محاضرة مقسمة لأقسام قابلة للطي مع جداول مقارنة ومصطلحات إنجليزية دقيقة كما في المقرر.</div>
-        <div class="mini-box"><strong>2. جرّب بيدك (تبويب المختبر)</strong>عدّل الكود، جرّب محددات CSS، حرّك أشرطة Box Model، وحلّل روابط URL مباشرةً لترسيخ الفهم.</div>
-        <div class="mini-box"><strong>3. اختبر نفسك (تبويب الاختبار)</strong>أجب عن الأسئلة واحصل على شرح فوري لكل إجابة، ثم اختبر نفسك في الاختبار الشامل للمادة.</div>
-      </div>
-    </div>
-  `;
-}
+            <!-- Live Score & Controls -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Mode Switcher -->
+                <div class="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center border border-slate-200 dark:border-slate-700">
+                    <button id="btnQuizMode" onclick="setMode('quiz')" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-indigo-600 text-white shadow">
+                        <i class="fa-solid fa-pen-to-square ml-1"></i> وضع الاختبار
+                    </button>
+                    <button id="btnStudyMode" onclick="setMode('study')" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600">
+                        <i class="fa-solid fa-book-open ml-1"></i> وضع الدراسة
+                    </button>
+                </div>
 
-function renderLectureShell(lecId) {
-  const meta = {
-    lec1: { tag: 'المحاضرة الأولى • 7 أقسام', title: 'كيف يعمل الويب (How the Web Works)', sub: 'التأسيس الشبكي للويب: الإنترنت، العميل والخادم، TCP/IP، DNS، URL، HTTP، والمتصفحات.' },
-    lec2: { tag: 'المحاضرة الثانية • 5 أقسام', title: 'مقدمة في HTML (HTML 1: Introduction)', sub: 'لغة ترميز النص التشعبي، الهيكل الهرمي، العناصر الدلالية، المسارات، و Block مقابل Inline.' },
-    lec3: { tag: 'المحاضرة الثالثة • 4 أقسام', title: 'CSS 1: المحددات والتنسيق الأساسي', sub: 'بناء جملة CSS، الألوان، وحدات em و rem، مواقع الأنماط، وجميع أنواع المحددات.' },
-    lec4: { tag: 'المحاضرة الرابعة • 3 أقسام', title: 'CSS 2: التتالي ونموذج الصندوق وتنسيق النصوص', sub: 'كيف يحسم المتصفح التعارضات (Cascade)، أبعاد الصندوق و box-sizing، وتنسيق الخطوط والفقرات.' }
-  }[lecId];
-
-  const tab = state.subtab[lecId] || 'study';
-  let bodyHTML = '';
-  if (tab === 'study') bodyHTML = getStudyHTML(lecId);
-  else if (tab === 'lab') bodyHTML = getLabHTML(lecId);
-  else if (tab === 'quiz') bodyHTML = renderQuizHTML(lecId);
-
-  return `
-    <div class="page-hero">
-      <span class="tag">${meta.tag}</span>
-      <h2>${meta.title}</h2>
-      <p>${meta.sub}</p>
-    </div>
-
-    <div class="subtabs">
-      <button class="subtab-btn ${tab==='study'?'active':''}" onclick="setSubtab('${lecId}','study')">📖 الشرح المنظم</button>
-      <button class="subtab-btn ${tab==='lab'?'active':''}" onclick="setSubtab('${lecId}','lab')">🧪 المختبر والأمثلة التفاعلية</button>
-      <button class="subtab-btn ${tab==='quiz'?'active':''}" onclick="setSubtab('${lecId}','quiz')">📝 اختبار المحاضرة (${QUIZZES[lecId].length} أسئلة)</button>
-    </div>
-
-    ${bodyHTML}
-  `;
-}
-
-// ===================== STUDY CONTENT FOR EACH LECTURE =====================
-function getStudyHTML(lecId) {
-  if (lecId === 'lec1') return `
-    <details class="acc" open>
-      <summary>القسم 1: تاريخ الإنترنت والشبكة العنكبوتية العالمية (History of Internet & WWW)</summary>
-      <div class="acc-body">
-        <p>يركز المساق على التقنيات الثلاث للواجهة الأمامية: <span class="en-term">HTML</span> للهيكل، <span class="en-term">CSS</span> للتنسيق، و <span class="en-term">JavaScript</span> للتفاعل. بينما تشمل منظومة الويب طرفين:</p>
-        <div class="info-grid">
-          <div class="mini-box"><strong>الواجهة الأمامية (Front End)</strong>تعمل داخل المتصفح: HTML, CSS, JavaScript وأطر عمل مثل React, Vue, Angular.</div>
-          <div class="mini-box"><strong>الواجهة الخلفية (Back End)</strong>تعمل على الخادم: PHP, Node، وتشمل APIs وقواعد البيانات والأمان.</div>
-        </div>
-        <h4>تبديل الدوائر مقابل تبديل الحزم</h4>
-        <div class="table-wrap"><table>
-          <tr><th>النوع</th><th>آلية العمل</th><th>الخصائص / العيوب</th></tr>
-          <tr><td><strong>تبديل الدوائر (Circuit Switched)</strong></td><td>ربط فيزيائي مستمر ومخصص عبر لوحة مفاتيح طوال الاتصال.</td><td>استخدام غير فعّال لعرض النطاق الترددي وصعوبة التوسع.</td></tr>
-          <tr><td><strong>تبديل الحزم (Packet Switched)</strong></td><td>تقسيم الرسالة إلى حزم مرقمة تسلك مسارات مختلفة وتُجمع عند الوجهة.</td><td>لا يتطلب اتصالاً مستمراً، مرن وقابل للتوسع (أساس الإنترنت الحديث).</td></tr>
-        </table></div>
-        <h4>المحطات التاريخية</h4>
-        <div class="table-wrap"><table>
-          <tr><th>السنة</th><th>المحطة التاريخية</th></tr>
-          <tr><td>الستينيات (1960s)</td><td>ظهور شبكة <span class="en-term">ARPANET</span></td></tr>
-          <tr><td>1974 / 1979</td><td>بروتوكول <span class="en-term">X.25</span> (1974) ثم ظهور شبكة <span class="en-term">USENET</span> (1979)</td></tr>
-          <tr><td>1981 / 1983</td><td>تقديم حزمة <span class="en-term">TCP/IP</span> (1981) واعتمادها رسمياً في 1 يناير 1983</td></tr>
-          <tr><td>1989 – 1994</td><td>مقترح تيم بيرنرز لي (1989)، نشر مكونات الويب (URL, HTTP, HTML, Server, Browser) عام 1992، وتأسيس <span class="en-term">W3C</span> عام 1994</td></tr>
-        </table></div>
-        <div class="callout info"><strong>تطور مواقع الويب (5 مراحل):</strong> المواقع الثابتة (Static) ← الديناميكية على الخادم (Dynamic PHP + DB) ← الويب 2.0 (انتقال المنطق لـ JS) ← خوادم خلفية أخف (Thinner Back Ends + JSON APIs) ← العودة للمواقع الثابتة السحابية الحديثة.</div>
-      </div>
-    </details>
-
-    <details class="acc">
-      <summary>القسم 2: نموذج العميل والخادم (The Client-Server Model)</summary>
-      <div class="acc-body">
-        <div class="info-grid">
-          <div class="mini-box"><strong>العميل (Client)</strong>يرسل الطلبات (Requests) ويستقبل الاستجابات (Responses). يشمل الحواسيب والهواتف والأجهزة اللوحية بمواصفات متفاوتة.</div>
-          <div class="mini-box"><strong>الخادم (Server)</strong>يعمل 24/7، يستمع للطلبات ويرد عليها، يستضيف التطبيقات والبيانات وينفذ مهام الأمان والتفويض.</div>
-        </div>
-        <p><strong>أنواع الخوادم:</strong> خوادم الويب (Web)، التطبيقات (Application)، قواعد البيانات (Database)، البريد (Mail)، الوسائط (Media)، المصادقة (Authentication)، والتحليلات (Analytics).</p>
-      </div>
-    </details>
-
-    <details class="acc">
-      <summary>القسم 3: بروتوكولات الإنترنت (TCP/IP, IPv4/IPv6)</summary>
-      <div class="acc-body">
-        <div class="table-wrap"><table>
-          <tr><th>الطبقة</th><th>الوظيفة الأساسية</th><th>أمثلة</th></tr>
-          <tr><td>التطبيقات (Application)</td><td>تتيح للتطبيقات التفاعل مع طبقة النقل.</td><td>HTTP, FTP, POP</td></tr>
-          <tr><td>النقل (Transport)</td><td>تضمن وصول الإرسالات بالترتيب وبدون أخطاء (عبر Sequence Number و ACK).</td><td>TCP, UDP</td></tr>
-          <tr><td>الإنترنت (Internet)</td><td>التوجيه (Routing) والعنونة (Addressing).</td><td>IPv4 (32-bit), IPv6 (128-bit)</td></tr>
-          <tr><td>الربط (Link)</td><td>النقل الفيزيائي للبتات الخام (Raw Bits).</td><td>MAC</td></tr>
-        </table></div>
-      </div>
-    </details>
-
-    <details class="acc">
-      <summary>القسم 4 و 5: نظام أسماء النطاقات (DNS) وبنية الـ URL</summary>
-      <div class="acc-body">
-        <p><strong>نظام DNS:</strong> يربط الأسماء المقروءة (مثل <span class="en-term">www.funwebdev.com</span>) بعناوين IP الرقمية (مثل <span class="en-term">66.147.244.79</span>). حَلَّ محل ملف <span class="en-term">hosts</span> القديم، ويتيح نقل الموقع لخادم جديد دون تغيير اسمه.</p>
-        <p style="margin-top:10px;"><strong>مكونات الـ URL:</strong></p>
-        <div class="table-wrap"><table>
-          <tr><th>المكون</th><th>الحالة</th><th>الوظيفة</th></tr>
-          <tr><td>البروتوكول (Protocol)</td><td>إلزامي</td><td>يحدد البروتوكول والمنفذ الافتراضي (HTTP=80, FTP=21).</td></tr>
-          <tr><td>النطاق (Domain)</td><td>إلزامي</td><td>اسم الخادم أو عنوان IP.</td></tr>
-          <tr><td>المنفذ (Port)</td><td>اختياري</td><td>نقطة اتصال برمجية (مثل رقم الباب داخل المبنى).</td></tr>
-          <tr><td>المسار (Path)</td><td>اختياري</td><td>الملف أو المجلد المطلوب على الخادم.</td></tr>
-          <tr><td>سلسلة الاستعلام (Query String)</td><td>اختياري</td><td>أزواج مفتاح=قيمة تبدأ بـ <span class="en-term">?</span> وتفصل بـ <span class="en-term">&amp;</span>.</td></tr>
-          <tr><td>المعرف الجزئي (Fragment)</td><td>اختياري</td><td>يبدأ بـ <span class="en-term">#</span> للانتقال لجزء محدد داخل الصفحة.</td></tr>
-        </table></div>
-      </div>
-    </details>
-
-    <details class="acc">
-      <summary>القسم 6 و 7: بروتوكول HTTP ومتصفحات الويب (Rendering & Caching)</summary>
-      <div class="acc-body">
-        <p><strong>طرق طلب HTTP:</strong> <span class="en-term">GET</span> (استرجاع مورد وتمرير بيانات بالـ URL)، <span class="en-term">POST</span> (إرسال بيانات داخل جسم الطلب بلا قيود طول)، <span class="en-term">HEAD</span> (جلب الترويسات فقط بدون Body).</p>
-        <div class="callout"><strong>قاعدة هامة:</strong> لا تستخدم GET أبداً لتغيير حالة البيانات (التعديل أو الحذف)، بل استخدم POST أو PUT/DELETE.</div>
-        <p><strong>فئات رموز الاستجابة:</strong> <span class="en-term">2xx</span> نجاح (200 OK) • <span class="en-term">3xx</span> إعادة توجيه/تخزين مؤقت (301, 304, 307) • <span class="en-term">4xx</span> أخطاء العميل (400, 401, 404, 414) • <span class="en-term">5xx</span> أخطاء الخادم (500).</p>
-        <p style="margin-top:10px;"><strong>مقاييس التصيير (Browser Rendering):</strong> <span class="en-term">TTFB</span> (أول بايت) ← <span class="en-term">FP</span> (أول تغيير مرئي) ← <span class="en-term">FCP</span> (أول محتوى) ← <span class="en-term">FMP</span> (المحتوى الأساسي) ← <span class="en-term">LCP</span> (أكبر عنصر) ← <span class="en-term">TTI</span> (الجاهزية للتفاعل) ← <span class="en-term">On Load</span>. بينما <span class="en-term">CLS</span> يقيس الاستقرار البصري.</p>
-        <p style="margin-top:8px;"><strong>التخزين المؤقت (Browser Caching):</strong> يتحقق المتصفح إن كانت النسخة المخزنة حديثة (Fresh) فيستخدمها مباشرة لتقليل حركة الشبكة.</p>
-      </div>
-    </details>
-  `;
-
-  if (lecId === 'lec2') return `
-    <details class="acc" open>
-      <summary>القسم 1 و 2: ما هي HTML وبناء الجملة والتداخل (Syntax & Nesting)</summary>
-      <div class="acc-body">
-        <p><span class="en-term">HTML</span> هي لغة ترميز قياسية (ليست لغة برمجة) تصف هيكل ومحتوى صفحة الويب، ووسومها <strong>غير حساسة لحالة الأحرف</strong>. تشمل خصائص العناصر أزواج <span class="en-term">name="value"</span> (القيم الرقمية مثل <span class="en-term">width="80"</span> لا تكتب فيها وحدة px).</p>
-        <div class="info-grid">
-          <div class="mini-box"><strong>الأب والابن (Parent & Child)</strong>العنصر الحاوي المباشر هو الأب، وما بداخله مباشرةً هو الابن.</div>
-          <div class="mini-box"><strong>الأشقاء (Siblings)</strong>العناصر التي تشترك في نفس الأب المباشر.</div>
-          <div class="mini-box"><strong>الأحفاد (Descendants)</strong>جميع العناصر الموجودة داخل عنصر على أي مستوى.</div>
-          <div class="mini-box"><strong>الأسلاف (Ancestors)</strong>جميع العناصر الحاوية لعنصر صعوداً حتى الجذر.</div>
-        </div>
-        <div class="callout tip"><strong>قاعدة التداخل الصحيح:</strong> أغلق وسم الابن دائماً قبل إغلاق وسم الأب: <span class="en-term">&lt;h1&gt;Hi &lt;strong&gt;Web&lt;/strong&gt;&lt;/h1&gt;</span></div>
-      </div>
-    </details>
-
-    <details class="acc">
-      <summary>القسم 3: هيكل مستند HTML5 الكامل</summary>
-      <div class="acc-body">
-<pre class="code">&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
-  &lt;head&gt;
-    &lt;meta charset="utf-8" /&gt;
-    &lt;title&gt;Page Title&lt;/title&gt;
-    &lt;link rel="stylesheet" href="css/main.css" /&gt;
-    &lt;script src="js/app.js"&gt;&lt;/script&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;h1&gt;Main heading goes here&lt;/h1&gt;
-  &lt;/body&gt;
-&lt;/html&gt;</pre>
-        <p><span class="en-term">&lt;!DOCTYPE html&gt;</span> يحدد نوع المستند، <span class="en-term">&lt;html&gt;</span> العنصر الجذر، <span class="en-term">&lt;head&gt;</span> بيانات وصفية لا تظهر في الجسم، و <span class="en-term">&lt;body&gt;</span> المحتوى المرئي.</p>
-      </div>
-    </details>
-
-    <details class="acc">
-      <summary>القسم 4: جولة في العناصر، المسارات النسبية، والعناصر الدلالية</summary>
-      <div class="acc-body">
-        <ul>
-          <li><strong>العناوين والفقرات:</strong> <span class="en-term">&lt;h1&gt;–&lt;h6&gt;</span>، والفقرة <span class="en-term">&lt;p&gt;</span> (يتجاهل المتصفح المسافات الإضافية داخلها، بخلاف <span class="en-term">&lt;pre&gt;</span>).</li>
-          <li><strong>الحاويات والفواصل:</strong> <span class="en-term">&lt;div&gt;</span> (كتلية)، <span class="en-term">&lt;span&gt;</span> (سطرية)، <span class="en-term">&lt;hr&gt;</span> (خط أفقي)، <span class="en-term">&lt;br&gt;</span> (كسر سطر).</li>
-          <li><strong>الروابط و target:</strong> <span class="en-term">_blank</span> (تبويب جديد)، <span class="en-term">_self</span> (الافتراضي)، <span class="en-term">_parent</span>، <span class="en-term">_top</span>، أو اسم <span class="en-term">&lt;iframe&gt;</span>.</li>
-          <li><strong>الصور:</strong> <span class="en-term">&lt;img src="..." alt="..." title="..." /&gt;</span> عنصر فارغ.</li>
-          <li><strong>كيانات الأحرف:</strong> <span class="en-term">&amp;nbsp;</span> مسافة، <span class="en-term">&amp;lt;</span> (&lt;)، <span class="en-term">&amp;gt;</span> (&gt;)، <span class="en-term">&amp;copy;</span> (©)، <span class="en-term">&amp;euro;</span> (€).</li>
-        </ul>
-        <h4>المسارات النسبية (Relative URLs)</h4>
-        <div class="table-wrap"><table>
-          <tr><th>النوع</th><th>مثال</th><th>القاعدة</th></tr>
-          <tr><td>نفس المجلد</td><td><span class="en-term">example.html</span></td><td>اسم الملف مباشرة</td></tr>
-          <tr><td>مجلد فرعي</td><td><span class="en-term">images/logo.gif</span></td><td>اسم المجلد ثم / ثم الملف</td></tr>
-          <tr><td>مجلد أب</td><td><span class="en-term">../about.html</span></td><td>استخدام ../ للصعود مستوى</td></tr>
-          <tr><td>مجلد شقيق</td><td><span class="en-term">../images/logo.gif</span></td><td>الصعود ثم الدخول للمجلد الشقيق</td></tr>
-          <tr><td>الإشارة للجذر</td><td><span class="en-term">/about.html</span></td><td>يعمل على خادم الويب فقط</td></tr>
-        </table></div>
-        <h4>العناصر الدلالية في HTML5</h4>
-        <p><span class="en-term">&lt;header&gt;</span>، <span class="en-term">&lt;footer&gt;</span>، <span class="en-term">&lt;nav&gt;</span>، <span class="en-term">&lt;main&gt;</span> (واحد فقط بالمستند)، <span class="en-term">&lt;section&gt;</span>، <span class="en-term">&lt;article&gt;</span>، <span class="en-term">&lt;figure&gt;/&lt;figcaption&gt;</span>، <span class="en-term">&lt;aside&gt;</span>، و <span class="en-term">&lt;details&gt;/&lt;summary&gt;</span> (أداة كشف تفاعلية في HTML 5.1).</p>
-      </div>
-    </details>
-
-    <details class="acc">
-      <summary>القسم 5: العناصر الكتلية مقابل السطرية (Block vs Inline)</summary>
-      <div class="acc-body">
-        <div class="table-wrap"><table>
-          <tr><th>الفئة</th><th>السلوك</th><th>أمثلة</th></tr>
-          <tr><td><strong>كتلية (Block-level)</strong></td><td>تبدأ سطراً جديداً، تملأ عرض الأب، تقبل width و height.</td><td>div, p, h1-h6, ul, ol, table, form, section, article</td></tr>
-          <tr><td><strong>سطرية (Inline)</strong></td><td>تتدفق أفقياً داخل السطر، ليس لها width أو height محدد.</td><td>span, a, em, strong, code, small, time, br</td></tr>
-          <tr><td><strong>سطرية-كتلية (Inline-block)</strong></td><td>سطرية ولكنها تقبل تحديد العرض والارتفاع.</td><td>img</td></tr>
-        </table></div>
-        <p>يمكن تغيير سلوك أي عنصر عبر خاصية CSS: <span class="en-term">display: block / inline / inline-block</span>.</p>
-      </div>
-    </details>
-  `;
-
-  if (lecId === 'lec3') return `
-    <details class="acc" open>
-      <summary>القسم 1 و 2: ما هي CSS، فوائدها، بناء الجملة، الألوان، ووحدات القياس</summary>
-      <div class="acc-body">
-        <p><strong>فوائد CSS الخمس:</strong> تحكم أفضل في التنسيق، قابلية صيانة عالية، تحسين إمكانية الوصول (Accessibility)، سرعة تحميل الصفحات، ومرونة المخرجات (Responsive Design).</p>
-        <p style="margin-top:8px;"><strong>بناء الجملة:</strong> <span class="en-term">selector { property: value; }</span>، والتعليقات تُكتب بـ <span class="en-term">/* comment */</span>.</p>
-        <h4>طرق وصف الألوان</h4>
-        <p>الأسماء القياسية (<span class="en-term">red</span>)، <span class="en-term">rgb(255,0,0)</span>، السداسي عشر <span class="en-term">#FF0000</span>، الشفافية <span class="en-term">rgba(255,0,0,0.5)</span>، و <span class="en-term">hsl / hsla</span> في CSS3.</p>
-        <h4>وحدات القياس النسبية مقابل المطلقة</h4>
-        <div class="table-wrap"><table>
-          <tr><th>الوحدة</th><th>النوع</th><th>الشرح</th></tr>
-          <tr><td><span class="en-term">px</span></td><td>نسبي (CSS2) / مطلق (CSS3)</td><td>بكسل واحد يساوي 1/96 بوصة في CSS3.</td></tr>
-          <tr><td><span class="en-term">em</span></td><td>نسبي</td><td>منسوب لحجم خط الأب — <strong>يتراكم (Compounds)</strong> مع التداخل.</td></tr>
-          <tr><td><span class="en-term">rem</span></td><td>نسبي (CSS3)</td><td>منسوب لجذر المستند <span class="en-term">&lt;html&gt;</span> — <strong>لا يتراكم</strong>.</td></tr>
-          <tr><td><span class="en-term">%, vw, vh</span></td><td>نسبي</td><td>نسبة من الأب (%) أو من نافذة العرض (vw, vh).</td></tr>
-          <tr><td><span class="en-term">in, cm, mm, pt, pc</span></td><td>مطلق</td><td>قياسات فيزيائية ثابتة (1pt = 1/72 بوصة).</td></tr>
-        </table></div>
-      </div>
-    </details>
-
-    <details class="acc">
-      <summary>القسم 3: مواقع الأنماط وأنواع صفحات الأنماط</summary>
-      <div class="acc-body">
-        <div class="info-grid">
-          <div class="mini-box"><strong>1. السطري (Inline)</strong>داخل خاصية <span class="en-term">style="..."</span>. يلغي التنسيقات الأخرى لكنه سيء للصيانة.</div>
-          <div class="mini-box"><strong>2. المضمّن (Embedded)</strong>داخل <span class="en-term">&lt;style&gt;</span> في <span class="en-term">&lt;head&gt;</span>. لصفحة واحدة فقط.</div>
-          <div class="mini-box"><strong>3. الخارجي (External)</strong>ملف <span class="en-term">.css</span> عبر <span class="en-term">&lt;link&gt;</span>. الأفضل والأسرع (يدعم الـ Cache).</div>
-        </div>
-        <p><strong>أنواع صفحات الأنماط الثلاثة:</strong> المؤلف (Author)، المستخدم (User)، والمتصفح (Browser Default).</p>
-      </div>
-    </details>
-
-    <details class="acc">
-      <summary>القسم 4: جميع أنواع محددات CSS (Selectors)</summary>
-      <div class="acc-body">
-        <div class="table-wrap"><table>
-          <tr><th>النوع</th><th>أمثلة</th><th>الوظيفة</th></tr>
-          <tr><td>العنصر / الشامل / المجمّع</td><td><span class="en-term">p</span> • <span class="en-term">*</span> • <span class="en-term">h1, h2</span></td><td>استهداف نوع عنصر، أو كل العناصر، أو عدة عناصر معاً.</td></tr>
-          <tr><td>الفئة (Class) والمعرّف (ID)</td><td><span class="en-term">.circle</span> • <span class="en-term">#first</span></td><td>الفئة تتكرر ويمكن دمجها، والمعرف فريد مرة واحدة بالصفحة.</td></tr>
-          <tr><td>محددات الخصائص</td><td><span class="en-term">[title]</span> • <span class="en-term">[href^="mailto"]</span> • <span class="en-term">[href$=".pdf"]</span> • <span class="en-term">[src*="flag"]</span></td><td>المطابقة حسب وجود الخاصية أو بدايتها (^) أو نهايتها ($) أو احتوائها (*).</td></tr>
-          <tr><td>الفئات والعناصر الزائفة</td><td><span class="en-term">:hover</span> • <span class="en-term">:focus</span> • <span class="en-term">:nth-child(2n)</span> • <span class="en-term">:first-letter</span></td><td>الفئات الزائفة لحالة العنصر، والعناصر الزائفة لجزء من النص.</td></tr>
-          <tr><td>السياقية (Combinators)</td><td><span class="en-term">div p</span> (حفيد) • <span class="en-term">div &gt; p</span> (ابن مباشر) • <span class="en-term">hr + p</span> (شقيق مجاور) • <span class="en-term">h3 ~ p</span> (شقيق عام)</td><td>اختيار العناصر بناءً على علاقاتها في شجرة المستند.</td></tr>
-        </table></div>
-      </div>
-    </details>
-  `;
-
-  if (lecId === 'lec4') return `
-    <details class="acc" open>
-      <summary>القسم 1: التتالي في CSS (The Cascade: Inheritance, Specificity, Location)</summary>
-      <div class="acc-body">
-        <div class="info-grid">
-          <div class="mini-box"><strong>1. الوراثة (Inheritance)</strong>تُورّث خصائص الخط واللون والنصوص والقوائم. لا تُورّث الحدود والهوامش والحشو والخلفيات (ويمكن إجبارها بـ <span class="en-term">inherit</span>).</div>
-          <div class="mini-box"><strong>2. التخصيص (Specificity)</strong>الوزن التصاعدي: الوراثة ← Element ← Class ← ID. الأكثر تحديداً يفوز.</div>
-          <div class="mini-box"><strong>3. الموقع (Location)</strong>عند تساوي التخصيص، القاعدة الأحدث تفوز: Browser ← User ← External ← Embedded ← Inline.</div>
-        </div>
-        <div class="callout"><strong>استثناء <span class="en-term">!important</span>:</strong> تلغي أي قاعدة مؤلف أخرى بغض النظر عن موقعها.</div>
-      </div>
-    </details>
-
-    <details class="acc">
-      <summary>القسم 2: نموذج الصندوق (The Box Model) ومشكلاته الأربع</summary>
-      <div class="acc-body">
-        <p>يتكون كل عنصر من 4 طبقات من الداخل للخارج: <strong>Content</strong> ← <strong>Padding</strong> (تظهر فيه خلفية العنصر) ← <strong>Border</strong> ← <strong>Margin</strong> (شفاف تظهر فيه خلفية الأب).</p>
-        <pre class="code">Total Width  = width  + padding(L+R) + border(L+R) + margin(L+R)
-Total Height = height + padding(T+B) + border(T+B) + margin(T+B)</pre>
-        <ul>
-          <li><strong>قاعدة عقارب الساعة (TRBL):</strong> <span class="en-term">Top, Right, Bottom, Left</span>.</li>
-          <li><strong>انهيار الهوامش العمودية (Collapsing Margins):</strong> عند تلامس هامشين عموديين يُعرض الأكبر فقط (الأفقية لا تنهار أبداً).</li>
-          <li><strong>المشكلات الأربع لـ width/height:</strong> (1) لا تُطبّق على السطرية النصية. (2) افتراضياً <span class="en-term">content-box</span> يزيد الأبعاد؛ الحل <span class="en-term">box-sizing: border-box</span>. (3) فيضان المحتوى يُعالج بـ <span class="en-term">overflow: visible | hidden | scroll | auto</span>. (4) الأبعاد بـ % تحتاج قيود <span class="en-term">min-width / max-width</span>.</li>
-        </ul>
-      </div>
-    </details>
-
-    <details class="acc">
-      <summary>القسم 3: تنسيق النصوص والخطوط (Text & Font Styling)</summary>
-      <div class="acc-body">
-        <p><strong>مكدس الخطوط (Web Font Stack):</strong> توفير بدائل مرتبة بالأولوية تنتهي بعائلة عامة (<span class="en-term">serif, sans-serif, monospace, cursive, fantasy</span>)، ويمكن تحميل خط مخصص عبر <span class="en-term">@font-face</span>.</p>
-        <p style="margin-top:8px;"><strong>خصائص الخط:</strong> <span class="en-term">font-family, font-size, font-style, font-variant, font-weight</span> (من 100 إلى 900).</p>
-        <p style="margin-top:8px;"><strong>خصائص الفقرة:</strong> <span class="en-term">letter-spacing, word-spacing, line-height, text-align, text-decoration, direction (rtl/ltr), text-indent, text-shadow, text-transform, vertical-align</span>.</p>
-      </div>
-    </details>
-  `;
-}
-
-// ===================== INTERACTIVE LABS =====================
-function getLabHTML(lecId) {
-  if (lecId === 'lec1') return `
-    <div class="lab-box">
-      <div class="lab-title">
-        <h3>🔍 1. محلل الـ URL التفاعلي</h3>
-        <div class="pill-row" style="margin:0">
-          <button class="btn secondary" onclick="setSampleURL('http://www.funwebdev.com/index.php?page=17#article')">مثال المحاضرة</button>
-          <button class="btn secondary" onclick="setSampleURL('https://shop.example.com:8443/products/view?cat=web&sort=asc#reviews')">مثال مع Port</button>
-          <button class="btn secondary" onclick="setSampleURL('ftp://files.uni.edu/lectures/lec1.pdf')">رابط FTP</button>
-        </div>
-      </div>
-      <input type="text" class="input-ltr" id="url-input" value="http://www.funwebdev.com/index.php?page=17#article" oninput="analyzeURL()" />
-      <div class="url-parts" id="url-output"></div>
-    </div>
-
-    <div class="lab-box">
-      <div class="lab-title">
-        <h3>📡 2. محاكي طلبات واستجابات HTTP</h3>
-      </div>
-      <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:8px;">اختر طريقة الطلب (Method) ورمز الاستجابة (Status Code) لمعاينة ترويسات HTTP الحقيقية:</p>
-      <div class="pill-row">
-        <button class="btn secondary active-pill" data-method="GET" onclick="setHttpMethod('GET', this)">GET</button>
-        <button class="btn secondary" data-method="POST" onclick="setHttpMethod('POST', this)">POST</button>
-        <button class="btn secondary" data-method="HEAD" onclick="setHttpMethod('HEAD', this)">HEAD</button>
-      </div>
-      <div class="pill-row">
-        <button class="btn secondary active-pill" onclick="setHttpCode(200, this)">200 OK</button>
-        <button class="btn secondary" onclick="setHttpCode(301, this)">301 Moved</button>
-        <button class="btn secondary" onclick="setHttpCode(304, this)">304 Not Modified</button>
-        <button class="btn secondary" onclick="setHttpCode(401, this)">401 Unauthorized</button>
-        <button class="btn secondary" onclick="setHttpCode(404, this)">404 Not Found</button>
-        <button class="btn secondary" onclick="setHttpCode(414, this)">414 URI Too Long</button>
-        <button class="btn secondary" onclick="setHttpCode(500, this)">500 Server Error</button>
-      </div>
-      <div class="split-editor">
-        <div>
-          <strong style="font-size:0.86rem;">طلب العميل (HTTP Request):</strong>
-          <pre class="code" id="http-req-box"></pre>
-        </div>
-        <div>
-          <strong style="font-size:0.86rem;">استجابة الخادم (HTTP Response):</strong>
-          <pre class="code" id="http-res-box"></pre>
-        </div>
-      </div>
-      <div class="callout info" id="http-explain"></div>
-    </div>
-  `;
-
-  if (lecId === 'lec2') return `
-    <div class="lab-box">
-      <div class="lab-title">
-        <h3>⚡ محرر HTML الحي (Live Sandbox)</h3>
-        <div class="pill-row" style="margin:0">
-          <button class="btn secondary" onclick="loadHtmlPreset('semantic')">HTML5 الدلالية</button>
-          <button class="btn secondary" onclick="loadHtmlPreset('blockinline')">Block vs Inline</button>
-          <button class="btn secondary" onclick="loadHtmlPreset('details')">أداة details/summary</button>
-          <button class="btn secondary" onclick="loadHtmlPreset('entities')">كيانات الأحرف</button>
-        </div>
-      </div>
-      <div class="split-editor">
-        <div>
-          <strong style="font-size:0.86rem;">اكتب أو عدّل كود HTML هنا:</strong>
-          <textarea class="editor-area" id="html-editor" oninput="runHtmlSandbox()"></textarea>
-        </div>
-        <div>
-          <strong style="font-size:0.86rem;">المعاينة الفورية (المتصفح):</strong>
-          <iframe class="preview-frame" id="html-preview"></iframe>
-        </div>
-      </div>
-    </div>
-  `;
-
-  if (lecId === 'lec3') return `
-    <div class="lab-box">
-      <div class="lab-title">
-        <h3>🎯 1. مختبر محددات CSS السياقية (مثال الشريحة 46)</h3>
-      </div>
-      <p style="font-size:0.9rem;color:var(--text-muted);">اضغط على أي محدد لترى العناصر التي يطابقها تتوهج فوراً داخل شجرة HTML:</p>
-      <div class="pill-row" id="sel-pills">
-        <button class="btn secondary active-pill" onclick="testSelector('ul a', this)">ul a:link (حفيد)</button>
-        <button class="btn secondary" onclick="testSelector('#main > time', this)">#main &gt; time (ابن مباشر)</button>
-        <button class="btn secondary" onclick="testSelector('div time', this)">div time (حفيد)</button>
-        <button class="btn secondary" onclick="testSelector('hr + p', this)">hr + p (شقيق مجاور)</button>
-        <button class="btn secondary" onclick="testSelector('h3 ~ p', this)">h3 ~ p (شقيق عام)</button>
-      </div>
-      <div class="selector-demo" id="selector-tree">
-        <div>&lt;nav&gt; &lt;ul&gt;</div>
-        <div class="sel-node" data-tags="ul-a" style="margin-left:20px;">&lt;li&gt;&lt;a href="#"&gt;Canada&lt;/a&gt;&lt;/li&gt;</div>
-        <div class="sel-node" data-tags="ul-a" style="margin-left:20px;">&lt;li&gt;&lt;a href="#"&gt;Germany&lt;/a&gt;&lt;/li&gt;</div>
-        <div>&lt;/ul&gt; &lt;/nav&gt;</div>
-        <div style="margin-top:8px;">&lt;div id="main"&gt;</div>
-        <div class="sel-node" data-tags="main-child-time div-time" style="margin-left:20px;">&lt;time&gt;2019-12-25&lt;/time&gt;</div>
-        <div style="margin-left:20px;">&lt;hr&gt;</div>
-        <div class="sel-node" data-tags="hr-plus-p div-time" style="margin-left:20px;">&lt;p&gt;By Ricardo on &lt;time&gt;2020-05-23&lt;/time&gt;&lt;/p&gt;</div>
-        <div class="sel-node" data-tags="" style="margin-left:20px;">&lt;p&gt;Easy on the HDR buddy.&lt;/p&gt;</div>
-        <div style="margin-left:20px;">&lt;hr&gt;</div>
-        <div class="sel-node" data-tags="hr-plus-p" style="margin-left:20px;">&lt;p&gt;Usage stats are here&lt;/p&gt;</div>
-        <div style="margin-left:20px;">&lt;h3&gt;Social&lt;/h3&gt;</div>
-        <div class="sel-node" data-tags="h3-tilde-p" style="margin-left:20px;">&lt;p&gt;Visits: 2300&lt;/p&gt;</div>
-        <div class="sel-node" data-tags="h3-tilde-p" style="margin-left:20px;">&lt;p&gt;Shares: 5&lt;/p&gt;</div>
-        <div>&lt;/div&gt;</div>
-      </div>
-      <div class="callout info" id="sel-explain" style="margin-top:12px;"></div>
-    </div>
-
-    <div class="lab-box">
-      <div class="lab-title">
-        <h3>📏 2. حاسبة وحدات القياس (em مقابل rem)</h3>
-      </div>
-      <div class="slider-grid">
-        <div class="slider-item">
-          <label><span>حجم خط الجذر (html)</span><span id="val-root">16px</span></label>
-          <input type="range" id="rng-root" min="12" max="24" value="16" oninput="updateUnitsLab()" />
-        </div>
-        <div class="slider-item">
-          <label><span>حجم خط الأب (.card)</span><span id="val-card">20px</span></label>
-          <input type="range" id="rng-card" min="14" max="30" value="20" oninput="updateUnitsLab()" />
-        </div>
-      </div>
-      <div class="info-grid" id="units-result"></div>
-    </div>
-  `;
-
-  if (lecId === 'lec4') return `
-    <div class="lab-box">
-      <div class="lab-title">
-        <h3>📦 1. محاكي نموذج الصندوق (Interactive Box Model)</h3>
-        <div class="pill-row" style="margin:0">
-          <button class="btn secondary active-pill" id="btn-content-box" onclick="setBoxSizing('content-box')">content-box (افتراضي)</button>
-          <button class="btn secondary" id="btn-border-box" onclick="setBoxSizing('border-box')">border-box</button>
-        </div>
-      </div>
-      <div class="slider-grid">
-        <div class="slider-item"><label><span>width</span><span id="bm-v-w">200px</span></label><input type="range" id="bm-w" min="100" max="320" value="200" oninput="updateBoxModel()"></div>
-        <div class="slider-item"><label><span>padding</span><span id="bm-v-p">15px</span></label><input type="range" id="bm-p" min="0" max="40" value="15" oninput="updateBoxModel()"></div>
-        <div class="slider-item"><label><span>border</span><span id="bm-v-b">4px</span></label><input type="range" id="bm-b" min="0" max="20" value="4" oninput="updateBoxModel()"></div>
-        <div class="slider-item"><label><span>margin</span><span id="bm-v-m">16px</span></label><input type="range" id="bm-m" min="0" max="40" value="16" oninput="updateBoxModel()"></div>
-      </div>
-      <div class="box-stage" id="bm-stage"></div>
-      <div class="callout info" id="bm-math" style="margin-top:14px;"></div>
-    </div>
-
-    <div class="lab-box">
-      <div class="lab-title">
-        <h3>🌊 2. تجربة خاصية Overflow</h3>
-        <div class="pill-row" style="margin:0">
-          <button class="btn secondary active-pill" onclick="setOverflowDemo('visible', this)">visible</button>
-          <button class="btn secondary" onclick="setOverflowDemo('hidden', this)">hidden</button>
-          <button class="btn secondary" onclick="setOverflowDemo('scroll', this)">scroll</button>
-          <button class="btn secondary" onclick="setOverflowDemo('auto', this)">auto</button>
-        </div>
-      </div>
-      <div style="padding:20px 10px 45px;">
-        <div id="overflow-box" style="width:260px;height:75px;border:2px solid var(--primary);padding:10px;background:var(--surface-alt);overflow:visible;margin:auto;border-radius:8px;font-size:0.88rem;">
-          هذا نص طويل يتجاوز ارتفاع الصندوق المحدد (75px) لتوضيح كيف تتعامل خاصية overflow مع فيضان المحتوى داخل عناصر HTML الكتلية في CSS. جرّب التبديل بين القيم الأربع أعلاه ولاحظ الفرق فوراً!
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-// ===================== QUIZ ENGINE =====================
-let activeQuizAnswers = {};
-
-function renderQuizHTML(lecId, customQuestions = null, title = null) {
-  const qs = customQuestions || QUIZZES[lecId];
-  activeQuizAnswers = {};
-  return `
-    <div class="card">
-      <div class="quiz-header">
-        <h3>📝 ${title || 'اختبار المحاضرة التفاعلي'}</h3>
-        <button class="btn secondary" onclick="resetQuiz('${lecId}', ${customQuestions ? 'true' : 'false'})">🔄 إعادة الاختبار</button>
-      </div>
-      <div id="quiz-list">
-        ${qs.map((item, idx) => `
-          <div class="q-card" id="qcard-${idx}">
-            <div class="q-title">${idx + 1}. ${item.q}</div>
-            <div class="q-options">
-              ${item.opts.map((opt, oIdx) => `
-                <button class="q-opt" onclick="answerQuestion('${lecId}', ${idx}, ${oIdx}, ${item.ans}, ${qs.length}, ${customQuestions ? 'true' : 'false'})">${opt}</button>
-              `).join('')}
+                <!-- Theme Toggle -->
+                <button onclick="toggleDarkMode()" title="تبديل المظهر" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-amber-400 border border-slate-200 dark:border-slate-700 transition">
+                    <i id="themeIcon" class="fa-solid fa-moon text-base"></i>
+                </button>
             </div>
-            <div class="q-explain" id="qexp-${idx}">💡 <strong>التوضيح:</strong> ${item.exp}</div>
-          </div>
-        `).join('')}
-      </div>
-      <div class="score-banner" id="score-banner" style="display:none;">
-        <div>
-          <h3 style="color:#fff;margin:0;" id="score-title">نتيجتك</h3>
-          <p style="margin:4px 0 0;opacity:0.9;" id="score-msg"></p>
         </div>
-        <button class="btn" style="background:#fff;color:var(--primary);" onclick="resetQuiz('${lecId}', ${customQuestions ? 'true' : 'false'})">محاولة جديدة</button>
-      </div>
-    </div>
-  `;
-}
 
-function renderFinalQuiz() {
-  const all = [
-    ...QUIZZES.lec1.slice(0, 4),
-    ...QUIZZES.lec2.slice(0, 4),
-    ...QUIZZES.lec3.slice(0, 4),
-    ...QUIZZES.lec4.slice(0, 4)
-  ];
-  window._finalQuestions = all;
-  return `
-    <div class="page-hero">
-      <span class="tag">مراجعة نهائية • 16 سؤالاً</span>
-      <h2>🏆 الاختبار الشامل لمادة برمجة الويب</h2>
-      <p>يجمع هذا الاختبار أهم الأسئلة من المحاضرات الأربع لقياس جاهزيتك الكاملة للامتحان.</p>
-    </div>
-    ${renderQuizHTML('final', all, 'الاختبار الشامل (المحاضرات 1 إلى 4)')}
-  `;
-}
-
-function answerQuestion(lecId, qIdx, chosen, correct, total, isFinal) {
-  if (activeQuizAnswers[qIdx] !== undefined) return;
-  activeQuizAnswers[qIdx] = (chosen === correct);
-
-  const card = document.getElementById('qcard-' + qIdx);
-  const btns = card.querySelectorAll('.q-opt');
-  btns.forEach((b, i) => {
-    b.disabled = true;
-    if (i === correct) b.classList.add('correct');
-    else if (i === chosen && chosen !== correct) b.classList.add('wrong');
-  });
-  document.getElementById('qexp-' + qIdx).classList.add('show');
-
-  const answeredCount = Object.keys(activeQuizAnswers).length;
-  if (answeredCount === total) {
-    const rightCount = Object.values(activeQuizAnswers).filter(Boolean).length;
-    const pct = Math.round((rightCount / total) * 100);
-    if (!isFinal) {
-      state.scores[lecId] = pct;
-      state.completed[lecId] = true;
-      saveState();
-    }
-    const banner = document.getElementById('score-banner');
-    banner.style.display = 'flex';
-    document.getElementById('score-title').textContent = `نتيجتك: ${rightCount} من ${total} (${pct}%)`;
-    document.getElementById('score-msg').textContent = pct >= 85 ? 'ممتاز جداً! إتقان رائع لمحتوى المحاضرة 🌟' : (pct >= 60 ? 'جيد! راجع الأسئلة التي أخطأت بها لتصل لـ 100% 👍' : 'أنصحك بمراجعة تبويب الشرح والمختبر ثم المحاولة مجدداً 📖');
-  }
-}
-
-function resetQuiz(lecId, isFinal) {
-  if (isFinal) render();
-  else setSubtab(lecId, 'quiz');
-}
-
-// ===================== INTERACTIVE WIDGETS LOGIC =====================
-function initInteractiveWidgets(lecId) {
-  if (state.subtab[lecId] !== 'lab') return;
-  if (lecId === 'lec1') { analyzeURL(); renderHttpSim(); }
-  if (lecId === 'lec2') { loadHtmlPreset('semantic'); }
-  if (lecId === 'lec3') { testSelector('ul a'); updateUnitsLab(); }
-  if (lecId === 'lec4') { updateBoxModel(); }
-}
-
-// --- Lec 1: URL Analyzer ---
-function setSampleURL(u) {
-  document.getElementById('url-input').value = u;
-  analyzeURL();
-}
-function analyzeURL() {
-  const input = document.getElementById('url-input');
-  const out = document.getElementById('url-output');
-  if (!input || !out) return;
-  try {
-    const u = new URL(input.value.trim());
-    const parts = [
-      { label: 'البروتوكول (Protocol) - إلزامي', val: u.protocol.replace(':',''), color: '#2563eb' },
-      { label: 'النطاق (Domain) - إلزامي', val: u.hostname, color: '#0ea5e9' },
-      { label: 'المنفذ (Port) - اختياري', val: u.port || '(افتراضي)', color: '#7c3aed' },
-      { label: 'المسار (Path) - اختياري', val: u.pathname || '/', color: '#10b981' },
-      { label: 'سلسلة الاستعلام (Query) - اختياري', val: u.search || '(لا يوجد)', color: '#f59e0b' },
-      { label: 'المعرف الجزئي (Fragment) - اختياري', val: u.hash || '(لا يوجد)', color: '#ef4444' }
-    ];
-    out.innerHTML = parts.map(p => `
-      <div class="url-part" style="border-top-color:${p.color}">
-        <small>${p.label}</small>
-        <code>${p.val}</code>
-      </div>
-    `).join('');
-  } catch (e) {
-    out.innerHTML = `<div class="callout" style="grid-column:1/-1;">أدخل رابطاً صالحاً يبدأ ببروتوكول مثل <span class="en-term">http://</span> أو <span class="en-term">https://</span></div>`;
-  }
-}
-
-// --- Lec 1: HTTP Simulator ---
-let httpState = { method: 'GET', code: 200 };
-const HTTP_INFO = {
-  200: { text: '200 OK', desc: 'نُفّذ الطلب بنجاح وأعاد الخادم المورد المطلوب.' },
-  301: { text: '301 Moved Permanently', desc: 'تم نقل المورد بشكل دائم إلى عنوان جديد (تُحدّث محركات البحث فهرسها).' },
-  304: { text: '304 Not Modified', desc: 'النسخة المخزنة مؤقتاً (Cache) لدى المتصفح لا تزال حديثة، لذا يعيد الخادم ترويسات فقط.' },
-  401: { text: '401 Unauthorized', desc: 'المورد محمي ويتطلب تقديم بيانات اعتماد (Credentials).' },
-  404: { text: '404 Not Found', desc: 'المورد المطلوب غير موجود على الخادم.' },
-  414: { text: '414 Request URI Too Long', desc: 'الرابط طويل جداً وتجاوز الحد الأقصى للخادم (غالباً بسبب بيانات كثيرة في GET).' },
-  500: { text: '500 Internal Server Error', desc: 'حدث خطأ داخلي غير متوقع في الخادم دون تفاصيل للعميل.' }
-};
-function setHttpMethod(m, btn) {
-  httpState.method = m;
-  btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active-pill'));
-  btn.classList.add('active-pill');
-  renderHttpSim();
-}
-function setHttpCode(c, btn) {
-  httpState.code = c;
-  btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active-pill'));
-  btn.classList.add('active-pill');
-  renderHttpSim();
-}
-function renderHttpSim() {
-  const req = document.getElementById('http-req-box');
-  const res = document.getElementById('http-res-box');
-  const exp = document.getElementById('http-explain');
-  if (!req) return;
-  const path = httpState.method === 'POST' ? '/FormProcess.php' : '/index.html';
-  req.textContent = `${httpState.method} ${path} HTTP/1.1\nHost: example.com\nUser-Agent: Mozilla/5.0\nAccept: text/html\nConnection: keep-alive${httpState.method==='POST' ? '\n\nusername=ali&course=web' : ''}`;
-  const info = HTTP_INFO[httpState.code];
-  const hasBody = httpState.method !== 'HEAD' && httpState.code !== 304;
-  res.textContent = `HTTP/1.1 ${info.text}\nServer: Apache\nContent-Type: text/html\nContent-Length: ${hasBody ? '4538' : '0'}${hasBody ? '\n\n<html><body>...</body></html>' : '\n\n(No Body returned)'}`;
-  exp.innerHTML = `<strong>${httpState.method} + ${info.text}:</strong> ${info.desc}` + (httpState.method === 'HEAD' ? ' — لاحظ أن طريقة <strong>HEAD</strong> تُعيد الترويسات فقط بدون جسم الصفحة لتوفير عرض النطاق.' : '');
-}
-
-// --- Lec 2: HTML Sandbox ---
-const HTML_PRESETS = {
-  semantic: `<header style="background:#1e3a8a;color:#fff;padding:10px;border-radius:6px;">
-  <h2 style="margin:0;">مدونة برمجة الويب</h2>
-</header>
-<nav style="margin:8px 0;">
-  <a href="#sec1">المقال</a> | <a href="#sec2">ملاحظة</a>
-</nav>
-<main>
-  <article id="sec1" style="background:#f1f5f9;padding:10px;border-radius:6px;">
-    <h3>مقال مستقل (article)</h3>
-    <p>نستخدم <strong>HTML5</strong> لكتابة كود دلالي نظيف.</p>
-  </article>
-</main>
-<footer style="margin-top:10px;font-size:12px;color:#64748b;">&copy; 2026 جميع الحقوق محفوظة</footer>`,
-  blockinline: `<h3>الفرق بين Block و Inline:</h3>
-<div style="background:#dbeafe;padding:6px;margin-bottom:6px;">أنا &lt;div&gt; (عنصر كتلي يأخذ كامل السطر)</div>
-<p style="background:#dcfce7;padding:6px;">أنا &lt;p&gt; كتلي، وبداخلي <span style="background:#fef08a;padding:2px 6px;">عنصر &lt;span&gt; سطري</span> و <strong>&lt;strong&gt; سطري</strong> دون كسر السطر.</p>`,
-  details: `<h3>أداة الكشف التفاعلية (HTML 5.1):</h3>
-<details open style="border:1px solid #cbd5e1;padding:10px;border-radius:8px;">
-  <summary style="font-weight:bold;cursor:pointer;color:#2563eb;">اضغط هنا لإظهار/إخفاء المعلومة</summary>
-  <p>وسما &lt;details&gt; و &lt;summary&gt; يتيحان إخفاء وإظهار المحتوى بدون أي سطر JavaScript!</p>
-</details>`,
-  entities: `<h3>كيانات الأحرف (Character Entities):</h3>
-<p>لعرض وسم HTML كنص نكتب: &lt;p&gt;Hello&lt;/p&gt;</p>
-<p>رموز خاصة: &copy; حقوق النشر | &euro; يورو | &trade; علامة تجارية</p>
-<p>مسافات متعددة:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;باستخدام &amp;nbsp;</p>`
-};
-function loadHtmlPreset(key) {
-  const ed = document.getElementById('html-editor');
-  if (!ed) return;
-  ed.value = HTML_PRESETS[key];
-  runHtmlSandbox();
-}
-function runHtmlSandbox() {
-  const ed = document.getElementById('html-editor');
-  const frame = document.getElementById('html-preview');
-  if (!ed || !frame) return;
-  frame.srcdoc = `<html dir="rtl"><body style="font-family:Segoe UI,Tahoma,sans-serif;padding:12px;line-height:1.6;">${ed.value}</body></html>`;
-}
-
-// --- Lec 3: Selector Lab & Units Lab ---
-const SEL_MAP = {
-  'ul a': { tag: 'ul-a', desc: '<strong>Descendant Selector:</strong> يطابق كل الروابط &lt;a&gt; الموجودة في أي مستوى داخل &lt;ul&gt;.' },
-  '#main > time': { tag: 'main-child-time', desc: '<strong>Direct Child (&gt;):</strong> يطابق فقط &lt;time&gt; الابن المباشر لـ #main (2019-12-25) ويتجاهل الموجود داخل &lt;p&gt;.' },
-  'div time': { tag: 'div-time', desc: '<strong>Descendant Selector:</strong> يطابق كل &lt;time&gt; داخل &lt;div&gt; سواء كان ابناً مباشراً أو حفيداً داخل &lt;p&gt;.' },
-  'hr + p': { tag: 'hr-plus-p', desc: '<strong>Adjacent Sibling (+):</strong> يطابق أول فقرة &lt;p&gt; تأتي مباشرةً بعد كل &lt;hr&gt; فقط.' },
-  'h3 ~ p': { tag: 'h3-tilde-p', desc: '<strong>General Sibling (~):</strong> يطابق جميع فقرات &lt;p&gt; التي تأتي بعد &lt;h3&gt; وتشترك معها في نفس الأب.' }
-};
-function testSelector(sel, btn) {
-  if (btn) {
-    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active-pill'));
-    btn.classList.add('active-pill');
-  }
-  const info = SEL_MAP[sel];
-  document.querySelectorAll('#selector-tree .sel-node').forEach(node => {
-    const tags = (node.dataset.tags || '').split(' ');
-    node.classList.toggle('hit', tags.includes(info.tag));
-  });
-  const exp = document.getElementById('sel-explain');
-  if (exp) exp.innerHTML = info.desc;
-}
-
-function updateUnitsLab() {
-  const r = Number(document.getElementById('rng-root').value);
-  const c = Number(document.getElementById('rng-card').value);
-  document.getElementById('val-root').textContent = r + 'px';
-  document.getElementById('val-card').textContent = c + 'px';
-  const em1 = (c * 1.2).toFixed(1);
-  const em2 = (c * 1.2 * 1.2).toFixed(1);
-  const rem = (r * 1.2).toFixed(1);
-  document.getElementById('units-result').innerHTML = `
-    <div class="mini-box"><strong>.label-em (1.2em)</strong><span style="font-size:${em1}px">حجم: ${em1}px</span><small style="display:block;color:var(--text-muted)">${c} × 1.2</small></div>
-    <div class="mini-box"><strong>.nested-em (1.2em متداخل)</strong><span style="font-size:${em2}px;color:var(--danger)">حجم: ${em2}px</span><small style="display:block;color:var(--text-muted)">تراكم! ${em1} × 1.2</small></div>
-    <div class="mini-box"><strong>.label-rem و .nested-rem (1.2rem)</strong><span style="font-size:${rem}px;color:var(--success)">حجم: ${rem}px</span><small style="display:block;color:var(--text-muted)">ثابت نسبة للجذر (${r} × 1.2) — لا تراكم</small></div>
-  `;
-}
-
-// --- Lec 4: Box Model Simulator ---
-let bmSizing = 'content-box';
-function setBoxSizing(mode) {
-  bmSizing = mode;
-  document.getElementById('btn-content-box').classList.toggle('active-pill', mode === 'content-box');
-  document.getElementById('btn-border-box').classList.toggle('active-pill', mode === 'border-box');
-  updateBoxModel();
-}
-function updateBoxModel() {
-  const w = Number(document.getElementById('bm-w').value);
-  const p = Number(document.getElementById('bm-p').value);
-  const b = Number(document.getElementById('bm-b').value);
-  const m = Number(document.getElementById('bm-m').value);
-  document.getElementById('bm-v-w').textContent = w + 'px';
-  document.getElementById('bm-v-p').textContent = p + 'px';
-  document.getElementById('bm-v-b').textContent = b + 'px';
-  document.getElementById('bm-v-m').textContent = m + 'px';
-
-  const contentW = bmSizing === 'content-box' ? w : Math.max(20, w - 2*p - 2*b);
-  const totalW = bmSizing === 'content-box' ? (w + 2*p + 2*b + 2*m) : (w + 2*m);
-
-  document.getElementById('bm-stage').innerHTML = `
-    <div class="bm-margin" style="padding:${m}px;">
-      <div class="bm-border" style="padding:${b}px;">
-        <div class="bm-padding" style="padding:${p}px;">
-          <div class="bm-content" style="width:${contentW}px;height:64px;">
-            Content (${contentW}px)
-          </div>
+        <!-- Progress Bar -->
+        <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 overflow-hidden">
+            <div id="topProgressBar" class="h-full bg-gradient-to-l from-emerald-500 via-indigo-500 to-violet-500 transition-all duration-500" style="width: 0%"></div>
         </div>
-      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-6xl w-full mx-auto px-4 py-6 flex-1">
+        
+        <!-- Stats & Dashboard Cards -->
+        <section class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
+            <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-list-check"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-semibold">إجمالي الأسئلة</div>
+                    <div id="statTotal" class="text-xl font-extrabold">0</div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-semibold">إجابات صحيحة</div>
+                    <div id="statCorrect" class="text-xl font-extrabold text-emerald-600 dark:text-emerald-400">0</div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-semibold">إجابات خاطئة</div>
+                    <div id="statWrong" class="text-xl font-extrabold text-rose-600 dark:text-rose-400">0</div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-semibold">نسبة الإنجاز</div>
+                    <div id="statPercent" class="text-xl font-extrabold text-amber-600 dark:text-amber-400">0%</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search & Filter Controls -->
+        <section class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm mb-6 space-y-4">
+            <div class="flex flex-col md:flex-row gap-3 justify-between">
+                <!-- Search Input -->
+                <div class="relative flex-1">
+                    <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="searchInput" oninput="applyFilters()" placeholder="ابحث عن سؤال، وسم HTML، خاصية CSS، أو دالة JS..." 
+                           class="w-full pr-10 pl-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-950 outline-none text-sm transition">
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <button onclick="shuffleQuestions()" class="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-slate-700 dark:text-slate-200 hover:text-indigo-600 text-xs sm:text-sm font-bold border border-slate-200 dark:border-slate-700 transition flex items-center gap-2">
+                        <i class="fa-solid fa-shuffle"></i> خلط الأسئلة
+                    </button>
+                    <button onclick="resetQuiz()" class="px-4 py-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 text-xs sm:text-sm font-bold border border-rose-200 dark:border-rose-800/50 transition flex items-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i> تصفير الإجابات
+                    </button>
+                    <button onclick="showSummaryModal()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow-md shadow-indigo-500/20 transition flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie"></i> النتيجة النهائية
+                    </button>
+                </div>
+            </div>
+
+            <!-- Category Pills -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar" id="categoryTabs">
+                <button onclick="setCategory('ALL')" data-cat="ALL" class="cat-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-indigo-600 text-white shadow-sm transition">
+                    <i class="fa-solid fa-layer-group ml-1"></i> الكل
+                </button>
+                <button onclick="setCategory('WEB')" data-cat="WEB" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    <i class="fa-solid fa-globe ml-1 text-sky-500"></i> أساسيات الويب و HTTP
+                </button>
+                <button onclick="setCategory('HTML')" data-cat="HTML" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    <i class="fa-brands fa-html5 ml-1 text-orange-500"></i> HTML5
+                </button>
+                <button onclick="setCategory('CSS')" data-cat="CSS" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    <i class="fa-brands fa-css3-alt ml-1 text-blue-500"></i> CSS3
+                </button>
+                <button onclick="setCategory('JS')" data-cat="JS" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    <i class="fa-brands fa-js ml-1 text-amber-400"></i> JavaScript & DOM
+                </button>
+            </div>
+        </section>
+
+        <!-- Questions Container -->
+        <div id="questionsList" class="space-y-5">
+            <!-- Rendered dynamically via JS -->
+        </div>
+
+        <!-- Empty Search State -->
+        <div id="emptyState" class="hidden text-center py-16 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
+            <div class="w-16 h-16 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 text-2xl mb-3">
+                <i class="fa-solid fa-search"></i>
+            </div>
+            <h3 class="text-lg font-bold">لا توجد أسئلة مطابقة لبحثك</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">حاول البحث بكلمة مفتاحية أخرى أو اختر تصنيف "الكل"</p>
+        </div>
+
+    </main>
+
+    <!-- Summary Modal -->
+    <div id="summaryModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl animate-fade-in">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-extrabold flex items-center gap-2">
+                    <i class="fa-solid fa-award text-amber-500"></i> ملخص التقييم والأداء
+                </h3>
+                <button onclick="closeSummaryModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-slate-800">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="text-center py-6 bg-slate-50 dark:bg-slate-800/60 rounded-2xl mb-5 border border-slate-100 dark:border-slate-800">
+                <div id="modalScoreCircle" class="text-4xl font-black text-indigo-600 dark:text-indigo-400 mb-1">0%</div>
+                <p id="modalGradeText" class="text-sm font-bold text-slate-600 dark:text-slate-300">ابدأ بحل الأسئلة لمعرفة مستواك!</p>
+            </div>
+
+            <div class="space-y-3 text-sm mb-6">
+                <div class="flex justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40">
+                    <span class="text-slate-500 dark:text-slate-400">الأسئلة المجاب عليها:</span>
+                    <span id="modalAnswered" class="font-bold">0 / 0</span>
+                </div>
+                <div class="flex justify-between p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400">
+                    <span>الإجابات الصحيحة:</span>
+                    <span id="modalCorrect" class="font-bold">0</span>
+                </div>
+                <div class="flex justify-between p-3 rounded-xl bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400">
+                    <span>الإجابات الخاطئة:</span>
+                    <span id="modalWrong" class="font-bold">0</span>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="closeSummaryModal()" class="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm transition">
+                    متابعة الحل
+                </button>
+                <button onclick="resetQuiz(); closeSummaryModal();" class="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-bold text-sm transition">
+                    إعادة البدء
+                </button>
+            </div>
+        </div>
     </div>
-  `;
 
-  document.getElementById('bm-math').innerHTML = bmSizing === 'content-box'
-    ? `<strong>box-sizing: content-box:</strong> العرض الكلي = ${w} (width) + ${2*p} (padding) + ${2*b} (border) + ${2*m} (margin) = <strong>${totalW}px</strong>`
-    : `<strong>box-sizing: border-box:</strong> الـ width (${w}px) يشمل الحشو والحدود، لذا العرض الكلي = ${w} + ${2*m} (margin) = <strong>${totalW}px</strong>`;
-}
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 py-5 text-center text-xs text-slate-500 dark:text-slate-400 mt-10">
+        تم استخراج وتدقيق جميع الأسئلة البرمجية بعناية من <span class="font-bold text-indigo-600 dark:text-indigo-400">بنك برمجة الويب - ITP</span>
+    </footer>
 
-function setOverflowDemo(val, btn) {
-  btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active-pill'));
-  btn.classList.add('active-pill');
-  document.getElementById('overflow-box').style.overflow = val;
-}
+    <!-- Comprehensive Solved Question Bank Script -->
+    <script>
+        /**
+         * Complete, accurately verified question bank extracted from "نموذج ويب.pdf" (ITP Web Programming).
+         * Every question includes:
+         * - id: Original question number from the PDF
+         * - category: 'WEB' | 'HTML' | 'CSS' | 'JS'
+         * - question: Arabic question prompt
+         * - code: Optional clean LTR code snippet (formatted & syntax-safe)
+         * - options: Array of choices
+         * - correct: 0-based index of the verified correct option
+         * - explanation: Accurate Arabic explanation detailing why the answer is correct
+         */
+        const ORIGINAL_QUESTIONS = [
+            {
+                id: 1,
+                category: "WEB",
+                question: "يُشير الخطأ رقم 404 المعاد من المخدم إلى:",
+                options: [
+                    "طلب خاطئ (Bad Request)",
+                    "صفحة الويب المطلوبة تم نقلها من مكانها",
+                    "صفحة الويب المطلوبة غير موجودة (Not Found)",
+                    "خطأ عند المخدم (Internal Server Error)"
+                ],
+                correct: 2,
+                explanation: "رمز الحالة HTTP 404 يعني Not Found أي أن المورد أو الصفحة المطلوبة غير موجودة على المخدم."
+            },
+            {
+                id: 2,
+                category: "HTML",
+                question: "يمكن تحديد خصائص (Attributes) للعناصر في HTML ضمن وسم النهاية (End Tag)؟",
+                options: ["صح", "خطأ"],
+                correct: 1,
+                explanation: "خطأ؛ تُكتب الخصائص (Attributes) دائماً داخل وسم البداية (Start Tag) فقط ولا تُكتب في وسم النهاية."
+            },
+            {
+                id: 3,
+                category: "HTML",
+                question: "أي العبارات التالية صحيحة حول لغة HTML؟",
+                options: [
+                    "HTML هي لغة برمجة",
+                    "HTML تصف محتوى وبنية صفحة الويب",
+                    "وسوم HTML حساسة لحالة الأحرف (Case-sensitive)",
+                    "كل من A و B صحيح"
+                ],
+                correct: 1,
+                explanation: "HTML هي لغة توصيف (Markup Language) وليست لغة برمجة، وهي غير حساسة لحالة الأحرف، وظيفتها وصف بنية ومحتوى صفحة الويب."
+            },
+            {
+                id: 4,
+                category: "HTML",
+                question: "أي من العبارات التالية صحيحة حول العنصر على مستوى البلوك (Block-level element) في HTML؟",
+                options: [
+                    "إنه دوماً يبدأ بسطر جديد",
+                    "يمكن أن يحتوي عناصر من نوع block فقط",
+                    "يأخذ كمساحة العرض الذي يحتاجه فقط من صفحة الويب",
+                    "كل من A و B صحيح"
+                ],
+                correct: 0,
+                explanation: "العنصر على مستوى البلوك يبدأ دائماً بسطر جديد ويأخذ كامل العرض المتاح (100%)، ويمكن أن يحتوي عناصر block و inline معاً."
+            },
+            {
+                id: 5,
+                category: "HTML",
+                question: "عنصر <span> هو عنصر في HTML بإمكانه أن يحوي عناصر HTML أخرى ويتم استخدامه للقيام بتجميع منطقي للمستوى (Inline grouping).",
+                options: ["صح", "خطأ"],
+                correct: 0,
+                explanation: "صح؛ عنصر <span> هو حاوية سطرية (Inline container) تُستخدم لتجميع أجزاء من النص أو عناصر inline أخرى لتنسيقها."
+            },
+            {
+                id: 6,
+                category: "HTML",
+                question: "أي من عناصر HTML التالية يمكن استخدامه داخل عنصر <table> لتعريف عنوان من أجل الجدول؟",
+                options: ["<tablecaption>", "<caption>", "<table-cap>", "<table-caption>"],
+                correct: 1,
+                explanation: "الوسم القياسي في HTML لإضافة عنوان رئيسي للجدول هو <caption> ويوضع مباشرة بعد وسم <table>."
+            },
+            {
+                id: 7,
+                category: "HTML",
+                question: "ما هو كود الـ HTML الصحيح من أجل إنشاء رابط إلى إيميل محدد؟",
+                options: [
+                    '<a src="mailto:john@gmail.com">email us</a>',
+                    '<a href="mailto:john@gmail.com">email us</a>',
+                    '<a mailto="john@gmail.com">email us</a>',
+                    '<a link="john@gmail.com">email us</a>'
+                ],
+                correct: 1,
+                explanation: "نستخدم السمة href مع البروتوكول mailto: داخل وسم <a> لفتح عميل البريد الإلكتروني."
+            },
+            {
+                id: 8,
+                category: "HTML",
+                question: "أي من عناصر HTML التالية هو عنصر داخلي (Inline element)؟",
+                options: ["<span>", "<br>", "<strong>", "كل ما سبق صحيح"],
+                correct: 3,
+                explanation: "جميع العناصر المذكورة (<span>, <br>, <strong>) هي عناصر سطرية (Inline elements) لا تبدأ سطراً جديداً."
+            },
+            {
+                id: 9,
+                category: "HTML",
+                question: "خاصية action لعنصر <form> تحدد URL للملف من جانب المخدم الذي سيقوم بمعالجة بيانات النموذج عندما يتم إرسالها.",
+                options: ["صح", "خطأ"],
+                correct: 0,
+                explanation: "صح؛ السمة action تحدد مسار السكربت على المخدم (Server-side) الذي يستقبل البيانات ويعالجها."
+            },
+            {
+                id: 10,
+                category: "HTML",
+                question: "ما هو الدخل الصحيح الذي يوافق الـ pattern التالية؟",
+                code: '<input type="text" pattern="[A-Z]{3}-[0-9]{2}">',
+                options: ["CAT-44", "Cat-44", "CAT44", "كل من A و B صحيح"],
+                correct: 0,
+                explanation: "النمط يتطلب 3 أحرف إنجليزية كبيرة حصراً [A-Z]{3} تليها شرطة - ثم رقمين [0-9]{2}، وهذا ينطبق فقط على CAT-44."
+            },
+            {
+                id: 11,
+                category: "HTML",
+                question: "أي من عناصر HTML التالية صحيح لإنشاء زر يقوم بإرسال بيانات النموذج إلى المخدم؟",
+                options: [
+                    '<input type="button">',
+                    '<input type="submit">',
+                    '<button type="submit">',
+                    "كل من B و C صحيح"
+                ],
+                correct: 3,
+                explanation: "كلا الوسمين <input type=\"submit\"> و <button type=\"submit\"> يقومان بإرسال بيانات النموذج (Submit) إلى المخدم."
+            },
+            {
+                id: 12,
+                category: "CSS",
+                question: "أي من المحددات التالية صحيح لتطبيق قواعد CSS على كل العناصر في صفحة الويب؟",
+                options: [".all{color:red;}", "*{color: red;}", "#all{color:red;}", "&all{color:red;}"],
+                correct: 1,
+                explanation: "المحدد الشامل Universal Selector يُرمز له بالنجمة * ويستهدف كافة عناصر الصفحة."
+            },
+            {
+                id: 13,
+                category: "CSS",
+                question: "ما هو الحجم الصحيح لعنصر <span> في خرج الكود التالي؟",
+                code: `<head>\n  <style>\n    body { font-size: 16px; }\n    p { font-size: 32px; }\n    span { font-size: 2em; }\n  </style>\n</head>\n<body>\n  <p><span>hello world</span></p>\n</body>`,
+                options: ["16px", "32px", "48px", "64px"],
+                correct: 3,
+                explanation: "وحدة em نسبية لحجم خط العنصر الأب المباشر (<p>) وهو 32px. إذن 2em = 2 × 32px = 64px."
+            },
+            {
+                id: 14,
+                category: "CSS",
+                question: "ما هو كود الـ CSS الصحيح لجعل النص داخل عنصر <p> بلون أخضر؟",
+                options: [
+                    "p { color: green; }",
+                    "p { color: rgb(0,255,0); }",
+                    "p { color: #00FF00; }",
+                    "كل ما سبق صحيح"
+                ],
+                correct: 3,
+                explanation: "جميع الصيغ الثلاث (اسم اللون green، نظام RGB، والنظام الست عشري #00FF00) تمثل اللون الأخضر بشكل صحيح."
+            },
+            {
+                id: 15,
+                category: "CSS",
+                question: "اربط محددات الـ CSS التالية مع تعاريفها الصحيحة:\n(i) a:link   (ii) a:active   (iii) a:visited\n(a) يحدد الرابط عندما يتم نقره   (b) يحدد الرابط بعد أن يتم نقره   (c) يحدد الرابط قبل أن يتم نقره",
+                options: [
+                    "c-i , a-ii , b-iii",
+                    "b-i , a-ii , c-iii",
+                    "a-i , c-ii , b-iii",
+                    "a-i , b-ii , c-iii"
+                ],
+                correct: 0,
+                explanation: "a:link للرابط غير المزار بعد (c-i)، a:active لحظة النقر على الرابط (a-ii)، و a:visited للرابط الذي تمت زيارته مسبقاً (b-iii)."
+            },
+            {
+                id: 16,
+                category: "CSS",
+                question: 'أي من محددات الـ CSS التالية يتوافق مع أي عنصر <a> والذي خاصية href له تبدأ بـ "mailto"؟',
+                options: [
+                    'a[href^="mailto"]',
+                    'a[href="mailto"]',
+                    'a[href*="mailto"]',
+                    'a[href$="mailto"]'
+                ],
+                correct: 0,
+                explanation: "الرمز ^= يعني (يبدأ بـ)، بينما *= يعني (يحتوي على)، و $= يعني (ينتهي بـ)."
+            },
+            {
+                id: 17,
+                category: "CSS",
+                question: "ما هو كود الـ CSS الصحيح لجعل كل كلمة في النص داخل عنصر <p> تبدأ بحرف كبير؟",
+                options: [
+                    "p { text-style: capitalize; }",
+                    "p { text-transform: capitalize; }",
+                    "p { transform: capitalize; }",
+                    "ليس أي مما سبق"
+                ],
+                correct: 1,
+                explanation: "الخاصية text-transform مع القيمة capitalize تحول الحرف الأول من كل كلمة إلى حرف كبير."
+            },
+            {
+                id: 18,
+                category: "CSS",
+                question: "ما هو الخرج الصحيح للكود التالي؟",
+                code: `<head>\n  <style>\n    body { color: red; }\n    div { color: yellow; }\n    .main { color: blue; }\n    #last { color: orange; }\n  </style>\n</head>\n<body>\n  <div>\n    <p class="main" style="color:green;">first p</p>\n    <p class="main" id="last">second p</p>\n  </div>\n  <div><p>third p</p></div>\n</body>`,
+                options: [
+                    "لون first p هو أزرق، second p هو برتقالي، third p هو أحمر",
+                    "لون first p هو أخضر، second p هو برتقالي، third p هو أحمر",
+                    "لون first p هو أخضر، second p هو برتقالي، third p هو أصفر",
+                    "لون first p هو أخضر، second p هو أزرق، third p هو أصفر"
+                ],
+                correct: 2,
+                explanation: "first p يأخذ التنسيق السطري inline (أخضر)، second p يأخذ محدد id الأقوى (برتقالي)، third p يرث اللون من الأب المباشر div (أصفر)."
+            },
+            {
+                id: 19,
+                category: "CSS",
+                question: "ما هو كود الـ CSS الصحيح الذي يجعل الخط بلون pink على كل عناصر <strong> التي لديها عنصر <p> كأب مباشر لها؟",
+                options: [
+                    "p strong { color: pink; }",
+                    "p + strong { color: pink; }",
+                    "p > strong { color: pink; }",
+                    "p ~ strong { color: pink; }"
+                ],
+                correct: 2,
+                explanation: "محدد الابن المباشر (Child Selector) في CSS هو علامة أكبر من ( > )."
+            },
+            {
+                id: 20,
+                category: "CSS",
+                question: "أي من القيم التالية هي قيم محتملة لخاصية overflow في CSS2.1؟\n(i) visible  (ii) hidden  (iii) fixed  (iv) auto  (v) scroll",
+                options: [
+                    "فقط i, iii, iv",
+                    "فقط ii, iii, iv",
+                    "فقط i, iii",
+                    "فقط i, ii, iv, v"
+                ],
+                correct: 3,
+                explanation: "القيم القياسية لخاصية overflow هي: visible, hidden, scroll, auto (أما fixed فهي قيمة لخاصية position وليست overflow)."
+            },
+            {
+                id: 21,
+                category: "CSS",
+                question: "أي من القيم التالية هي قيم محتملة لخاصية background-repeat في CSS؟\n(i) repeat-x  (ii) repeat-y  (iii) no-repeat  (iv) repeat-xy",
+                options: ["فقط i, ii, iii", "فقط iii, iv", "فقط i, ii", "i, ii, iii, iv"],
+                correct: 0,
+                explanation: "لا توجد قيمة اسمها repeat-xy في CSS؛ التكرار في الاتجاهين يُكتب repeat فقط."
+            },
+            {
+                id: 22,
+                category: "CSS",
+                question: "العنصر الذي له خاصية position: absolute في CSS يحدد مكانه بالنسبة لأقرب سلف له (مُتموضع positioned)؟",
+                options: ["صح", "خطأ"],
+                correct: 0,
+                explanation: "صح؛ العنصر ذو position: absolute يتموضع بالنسبة لأقرب عنصر سلف (Ancestor) يمتلك position غير static (مثل relative أو absolute)."
+            },
+            {
+                id: 23,
+                category: "JS",
+                question: 'ما هو كود الـ JavaScript الصحيح لكتابة عبارة "Hello World" في الـ console؟',
+                options: [
+                    'console.alert("Hello World");',
+                    'console.log("Hello World");',
+                    'document.log("Hello World");',
+                    'console.write("Hello World");'
+                ],
+                correct: 1,
+                explanation: "الدالة console.log() تُستخدم لطباعة الرسائل والمخرجات في وحدة التحكم (Console) الخاصة بالمتصفح."
+            },
+            {
+                id: 24,
+                category: "CSS",
+                question: "ما هو الخرج الصحيح للكود التالي؟",
+                code: `<head>\n  <style>\n    .a { background-color: green; }\n    #c { background-color: yellow; }\n  </style>\n</head>\n<body>\n  <table>\n    <col id="c" />\n    <colgroup class="a">\n      <col style="background-color:red;" />\n      <col />\n    </colgroup>\n    <tr><th>Programming</th><th>Design</th><th>Design</th></tr>\n    <tr><td>PHP</td><td>MySQL</td><td>CSS</td></tr>\n  </table>\n</body>`,
+                options: [
+                    "لون الخلفية للعمود الأول أصفر، الثاني أحمر، الثالث أخضر",
+                    "لون الخلفية للعمود الأول أصفر، الثاني أخضر، الثالث أخضر",
+                    "لون الخلفية للعمود الأول أصفر، الثاني أحمر، الثالث أبيض",
+                    "لون الخلفية للعمود الأول أصفر، الثاني أخضر، الثالث أبيض"
+                ],
+                correct: 0,
+                explanation: "العمود الأول يأخذ #c (أصفر)، العمود الثاني يأخذ التنسيق السطري style (أحمر)، العمود الثالث يرث من colgroup.a (أخضر)."
+            },
+            {
+                id: 25,
+                category: "JS",
+                question: "الطرائق (Methods) للأغراض في JavaScript يتم تخزينها في خصائص الغرض كتوابع (Functions).",
+                options: ["صح", "خطأ"],
+                correct: 0,
+                explanation: "صح؛ في JavaScript، الطريقة (Method) هي ببساطة خاصية (Property) قيمتها عبارة عن دالة (Function)."
+            },
+            {
+                id: 26,
+                category: "JS",
+                question: "أي من العبارات التالية صحيحة حول لغة JavaScript؟",
+                options: [
+                    "JavaScript هي لغة مترجمة (Compiled)",
+                    "يتم تفسير برنامج JavaScript من قبل المستعرض (Interpreted)",
+                    "JavaScript ليست لغة غرضية التوجه",
+                    "كل من B و C صحيح"
+                ],
+                correct: 1,
+                explanation: "JavaScript لغة مفسّرة (Interpreted) ينفذها محرك المتصفح مباشرة، وهي لغة تدعم البرمجة غرضية التوجه."
+            },
+            {
+                id: 27,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var str = "Hello World!";\ndocument.write(str.slice(-8, -3));`,
+                options: ["llo", "o Wor", "o World!", "Hello"],
+                correct: 1,
+                explanation: 'الفهارس السالبة تعد من نهاية النص ("Hello World!" طوله 12): الفهرس -8 هو الحرف "o" في Hello، والفهرس -3 هو "l" في World (غير مشمول)، فالنتيجة هي "o Wor".'
+            },
+            {
+                id: 28,
+                category: "JS",
+                question: "السلسلة النصية (String) يمكن تحويلها إلى مصفوفة (Array) في JavaScript باستخدام طريقة:",
+                options: ["trim()", "substring()", "split()", "convert()"],
+                correct: 2,
+                explanation: "التابع split() يقوم بتقسيم السلسلة النصية بناءً على فاصل محدد وإرجاع مصفوفة."
+            },
+            {
+                id: 29,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var arr = ["a", "b", "c", "d"];\narr.reverse();\narr.push("e");\narr.shift();\ndocument.getElementById("demo").innerHTML = arr;`,
+                options: ["c,b,a,e,d", "c,b,a,e", "b,c,d,e", "d,c,b,a"],
+                correct: 1,
+                explanation: 'reverse() تقلبها إلى ["d","c","b","a"]، push("e") تضيف e في النهاية لتصبح ["d","c","b","a","e"]، shift() تحذف العنصر الأول "d" فتبقى ["c","b","a","e"].'
+            },
+            {
+                id: 30,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var x = "";\ndocument.write(Boolean(x));`,
+                options: ["true", "false", "undefined", "NaN"],
+                correct: 1,
+                explanation: 'السلسلة النصية الفارغة "" تُعتبر قيمة Falsy في JavaScript، لذلك Boolean("") يُرجع false.'
+            },
+            {
+                id: 31,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي (بفرض عدم وجود فراغات بين وسوم li)؟",
+                code: `<ul id="myList"><li>Coffee</li><li>Tea</li><li>Milk</li></ul>\n<script>\n  document.getElementsByTagName("li")[0].id = "first";\n  document.getElementById("first").nextSibling.innerHTML = "Pepsi";\n  var x = document.getElementsByTagName("li")[1].innerHTML;\n  document.write(x);\n<\/script>`,
+                options: ["Coffee", "Tea", "Pepsi", "Milk"],
+                correct: 2,
+                explanation: 'نصل للعنصر li[0] ونعطيه id="first"، ثم nextSibling يشير إلى li[1] ويغير محتواه إلى "Pepsi". (ملاحظة: لو كان هناك مسافة/سطر جديد بين الوسوم لكان nextSibling عقدة نصية ولبقيت Tea).'
+            },
+            {
+                id: 32,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `document.write(Math.round(5.4));\ndocument.write(Math.ceil(5.4));\ndocument.write(Math.floor(5.4));`,
+                options: ["655", "566", "665", "565"],
+                correct: 3,
+                explanation: "Math.round(5.4) تقرب للأقرب وهو 5، Math.ceil(5.4) تقرب للأعلى وهو 6، Math.floor(5.4) تقرب للأسفل وهو 5. الناتج المتلاصق: 565."
+            },
+            {
+                id: 33,
+                category: "JS",
+                question: "اربط أحداث JavaScript التالية مع توصيفها الصحيح:\n(i) onblur  (ii) onmouseup  (iii) ondblclick  (iv) onmouseout\n(a) عند النقر مرتين  (b) عند إبعاد الفأرة عن العنصر  (c) عند فقدان التركيز  (d) عند تحرير زر الفأرة",
+                options: [
+                    "b-iv , a-iii , c-ii , d-i",
+                    "d-iv , a-iii , c-ii , b-i",
+                    "b-iv , a-iii , d-ii , c-i",
+                    "b-iv , d-iii , c-ii , a-i"
+                ],
+                correct: 2,
+                explanation: "onblur لفقدان التركيز (c-i)، onmouseup لتحرير زر الفأرة (d-ii)، ondblclick للنقر المزدوج (a-iii)، onmouseout لإبعاد الفأرة (b-iv)."
+            },
+            {
+                id: 34,
+                category: "JS",
+                question: 'ما هو كود JavaScript الصحيح لتغيير لون عنصر <p> له id="p1"؟',
+                options: [
+                    'document.getElementsByTagName("p1").color = "blue";',
+                    'document.getElementById("p1").style.color = "blue";',
+                    'document.getElementById("p1").color = "blue";',
+                    "ليس أي مما سبق"
+                ],
+                correct: 1,
+                explanation: "نصل للعنصر عبر getElementById ثم نعدل خصائص التنسيق عبر الكائن style.color."
+            },
+            {
+                id: 35,
+                category: "JS",
+                question: "أي من طرائق JavaScript التالية يتم استخدامها لإضافة خاصية تم إنشاؤها بشكل ديناميكي (Attr node) إلى عنصر في هرمية الـ DOM؟",
+                options: [
+                    "appendAttribute()",
+                    "appendChild()",
+                    "setAttributeNode()",
+                    "setAttributeChild()"
+                ],
+                correct: 2,
+                explanation: "التابع setAttributeNode() يُستخدم لإرفاق عقدة سمة (Attribute Node) تم إنشاؤها مسبقاً عبر createAttribute()."
+            },
+            {
+                id: 36,
+                category: "WEB",
+                question: "ما هي الطريقة الأفضل والأكثر أماناً للتحقق من صحة بيانات النموذج (Form Validation)؟",
+                options: [
+                    "التحقق من جانب الزبون باستخدام HTML5 فقط",
+                    "التحقق من جانب المخدم باستخدام JavaScript فقط",
+                    "التحقق من جانب المخدم باستخدام PHP فقط",
+                    "التحقق من جانب الزبون ومن جانب المخدم معاً"
+                ],
+                correct: 3,
+                explanation: "التحقق من جانب الزبون (Client-side) يحسن تجربة المستخدم ويخفف الضغط، بينما التحقق من جانب المخدم (Server-side) ضروري للأمان."
+            },
+            {
+                id: 37,
+                category: "HTML",
+                question: "أي من الشروط التالية يجب تحقيقها لتحميل ملف من جهاز الزبون إلى المخدم؟",
+                options: [
+                    "يجب أن تكون طريقة إرسال النموذج هي GET",
+                    'يجب إضافة خاصية enctype="multipart/form-data" إلى النموذج مع method="post"',
+                    'يجب إضافة <input type="file"> إلى النموذج',
+                    "كل من B و C صحيح"
+                ],
+                correct: 3,
+                explanation: 'لرفع الملفات نحتاج حقل <input type="file"> وتعيين method="post" مع enctype="multipart/form-data".'
+            },
+            {
+                id: 38,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var x = "-15";\ndocument.write(Boolean(x));`,
+                options: ["true", "false", "undefined", "NaN"],
+                correct: 0,
+                explanation: 'أي سلسلة نصية غير فارغة (حتى لو كانت "-15" أو "false" أو "0") تُعتبر Truthy وتُرجع true.'
+            },
+            {
+                id: 39,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var str = "Hello world, welcome to the universe.";\ndocument.write(str.indexOf("e", 5));`,
+                options: ["-1", "1", "14", "19"],
+                correct: 2,
+                explanation: 'البحث عن الحرف "e" بدءاً من الفهرس 5 (حرف w في world) يجد أول "e" في كلمة welcome عند الفهرس 14.'
+            },
+            {
+                id: 40,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var str = "welcome to javascript!";\ndocument.write(str.slice(-5, -2));`,
+                options: ["rip", "ri", "ript!", "script!"],
+                correct: 0,
+                explanation: 'طول النص 22: الفهرس -5 هو "r" (فهرس 17) والفهرس -2 هو "t" (فهرس 20 غير مشمول)، فالناتج هو "rip".'
+            },
+            {
+                id: 41,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var a = "GeeksforGeeks";\ndocument.write(a.substring(4, 5));`,
+                options: ["e", "k", "s", "f"],
+                correct: 2,
+                explanation: 'الفهرس 0:G, 1:e, 2:e, 3:k, 4:s. التابع substring(4, 5) يأخذ المحرف عند الفهرس 4 فقط وهو "s".'
+            },
+            {
+                id: 42,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var arr = ["a", "b", "c", "d"];\narr.push("e");\narr.reverse();\narr.shift();\ndocument.write(arr);`,
+                options: ["c,b,a,e", "d,c,b,a", "e,d,c,b,a", "d,c,b,a,e"],
+                correct: 1,
+                explanation: 'push("e") -> ["a","b","c","d","e"]، reverse() -> ["e","d","c","b","a"]، shift() يحذف أول عنصر ("e") فيتبقى ["d","c","b","a"].'
+            },
+            {
+                id: 43,
+                category: "JS",
+                question: "أي من التوابع التالية يتم استخدامها لاستدعاء تابع من أجل كل عنصر في المصفوفة في JavaScript؟",
+                options: ["each()", "forEach()", "every()", "forEvery()"],
+                correct: 1,
+                explanation: "التابع Array.prototype.forEach() ينفذ دالة معينة مرة واحدة لكل عنصر من عناصر المصفوفة."
+            },
+            {
+                id: 44,
+                category: "JS",
+                question: "أي من طرائق JavaScript التالية يتم استخدامها لإزالة الفراغات من بداية ونهاية أي سلسلة نصية؟",
+                options: ["strip()", "trim()", "slice()", "space()"],
+                correct: 1,
+                explanation: "التابع trim() يزيل المسافات البيضاء (Whitespace) من طرفي السلسلة النصية دون تعديل الوسط."
+            },
+            {
+                id: 45,
+                category: "HTML",
+                question: "ما هو الوسم الذي يعطي حجم الخط الأكبر للعنوان في HTML؟",
+                options: ["<h1>", "<h3>", "<h5>", "<h6>"],
+                correct: 0,
+                explanation: "وسوم العناوين تتدرج من <h1> (الأكبر والأكثر أهمية) إلى <h6> (الأصغر)."
+            },
+            {
+                id: 47,
+                category: "WEB",
+                question: "إن ...... هو معرف لمكان الصفحة أو المورد على موقع الويب.",
+                options: ["HTTP", "IP", "URL", "DNS"],
+                correct: 2,
+                explanation: "URL (Uniform Resource Locator) هو العنوان الفريد لتحديد موقع الموارد على الويب."
+            },
+            {
+                id: 49,
+                category: "HTML",
+                question: "من أجل فتح رابط لصفحة ويب في نفس نافذة أو إطار المتصفح الحالي، ما هي قيمة خاصية target الصحيحة؟",
+                options: ["_blank", "_self", "_parent", "_top"],
+                correct: 1,
+                explanation: "القيمة _self (وهي الافتراضية) تفتح الرابط في نفس الإطار/التبويب، بينما _blank تفتحه في تبويب جديد."
+            },
+            {
+                id: 52,
+                category: "CSS",
+                question: "ما هو الحجم الصحيح لعنصر <span> في خرج الكود التالي؟",
+                code: `<head>\n  <style>\n    body { font-size: 16px; }\n    p { font-size: 32px; }\n    span { font-size: 0.5rem; }\n  </style>\n</head>\n<body>\n  <p><span>hello world</span></p>\n</body>`,
+                options: ["8px", "16px", "32px", "ليس أي مما سبق"],
+                correct: 0,
+                explanation: "وحدة rem (Root em) تعتمد على حجم خط الجذر (html/body = 16px) وليس الأب المباشر. إذن 0.5 × 16px = 8px."
+            },
+            {
+                id: 53,
+                category: "CSS",
+                question: "ما هو الكود الصحيح لإضافة تعليق (Comment) إلى ملف CSS؟",
+                options: [
+                    "'this is a comment",
+                    "//this is a comment",
+                    "/*this is a comment*/",
+                    "//this is a comment//"
+                ],
+                correct: 2,
+                explanation: "التعليقات في CSS تُكتب حصراً بين /* و */."
+            },
+            {
+                id: 59,
+                category: "WEB",
+                question: "أي مما يلي هو المسؤول عن تحويل أسماء النطاقات (Domain Names / URLs) إلى عناوين IP؟",
+                options: ["Hub", "DNS Server", "DHCP Server", "Firewall"],
+                correct: 1,
+                explanation: "مخدم نظام أسماء النطاقات (DNS Server) يترجم الأسماء المقروءة مثل google.com إلى عناوين IP رقمية."
+            },
+            {
+                id: 60,
+                category: "WEB",
+                question: "يشير الخطأ رقم 500 المعاد من المخدم إلى:",
+                options: [
+                    "طلب خاطئ (Bad Request)",
+                    "صفحة الويب المطلوبة تم نقلها من مكانها",
+                    "صفحة الويب المطلوبة غير موجودة",
+                    "خطأ عند المخدم (Internal Server Error)"
+                ],
+                correct: 3,
+                explanation: "أكواد الحالة التي تبدأ بالرقم 5xx تشير إلى أخطاء من طرف المخدم (Server Errors)، و 500 هو خطأ داخلي في المخدم."
+            },
+            {
+                id: 64,
+                category: "HTML",
+                question: "ما هو كود الـ HTML الصحيح من أجل إنشاء رابط للاتصال برقم هاتف محدد؟",
+                options: [
+                    '<a tel="+963988456321">call us</a>',
+                    '<a link="tel:+963988456321">call us</a>',
+                    '<a call="+963988456321">call us</a>',
+                    '<a href="tel:+963988456321">call us</a>'
+                ],
+                correct: 3,
+                explanation: "نستخدم href مع البادئة tel: داخل وسم <a> لإجراء مكالمات هاتفية مباشرة من المتصفح."
+            },
+            {
+                id: 65,
+                category: "HTML",
+                question: "ما هو كود الـ HTML الصحيح من أجل إدراج صورة في صفحة الويب؟",
+                options: [
+                    '<img alt="myImage">image.gif</img>',
+                    '<img src="myImage" alt="image.gif">',
+                    '<img href="image.gif" alt="myImage">',
+                    '<img src="image.gif" alt="myImage">'
+                ],
+                correct: 3,
+                explanation: "وسم <img> هو وسم فارغ (Void element) يستخدم السمة src لمسار الصورة والسمة alt للنص البديل."
+            },
+            {
+                id: 70,
+                category: "CSS",
+                question: "أي من وحدات القياس التالية هي وحدة قياس نسبية (Relative Unit) في CSS3؟",
+                options: ["em", "pt", "in", "cm"],
+                correct: 0,
+                explanation: "وحدة em (وكذلك rem, %, vw, vh) هي وحدات نسبية، بينما pt, in, cm هي وحدات مطلقة (Absolute)."
+            },
+            {
+                id: 71,
+                category: "CSS",
+                question: 'أي من المحددات التالية صحيح لتطبيق قواعد CSS على العنصر الذي له id مساوي لـ "all"؟',
+                options: [".all{color:red;}", "*{color: red;}", "#all{color:red;}", "&all{color:red;}"],
+                correct: 2,
+                explanation: "يُستخدم رمز المربع (#) لاختيار عنصر بناءً على السمة id الخاصة به."
+            },
+            {
+                id: 74,
+                category: "CSS",
+                question: 'أي من محددات الـ CSS التالية يتوافق مع أي عنصر <img> والذي خاصية src له تحوي الكلمة "file" في مكان ما ضمنها؟',
+                options: [
+                    'img[src^="file"]',
+                    'img[src~="file"]',
+                    'img[src*="file"]',
+                    'img[src$="file"]'
+                ],
+                correct: 2,
+                explanation: "المحدد *= يطابق وجود السلسلة الجزئية في أي مكان داخل قيمة الخاصية."
+            },
+            {
+                id: 81,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var count = 1;\nvar nums = [0, 1, 2, 0, 4];\nnums.forEach(num);\nfunction num(item) {\n  if (item) count += 2;\n}\nconsole.log(count);`,
+                options: ["6", "7", "9", "11"],
+                correct: 1,
+                explanation: "العدّاد يبدأ بـ 1. في المصفوفة توجد 3 قيم Truthy غير صفرية (1، 2، 4)، فيتم جمع 2 ثلاث مرات: 1 + 2 + 2 + 2 = 7."
+            },
+            {
+                id: 82,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var c = { greeting: 'Hello' };\nvar d = c;\nd.greeting = 'Hi!';\nconsole.log(c.greeting);`,
+                options: ["Hello", "undefined", "Hi!", "ReferenceError"],
+                correct: 2,
+                explanation: "الأغراض (Objects) في JavaScript تُنسخ بالمرجع (By Reference)، لذا فإن التعديل على d يعدل نفس الكائن الذي يشير إليه c."
+            },
+            {
+                id: 83,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var d = new Date("May 15, 1983 01:15:00");\ndocument.write(d.getDate());`,
+                options: ["May", "15", "1983", "May 15"],
+                correct: 1,
+                explanation: "التابع getDate() يُعيد يوم الشهر (من 1 إلى 31)، وهو هنا 15 (بينما getDay() يُعيد يوم الأسبوع)."
+            },
+            {
+                id: 88,
+                category: "WEB",
+                question: "أي من العبارات التالية صحيح حول الـ MIME Type؟",
+                options: [
+                    "الـ MIME هو معيار يُستخدم لتوصيف أنواع محتويات الرسائل والملفات على الإنترنت",
+                    "هو اختصار لـ Multipurpose Internet Mail Extensions",
+                    "MIME type لملف تنفيذي هو application/quicktime",
+                    "كل من A و B صحيح"
+                ],
+                correct: 3,
+                explanation: "MIME تعني Multipurpose Internet Mail Extensions وتُستخدم لتحديد نوع البيانات المرسلة عبر الإنترنت (مثل text/html أو application/json)."
+            },
+            {
+                id: 93,
+                category: "WEB",
+                question: "يشير رمز الحالة 301 المعاد من المخدم إلى:",
+                options: [
+                    "صفحة الويب المطلوبة تم نقلها بشكل دائم (Moved Permanently)",
+                    "صفحة الويب المطلوبة غير موجودة",
+                    "خطأ عند المخدم",
+                    "طلب خاطئ"
+                ],
+                correct: 0,
+                explanation: "الكود 301 يعني Moved Permanently (إعادة توجيه دائمة إلى عنوان URL جديد)."
+            },
+            {
+                id: 98,
+                category: "HTML",
+                question: "لإنشاء نموذج لرفع وتحميل الملفات، أي من القيم التالية لخاصيتي method و enctype لعنصر <form> صحيحة لتحقيق ذلك؟",
+                options: [
+                    '<form method="post" enctype="multipart/form-data">',
+                    '<form method="get" enctype="url-encoding">',
+                    '<form method="post" enctype="multipart/form-file">',
+                    '<form method="post" enctype="multipart/url-encoding">'
+                ],
+                correct: 0,
+                explanation: "يجب استخدام method=\"post\" مع enctype=\"multipart/form-data\" لتشفير وإرسال البيانات الثنائية للملفات."
+            },
+            {
+                id: 99,
+                category: "HTML",
+                question: "ما هو كود الـ HTML الصحيح لإضافة عنصر datalist وربطه بحقل الإدخال في النموذج؟",
+                options: [
+                    '<input type="data" list="hob"><datalist id="hob">...</datalist>',
+                    '<input type="text" name="hob"><datalist id="hob">...</datalist>',
+                    '<input type="text" list="hob"><datalist id="hob"><option value="reading"><option value="dancing"></datalist>',
+                    '<input type="text" id="hob"><datalist list="hob">...</datalist>'
+                ],
+                correct: 2,
+                explanation: "يتم ربط حقل <input> بقائمة <datalist> عبر مطابقة قيمة السمة list في حقل الإدخال مع قيمة id في عنصر datalist."
+            },
+            {
+                id: 100,
+                category: "CSS",
+                question: "أي من خصائص الـ CSS التالية قابلة للوراثة (Inherited) افتراضياً من الأب إلى الأبناء؟",
+                options: ["font-weight", "text-align", "margin", "كل من A و B صحيح"],
+                correct: 3,
+                explanation: "خصائص النصوص والخطوط مثل font-weight و text-align و color تورّث للأبناء، بينما خصائص الصندوق مثل margin و padding و border لا تورّث."
+            },
+            {
+                id: 103,
+                category: "JS",
+                question: "ما هو الكود الصحيح لإنشاء تابع (Function) اسمه add في JavaScript؟",
+                options: [
+                    "int add(int x1, int x2) { return x1 + x2; }",
+                    "function add(int x1, int x2) { return x1 + x2; }",
+                    "add(x1, x2) { return x1 + x2; }",
+                    "function add(x1, x2) { return x1 + x2; }"
+                ],
+                correct: 3,
+                explanation: "JavaScript لغة ديناميكية النمط (Dynamically typed) ولا نكتب أنواع البيانات مثل int للوسائط؛ نستخدم الكلمة المفتاحية function فقط."
+            },
+            {
+                id: 106,
+                category: "CSS",
+                question: "أي من المحددات التالية يتم اعتبارها pseudo-class في CSS3؟",
+                options: [":first-child", "::first-letter", "::first-line", "كل من B و C صحيح"],
+                correct: 0,
+                explanation: ":first-child هو Pseudo-class، بينما ::first-letter و ::first-line هما Pseudo-elements."
+            },
+            {
+                id: 107,
+                category: "CSS",
+                question: "أي من القيم التالية صحيحة لخاصية overflow لإخفاء ما تبقى من النص عند عدم ملاءمته مع حجم العنصر مع إضافة شريط تمرير دوماً؟",
+                options: ["overflow: scroll;", "overflow: hidden;", "overflow: auto;", "overflow: clip;"],
+                correct: 0,
+                explanation: "القيمة scroll تُظهر أشرطة التمرير دائماً، بينما auto تُظهرها فقط عند الحاجة (عند تجاوز المحتوى)."
+            },
+            {
+                id: 110,
+                category: "JS",
+                question: "أي من العبارات التالية صحيحة حول الـ DOM في JavaScript؟",
+                options: [
+                    "الـ DOM هو واجهة برمجية من أجل إضافة، حذف، تعديل، والحصول على عناصر HTML",
+                    "يتم إنشاء نموذج الـ DOM كشجرة من الأغراض (Objects) جذرها الغرض document",
+                    "أنواع العقد في الـ DOM هي Element, Attribute, Text, Comment",
+                    "كل ما سبق صحيح"
+                ],
+                correct: 3,
+                explanation: "جميع العبارات تصف بدقة بنية ووظيفة نموذج كائن المستند (Document Object Model - DOM)."
+            },
+            {
+                id: 111,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `var count = 0;\nvar nums = [0, false, 2, "s", null, undefined];\nnums.forEach(num);\nfunction num(item) {\n  if (item) count += 2;\n}\nconsole.log(count);`,
+                options: ["2", "4", "8", "12"],
+                correct: 1,
+                explanation: 'القيم 0 و false و null و undefined كلها Falsy. القيم Truthy فقط هما 2 و "s"، إذن count = 2 + 2 = 4.'
+            },
+            {
+                id: 112,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `console.log(Math.round(5.7));\nconsole.log(Number("5N"));\nconsole.log(Boolean("s"));`,
+                options: ["6 , 5 , false", "6 , NaN , true", "5 , NaN , false", "6 , NaN , false"],
+                correct: 1,
+                explanation: 'Math.round(5.7) = 6، تحويل سلسلة تحتوي حروفاً غير رقمية Number("5N") يعطي NaN، و Boolean("s") يعطي true.'
+            },
+            {
+                id: 115,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `function Animal(type) {\n  this.type = type;\n  this.sayType = function() { console.log(this.type); };\n}\nvar a1 = new Animal("cat");\nvar a2 = new Animal("dog");\nconsole.log(a1.sayType == a2.sayType);`,
+                options: ["true", "false"],
+                correct: 1,
+                explanation: "false؛ لأنه في نمط Constructor Function بدون Prototype، يتم إنشاء نسخة مستقلة جديدة في الذاكرة من الدالة sayType لكل كائن."
+            },
+            {
+                id: 116,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `var colors = new Array();\nvar count = colors.push("blue");\ncount = colors.unshift("red", "green", "black");\ncount = colors.unshift("yellow");\nvar item = colors.pop();\nconsole.log(item);`,
+                options: ["black", "red", "blue", "yellow"],
+                correct: 2,
+                explanation: 'push("blue") تضع "blue" في النهاية. unshift تضيف في البداية فتصبح المصفوفة ["yellow","red","green","black","blue"]. ثم pop() تسحب وتُرجع العنصر الأخير وهو "blue".'
+            },
+            {
+                id: 120,
+                category: "JS",
+                question: "ما هو كود الـ JavaScript الصحيح لإعادة قيمة حقل الـ fname في صفحة الـ HTML التالية؟",
+                code: `<form id="myForm">\n  Fname: <input type="text" name="fname"><br>\n  Lname: <input type="text" name="lname">\n</form>`,
+                options: [
+                    'document.getElementById("myForm").elements[0].value;',
+                    'document.forms[0].elements["fname"].value;',
+                    'document.forms[0]["fname"].value;',
+                    "كل ما سبق صحيح"
+                ],
+                correct: 3,
+                explanation: "جميع الطرق الثلاث صحيحة للوصول إلى أول عنصر داخل النموذج وقراءة قيمته عبر الخاصية value."
+            },
+            {
+                id: 122,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `function Animal() {}\nAnimal.prototype.type = "Dog";\nAnimal.prototype.sayType = function() { console.log(this.type); };\nvar a1 = new Animal();\nvar a2 = new Animal();\nconsole.log(a1.sayType == a2.sayType);`,
+                options: ["true", "false"],
+                correct: 0,
+                explanation: "true؛ لأن الدالة sayType مُعرّفة على الـ Prototype، وبالتالي يتشارك الكائنان a1 و a2 نفس المرجع للدالة في الذاكرة."
+            },
+            {
+                id: 127,
+                category: "WEB",
+                question: "أي من العبارات التالية صحيح حول طلبات GET في HTTP؟",
+                options: [
+                    "يتم استخدام طلبات GET للحصول على مورد موجود عند عنوان URL محدد",
+                    "يتم إرسال طلب GET عند النقر على رابط أو كتابة عنوان URL في نافذة المستعرض",
+                    "يتم إرسال بيانات النموذج باستخدام طلبات GET عبر الـ URL الخاص بالطلب (Query String)",
+                    "كل ما سبق صحيح"
+                ],
+                correct: 3,
+                explanation: "جميع الخيارات صحيحة وتلخص خصائص وطريقة عمل طلبات HTTP GET."
+            },
+            {
+                id: 135,
+                category: "WEB",
+                question: "يشير رمز الحالة 303 المعاد من المخدم إلى:",
+                options: [
+                    "طلب خاطئ",
+                    "خطأ عند المخدم",
+                    "صفحة الويب المطلوبة غير موجودة",
+                    "صفحة الويب المطلوبة تم نقلها من مكانها (See Other)"
+                ],
+                correct: 3,
+                explanation: "الكود 303 (See Other) هو أحد أكواد إعادة التوجيه (3xx) ويدل على توجيه المتصفح إلى عنوان URL آخر."
+            },
+            {
+                id: 136,
+                category: "CSS",
+                question: "أي من خصائص الـ CSS تستخدم من أجل تنسيق القائمة غير المرتبة (Unordered List)؟\n(i) list-style-type  (ii) list-style-image  (iii) list-type  (iv) list-color",
+                options: ["فقط i, ii, iii", "فقط i, ii, iv", "فقط i", "فقط i, ii"],
+                correct: 3,
+                explanation: "الخصائص القياسية للقوائم في CSS هي list-style-type و list-style-image و list-style-position."
+            },
+            {
+                id: 142,
+                category: "CSS",
+                question: "ما هو كود الـ CSS الصحيح لجعل لون خلفية الأسطر ذات الترتيب الزوجي ضمن جزء الـ body للجدول بلون أخضر؟",
+                options: [
+                    "tbody tr:nth-child(odd) { background-color: #00FF00; }",
+                    "tbody tr:nthChild(even) { background-color: green; }",
+                    "tbody td:nth-child(odd) { background-color: #00FF00; }",
+                    "tbody tr:nth-child(even) { background-color: green; }"
+                ],
+                correct: 3,
+                explanation: "نستخدم المحدد :nth-child(even) على السطر tr داخل tbody لتنسيق الأسطر الزوجية."
+            },
+            {
+                id: 144,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `console.log(Math.round(5.4));\nconsole.log(Number(" 5 "));\nconsole.log(Boolean(-5));`,
+                options: ["5 , 5 , true", "true , NaN , 5", "false , NaN , 5", "6 , 5 , true"],
+                correct: 0,
+                explanation: 'Math.round(5.4) = 5، و Number(" 5 ") يتجاهل الفراغات الجانبية ويعطي الرقم 5، و Boolean(-5) يعطي true لأن أي رقم غير الصفر هو Truthy.'
+            },
+            {
+                id: 145,
+                category: "JS",
+                question: "السيئة الأساسية لطريقة Factory Pattern لإنشاء الأغراض في JavaScript:",
+                options: [
+                    "يتم إنشاء الطرائق في كل مرة يتم فيها أخذ مثيل من الغرض مما يسبب هدراً في الذاكرة",
+                    "الكود غير منظم بشكل صحيح",
+                    "لا تعالج قضية هوية الغرض (Object Identification / instanceof)",
+                    "كل من A و C صحيح"
+                ],
+                correct: 3,
+                explanation: "نمط المصنع (Factory Pattern) يكرر إنشاء التوابع في الذاكرة لكل كائن ولا يحدد نوع الكائن المنشأ (instanceof)."
+            },
+            {
+                id: 151,
+                category: "WEB",
+                question: "المصطلح URL هو اختصار لـ:",
+                options: [
+                    "Uniform Resource Locator",
+                    "Unified Resource Locator",
+                    "Uniform Resource Launcher",
+                    "Unified Resource Launcher"
+                ],
+                correct: 0,
+                explanation: "URL هو اختصار لـ Uniform Resource Locator (مُحدّد موقع الموارد الموحد)."
+            },
+            {
+                id: 165,
+                category: "CSS",
+                question: "ما هو كود الـ CSS الصحيح لجعل النص داخل عنصر <p> بأحرف كبيرة لكن بحجم أصغر من الحجم الافتراضي للنص؟",
+                options: [
+                    "p { text-style: small-caps; }",
+                    "p { font-variant: small-caps; }",
+                    "p { text-transform: small-caps; }",
+                    "p { text-variant: small-caps; }"
+                ],
+                correct: 1,
+                explanation: "الخاصية font-variant: small-caps تعرض الأحرف الصغيرة كأحرف كبيرة مصغّرة."
+            },
+            {
+                id: 166,
+                category: "CSS",
+                question: "أي من القيم التالية صحيحة لخاصية overflow لإخفاء ما تبقى من النص عند عدم ملاءمته مع حجم العنصر الذي يحتويه مع إضافة شريط تمرير عند الحاجة فقط؟",
+                options: ["overflow: scroll;", "overflow: hidden;", "overflow: auto;", "overflow: clip;"],
+                correct: 2,
+                explanation: "القيمة auto تضيف أشرطة التمرير تلقائياً فقط عندما يتجاوز المحتوى أبعاد الحاوية."
+            },
+            {
+                id: 169,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `console.log(Number("5 23"));\nconsole.log(Boolean(""));\nconsole.log(typeof(3.14));`,
+                options: [
+                    "5 , false , number",
+                    "NaN , false , number",
+                    "5 , true , number",
+                    "NaN , false , float"
+                ],
+                correct: 1,
+                explanation: 'وجود مسافة داخل النص "5 23" يجعل Number() يعيد NaN، و Boolean("") يعيد false، ونوع الأعداد العشرية والصحيحة في JS هو "number".'
+            },
+            {
+                id: 170,
+                category: "JS",
+                question: "ما هي أنواع الصناديق المنبثقة (Popup Boxes) المدعومة قياسياً في JavaScript؟\n(i) prompt  (ii) alert  (iii) information  (iv) confirm",
+                options: ["فقط i, ii, iii", "فقط i, ii, iv", "i, ii, iii, iv", "فقط i, ii"],
+                correct: 1,
+                explanation: "تدعم JavaScript ثلاثة أنواع قياسية من الصناديق المنبثقة: alert() و confirm() و prompt()."
+            },
+            {
+                id: 172,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `var str = "Web Applications";\nconsole.log(str.substring(4, -5));`,
+                options: ['"Applica"', '"Web "', '"Applicat"', '""'],
+                correct: 1,
+                explanation: 'في دالة substring(start, end)، أي قيمة سالبة تُعامل كأنها 0، وإذا كان start > end يتم تبديلهما تلقائياً؛ فتصبح substring(0, 4) والتي تُعيد "Web ".'
+            },
+            {
+                id: 173,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `var str = "Internet and web Applications";\nconsole.log(str.slice(-9, -5));\nconsole.log(str.split(" "));`,
+                options: [
+                    'licat و ["Internet"], ["and"], ["web"], ["Applications"]',
+                    'lica و ["Internet"], ["and"], ["web"], ["Applications"]',
+                    'lica و ["Internet", "and", "web", "Applications"]',
+                    'licat و ["Internet", "and", "web", "Applications"]'
+                ],
+                correct: 2,
+                explanation: 'str.slice(-9, -5) يقتطع الأحرف من -9 إلى -5 من كلمة Applications وهي "lica"، و str.split(" ") يقسم الجملة إلى مصفوفة واحدة من 4 كلمات.'
+            },
+            {
+                id: 174,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `var count = 1;\nvar nums = [0, false, 2, "s", 4, null];\nnums.forEach(num);\nfunction num(item) {\n  if (item) count += 2;\n}\nconsole.log(count);`,
+                options: ["5", "7", "9", "11"],
+                correct: 1,
+                explanation: 'العدّاد يبدأ بـ 1. العناصر Truthy في المصفوفة هي 3 عناصر فقط (2، "s"، 4)، فيتم جمع 2 ثلاث مرات: 1 + 6 = 7.'
+            }
+        ];
 
-// Initial Render
-render();
-</script>
+        // Application State
+        let questions = [...ORIGINAL_QUESTIONS];
+        let userAnswers = {}; // { questionId: selectedOptionIndex }
+        let currentCategory = "ALL";
+        let currentMode = "quiz"; // 'quiz' | 'study'
+        let searchQuery = "";
+
+        // Category Metadata
+        const CATEGORY_BADGES = {
+            WEB: { label: "الويب و HTTP", classes: "bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-300 border-sky-200 dark:border-sky-800" },
+            HTML: { label: "HTML5", classes: "bg-orange-100 text-orange-700 dark:bg-orange-950/60 dark:text-orange-300 border-orange-200 dark:border-orange-800" },
+            CSS: { label: "CSS3", classes: "bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border-blue-200 dark:border-blue-800" },
+            JS: { label: "JavaScript", classes: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-800" }
+        };
+
+        // Escape HTML for safe code display
+        function escapeHTML(str) {
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Toggle Dark/Light Theme
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const icon = document.getElementById("themeIcon");
+            if (html.classList.contains("dark")) {
+                html.classList.remove("dark");
+                icon.className = "fa-solid fa-moon text-base";
+            } else {
+                html.classList.add("dark");
+                icon.className = "fa-solid fa-sun text-base";
+            }
+        }
+
+        // Switch between Quiz Mode and Study Mode
+        function setMode(mode) {
+            currentMode = mode;
+            const btnQuiz = document.getElementById("btnQuizMode");
+            const btnStudy = document.getElementById("btnStudyMode");
+
+            if (mode === "quiz") {
+                btnQuiz.className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-indigo-600 text-white shadow";
+                btnStudy.className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600";
+            } else {
+                btnStudy.className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-emerald-600 text-white shadow";
+                btnQuiz.className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600";
+            }
+            renderQuestions();
+        }
+
+        // Filter by Category
+        function setCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll(".cat-btn").forEach(btn => {
+                if (btn.dataset.cat === cat) {
+                    btn.className = "cat-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-indigo-600 text-white shadow-sm transition";
+                } else {
+                    btn.className = "cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition";
+                }
+            });
+            renderQuestions();
+        }
+
+        // Search Handler
+        function applyFilters() {
+            searchQuery = document.getElementById("searchInput").value.trim().toLowerCase();
+            renderQuestions();
+        }
+
+        // Select an Option
+        function selectOption(questionId, optionIndex) {
+            if (currentMode === "study") return; // Study mode already shows answers
+            if (userAnswers[questionId] !== undefined) return; // Lock once answered in quiz mode
+
+            userAnswers[questionId] = optionIndex;
+            updateStats();
+            renderQuestions();
+        }
+
+        // Reset Single Question
+        function resetSingleQuestion(questionId) {
+            delete userAnswers[questionId];
+            updateStats();
+            renderQuestions();
+        }
+
+        // Shuffle Questions
+        function shuffleQuestions() {
+            for (let i = questions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [questions[i], questions[j]] = [questions[j], questions[i]];
+            }
+            renderQuestions();
+        }
+
+        // Reset All Answers
+        function resetQuiz() {
+            userAnswers = {};
+            questions = [...ORIGINAL_QUESTIONS];
+            updateStats();
+            renderQuestions();
+        }
+
+        // Update Dashboard Statistics & Progress Bar
+        function updateStats() {
+            const total = ORIGINAL_QUESTIONS.length;
+            let correct = 0;
+            let wrong = 0;
+
+            ORIGINAL_QUESTIONS.forEach(q => {
+                if (userAnswers[q.id] !== undefined) {
+                    if (userAnswers[q.id] === q.correct) correct++;
+                    else wrong++;
+                }
+            });
+
+            const answeredCount = correct + wrong;
+            const progressPercent = total > 0 ? Math.round((answeredCount / total) * 100) : 0;
+
+            document.getElementById("statTotal").textContent = total;
+            document.getElementById("statCorrect").textContent = correct;
+            document.getElementById("statWrong").textContent = wrong;
+            document.getElementById("statPercent").textContent = `${progressPercent}%`;
+            document.getElementById("topProgressBar").style.width = `${progressPercent}%`;
+        }
+
+        // Render Filtered Questions
+        function renderQuestions() {
+            const container = document.getElementById("questionsList");
+            const emptyState = document.getElementById("emptyState");
+
+            const filtered = questions.filter(q => {
+                const matchesCat = currentCategory === "ALL" || q.category === currentCategory;
+                const matchesSearch = !searchQuery || 
+                    q.question.toLowerCase().includes(searchQuery) ||
+                    (q.code && q.code.toLowerCase().includes(searchQuery)) ||
+                    q.options.some(opt => opt.toLowerCase().includes(searchQuery)) ||
+                    (`سؤال ${q.id}`).includes(searchQuery) ||
+                    String(q.id) === searchQuery;
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = "";
+                emptyState.classList.remove("hidden");
+                return;
+            }
+
+            emptyState.classList.add("hidden");
+            const optionLetters = ["A", "B", "C", "D"];
+
+            container.innerHTML = filtered.map((q) => {
+                const badge = CATEGORY_BADGES[q.category];
+                const userChoice = userAnswers[q.id];
+                const isAnswered = userChoice !== undefined;
+                const showSolution = currentMode === "study" || isAnswered;
+
+                // Determine card border accent
+                let cardBorder = "border-slate-200 dark:border-slate-800";
+                if (isAnswered && currentMode === "quiz") {
+                    cardBorder = userChoice === q.correct 
+                        ? "border-emerald-400 dark:border-emerald-600/70" 
+                        : "border-rose-400 dark:border-rose-600/70";
+                }
+
+                // Render Code Snippet if exists
+                const codeBlockHTML = q.code ? `
+                    <div class="my-4" dir="ltr">
+                        <div class="flex items-center justify-between bg-slate-800 text-slate-400 text-xs px-3 py-1.5 rounded-t-xl border-b border-slate-700 font-mono">
+                            <span>Code Snippet</span>
+                            <span class="flex gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+                            </span>
+                        </div>
+                        <pre class="code-block !rounded-t-none !mt-0"><code>${escapeHTML(q.code)}</code></pre>
+                    </div>
+                ` : "";
+
+                // Render Options
+                const optionsHTML = q.options.map((opt, idx) => {
+                    let btnStyle = "bg-slate-50 dark:bg-slate-800/70 border-slate-200 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/30";
+                    let badgeStyle = "bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-600";
+                    let statusIcon = "";
+
+                    if (showSolution) {
+                        if (idx === q.correct) {
+                            btnStyle = "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-900 dark:text-emerald-200 font-bold ring-1 ring-emerald-500/40";
+                            badgeStyle = "bg-emerald-600 text-white border-emerald-600";
+                            statusIcon = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 text-lg mr-auto"></i>`;
+                        } else if (isAnswered && idx === userChoice && userChoice !== q.correct) {
+                            btnStyle = "bg-rose-50 dark:bg-rose-950/40 border-rose-500 text-rose-900 dark:text-rose-200 font-bold";
+                            badgeStyle = "bg-rose-600 text-white border-rose-600";
+                            statusIcon = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400 text-lg mr-auto"></i>`;
+                        } else {
+                            btnStyle = "bg-slate-50/60 dark:bg-slate-800/30 border-slate-200/70 dark:border-slate-800 opacity-70";
+                        }
+                    }
+
+                    // Detect if option is predominantly English/Code so it renders cleanly
+                    const isCodeOption = /^[a-zA-Z0-9<>{}\[\]()._#*$^~="'/\\:;\-+,\s!]+$/.test(opt);
+
+                    return `
+                        <button onclick="selectOption(${q.id}, ${idx})" 
+                                ${showSolution ? "disabled" : ""}
+                                class="w-full text-right p-3.5 rounded-xl border transition-all flex items-center gap-3 ${btnStyle} ${showSolution ? 'cursor-default' : 'cursor-pointer active:scale-[0.99]'}">
+                            <span class="w-8 h-8 rounded-lg border flex-shrink-0 flex items-center justify-center font-mono text-xs font-bold ${badgeStyle}">
+                                ${optionLetters[idx] || idx + 1}
+                            </span>
+                            <span class="text-sm sm:text-base leading-relaxed ${isCodeOption ? 'font-mono text-left' : ''}" ${isCodeOption ? 'dir="ltr"' : ''}>
+                                ${escapeHTML(opt)}
+                            </span>
+                            ${statusIcon}
+                        </button>
+                    `;
+                }).join("");
+
+                // Explanation Box
+                const explanationHTML = showSolution ? `
+                    <div class="mt-4 p-4 rounded-xl bg-indigo-50/80 dark:bg-indigo-950/30 border border-indigo-200/80 dark:border-indigo-800/60 text-sm animate-fade-in">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-bold text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-lightbulb text-amber-500"></i> التوضيح والحل الدقيق:
+                            </span>
+                            ${isAnswered && currentMode === "quiz" ? `
+                                <button onclick="resetSingleQuestion(${q.id})" class="text-xs text-slate-500 hover:text-indigo-600 underline">
+                                    إعادة محاولة السؤال
+                                </button>
+                            ` : ""}
+                        </div>
+                        <p class="text-slate-700 dark:text-slate-300 leading-relaxed">${escapeHTML(q.explanation)}</p>
+                    </div>
+                ` : "";
+
+                return `
+                    <article class="bg-white dark:bg-slate-900 rounded-2xl p-5 sm:p-6 border ${cardBorder} shadow-sm transition-all animate-fade-in">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="px-3 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono text-xs font-extrabold">
+                                    سؤال #${q.id}
+                                </span>
+                                <span class="px-3 py-1 rounded-lg border text-xs font-bold ${badge.classes}">
+                                    ${badge.label}
+                                </span>
+                            </div>
+                            ${isAnswered && currentMode === "quiz" ? (
+                                userChoice === q.correct 
+                                    ? `<span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2.5 py-1 rounded-lg"><i class="fa-solid fa-check ml-1"></i>إجابة صحيحة</span>`
+                                    : `<span class="text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 px-2.5 py-1 rounded-lg"><i class="fa-solid fa-xmark ml-1"></i>إجابة خاطئة</span>`
+                            ) : ""}
+                        </div>
+
+                        <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-relaxed whitespace-pre-line">
+                            ${escapeHTML(q.question)}
+                        </h2>
+
+                        ${codeBlockHTML}
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+                            ${optionsHTML}
+                        </div>
+
+                        ${explanationHTML}
+                    </article>
+                `;
+            }).join("");
+        }
+
+        // Summary Modal Functions
+        function showSummaryModal() {
+            const total = ORIGINAL_QUESTIONS.length;
+            let correct = 0;
+            let wrong = 0;
+
+            ORIGINAL_QUESTIONS.forEach(q => {
+                if (userAnswers[q.id] !== undefined) {
+                    if (userAnswers[q.id] === q.correct) correct++;
+                    else wrong++;
+                }
+            });
+
+            const answered = correct + wrong;
+            const accuracy = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+
+            document.getElementById("modalScoreCircle").textContent = `${accuracy}%`;
+            document.getElementById("modalAnswered").textContent = `${answered} من ${total}`;
+            document.getElementById("modalCorrect").textContent = correct;
+            document.getElementById("modalWrong").textContent = wrong;
+
+            let gradeMsg = "ابدأ بحل الأسئلة لمعرفة مستواك!";
+            if (answered > 0) {
+                if (accuracy >= 90) gradeMsg = "ممتاز جداً! أداء استثنائي في برمجة الويب 🌟";
+                else if (accuracy >= 75) gradeMsg = "جيد جداً! لديك أساس قوي وممتاز 👏";
+                else if (accuracy >= 50) gradeMsg = "جيد، راجع الشروحات لتثبيت المعلومات 💪";
+                else gradeMsg = "تحتاج إلى مراجعة إضافية، جرب وضع الدراسة 📚";
+            }
+            document.getElementById("modalGradeText").textContent = gradeMsg;
+
+            const modal = document.getElementById("summaryModal");
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+        }
+
+        function closeSummaryModal() {
+            const modal = document.getElementById("summaryModal");
+            modal.classList.add("hidden");
+            modal.classList.remove("flex");
+        }
+
+        // Initialize App
+        window.onload = function() {
+            updateStats();
+            renderQuestions();
+        };
+    </script>
 </body>
 </html>
