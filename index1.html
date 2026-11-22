@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بنك أسئلة برمجة الويب - ITP</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Cairo & Tajawal for Arabic, JetBrains Mono for Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom scrollbar and smooth transitions */
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        pre, code {
+            font-family: 'JetBrains Mono', monospace;
+            direction: ltr !important;
+            text-align: left !important;
+        }
+        .code-block {
+            background: #1e293b;
+            color: #f8fafc;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            border: 1px solid #334155;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.25);
+        }
+        /* Syntax highlighting subtle classes */
+        .tok-tag { color: #f472b6; }
+        .tok-attr { color: #38bdf8; }
+        .tok-str { color: #a3e635; }
+        .tok-kw { color: #c084fc; }
+        .tok-num { color: #fb923c; }
+        .tok-com { color: #94a3b8; font-style: italic; }
+        
+        /* Custom animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.35s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Top Sticky Header -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-white/85 dark:bg-slate-900/85 border-b border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <!-- Logo & Title -->
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-code text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-extrabold tracking-tight bg-gradient-to-l from-indigo-600 to-violet-500 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">
+                        بنك أسئلة برمجة الويب
+                    </h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 font-semibold">
+                        نموذج ITP الشامل • محلول ومُدقّق بدقة
+                    </p>
+                </div>
+            </div>
+
+            <!-- Live Score & Controls -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Mode Switcher -->
+                <div class="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center border border-slate-200 dark:border-slate-700">
+                    <button id="btnQuizMode" onclick="setMode('quiz')" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-indigo-600 text-white shadow">
+                        <i class="fa-solid fa-pen-to-square ml-1"></i> وضع الاختبار
+                    </button>
+                    <button id="btnStudyMode" onclick="setMode('study')" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600">
+                        <i class="fa-solid fa-book-open ml-1"></i> وضع الدراسة
+                    </button>
+                </div>
+
+                <!-- Theme Toggle -->
+                <button onclick="toggleDarkMode()" title="تبديل المظهر" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-amber-400 border border-slate-200 dark:border-slate-700 transition">
+                    <i id="themeIcon" class="fa-solid fa-moon text-base"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 overflow-hidden">
+            <div id="topProgressBar" class="h-full bg-gradient-to-l from-emerald-500 via-indigo-500 to-violet-500 transition-all duration-500" style="width: 0%"></div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-6xl w-full mx-auto px-4 py-6 flex-1">
+        
+        <!-- Stats & Dashboard Cards -->
+        <section class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
+            <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-list-check"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-semibold">إجمالي الأسئلة</div>
+                    <div id="statTotal" class="text-xl font-extrabold">0</div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-semibold">إجابات صحيحة</div>
+                    <div id="statCorrect" class="text-xl font-extrabold text-emerald-600 dark:text-emerald-400">0</div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-semibold">إجابات خاطئة</div>
+                    <div id="statWrong" class="text-xl font-extrabold text-rose-600 dark:text-rose-400">0</div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-semibold">نسبة الإنجاز</div>
+                    <div id="statPercent" class="text-xl font-extrabold text-amber-600 dark:text-amber-400">0%</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search & Filter Controls -->
+        <section class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm mb-6 space-y-4">
+            <div class="flex flex-col md:flex-row gap-3 justify-between">
+                <!-- Search Input -->
+                <div class="relative flex-1">
+                    <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="searchInput" oninput="applyFilters()" placeholder="ابحث عن سؤال، وسم HTML، خاصية CSS، أو دالة JS..." 
+                           class="w-full pr-10 pl-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-950 outline-none text-sm transition">
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <button onclick="shuffleQuestions()" class="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-slate-700 dark:text-slate-200 hover:text-indigo-600 text-xs sm:text-sm font-bold border border-slate-200 dark:border-slate-700 transition flex items-center gap-2">
+                        <i class="fa-solid fa-shuffle"></i> خلط الأسئلة
+                    </button>
+                    <button onclick="resetQuiz()" class="px-4 py-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 text-xs sm:text-sm font-bold border border-rose-200 dark:border-rose-800/50 transition flex items-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i> تصفير الإجابات
+                    </button>
+                    <button onclick="showSummaryModal()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow-md shadow-indigo-500/20 transition flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie"></i> النتيجة النهائية
+                    </button>
+                </div>
+            </div>
+
+            <!-- Category Pills -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar" id="categoryTabs">
+                <button onclick="setCategory('ALL')" data-cat="ALL" class="cat-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-indigo-600 text-white shadow-sm transition">
+                    <i class="fa-solid fa-layer-group ml-1"></i> الكل
+                </button>
+                <button onclick="setCategory('WEB')" data-cat="WEB" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    <i class="fa-solid fa-globe ml-1 text-sky-500"></i> أساسيات الويب و HTTP
+                </button>
+                <button onclick="setCategory('HTML')" data-cat="HTML" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    <i class="fa-brands fa-html5 ml-1 text-orange-500"></i> HTML5
+                </button>
+                <button onclick="setCategory('CSS')" data-cat="CSS" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    <i class="fa-brands fa-css3-alt ml-1 text-blue-500"></i> CSS3
+                </button>
+                <button onclick="setCategory('JS')" data-cat="JS" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    <i class="fa-brands fa-js ml-1 text-amber-400"></i> JavaScript & DOM
+                </button>
+            </div>
+        </section>
+
+        <!-- Questions Container -->
+        <div id="questionsList" class="space-y-5">
+            <!-- Rendered dynamically via JS -->
+        </div>
+
+        <!-- Empty Search State -->
+        <div id="emptyState" class="hidden text-center py-16 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
+            <div class="w-16 h-16 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 text-2xl mb-3">
+                <i class="fa-solid fa-search"></i>
+            </div>
+            <h3 class="text-lg font-bold">لا توجد أسئلة مطابقة لبحثك</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">حاول البحث بكلمة مفتاحية أخرى أو اختر تصنيف "الكل"</p>
+        </div>
+
+    </main>
+
+    <!-- Summary Modal -->
+    <div id="summaryModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl animate-fade-in">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-extrabold flex items-center gap-2">
+                    <i class="fa-solid fa-award text-amber-500"></i> ملخص التقييم والأداء
+                </h3>
+                <button onclick="closeSummaryModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-slate-800">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="text-center py-6 bg-slate-50 dark:bg-slate-800/60 rounded-2xl mb-5 border border-slate-100 dark:border-slate-800">
+                <div id="modalScoreCircle" class="text-4xl font-black text-indigo-600 dark:text-indigo-400 mb-1">0%</div>
+                <p id="modalGradeText" class="text-sm font-bold text-slate-600 dark:text-slate-300">ابدأ بحل الأسئلة لمعرفة مستواك!</p>
+            </div>
+
+            <div class="space-y-3 text-sm mb-6">
+                <div class="flex justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40">
+                    <span class="text-slate-500 dark:text-slate-400">الأسئلة المجاب عليها:</span>
+                    <span id="modalAnswered" class="font-bold">0 / 0</span>
+                </div>
+                <div class="flex justify-between p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400">
+                    <span>الإجابات الصحيحة:</span>
+                    <span id="modalCorrect" class="font-bold">0</span>
+                </div>
+                <div class="flex justify-between p-3 rounded-xl bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400">
+                    <span>الإجابات الخاطئة:</span>
+                    <span id="modalWrong" class="font-bold">0</span>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="closeSummaryModal()" class="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm transition">
+                    متابعة الحل
+                </button>
+                <button onclick="resetQuiz(); closeSummaryModal();" class="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-bold text-sm transition">
+                    إعادة البدء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 py-5 text-center text-xs text-slate-500 dark:text-slate-400 mt-10">
+        تم استخراج وتدقيق جميع الأسئلة البرمجية بعناية من <span class="font-bold text-indigo-600 dark:text-indigo-400">بنك برمجة الويب - ITP</span>
+    </footer>
+
+    <!-- Comprehensive Solved Question Bank Script -->
+    <script>
+        /**
+         * Complete, accurately verified question bank extracted from "نموذج ويب.pdf" (ITP Web Programming).
+         * Every question includes:
+         * - id: Original question number from the PDF
+         * - category: 'WEB' | 'HTML' | 'CSS' | 'JS'
+         * - question: Arabic question prompt
+         * - code: Optional clean LTR code snippet (formatted & syntax-safe)
+         * - options: Array of choices
+         * - correct: 0-based index of the verified correct option
+         * - explanation: Accurate Arabic explanation detailing why the answer is correct
+         */
+        const ORIGINAL_QUESTIONS = [
+            {
+                id: 1,
+                category: "WEB",
+                question: "يُشير الخطأ رقم 404 المعاد من المخدم إلى:",
+                options: [
+                    "طلب خاطئ (Bad Request)",
+                    "صفحة الويب المطلوبة تم نقلها من مكانها",
+                    "صفحة الويب المطلوبة غير موجودة (Not Found)",
+                    "خطأ عند المخدم (Internal Server Error)"
+                ],
+                correct: 2,
+                explanation: "رمز الحالة HTTP 404 يعني Not Found أي أن المورد أو الصفحة المطلوبة غير موجودة على المخدم."
+            },
+            {
+                id: 2,
+                category: "HTML",
+                question: "يمكن تحديد خصائص (Attributes) للعناصر في HTML ضمن وسم النهاية (End Tag)؟",
+                options: ["صح", "خطأ"],
+                correct: 1,
+                explanation: "خطأ؛ تُكتب الخصائص (Attributes) دائماً داخل وسم البداية (Start Tag) فقط ولا تُكتب في وسم النهاية."
+            },
+            {
+                id: 3,
+                category: "HTML",
+                question: "أي العبارات التالية صحيحة حول لغة HTML؟",
+                options: [
+                    "HTML هي لغة برمجة",
+                    "HTML تصف محتوى وبنية صفحة الويب",
+                    "وسوم HTML حساسة لحالة الأحرف (Case-sensitive)",
+                    "كل من A و B صحيح"
+                ],
+                correct: 1,
+                explanation: "HTML هي لغة توصيف (Markup Language) وليست لغة برمجة، وهي غير حساسة لحالة الأحرف، وظيفتها وصف بنية ومحتوى صفحة الويب."
+            },
+            {
+                id: 4,
+                category: "HTML",
+                question: "أي من العبارات التالية صحيحة حول العنصر على مستوى البلوك (Block-level element) في HTML؟",
+                options: [
+                    "إنه دوماً يبدأ بسطر جديد",
+                    "يمكن أن يحتوي عناصر من نوع block فقط",
+                    "يأخذ كمساحة العرض الذي يحتاجه فقط من صفحة الويب",
+                    "كل من A و B صحيح"
+                ],
+                correct: 0,
+                explanation: "العنصر على مستوى البلوك يبدأ دائماً بسطر جديد ويأخذ كامل العرض المتاح (100%)، ويمكن أن يحتوي عناصر block و inline معاً."
+            },
+            {
+                id: 5,
+                category: "HTML",
+                question: "عنصر <span> هو عنصر في HTML بإمكانه أن يحوي عناصر HTML أخرى ويتم استخدامه للقيام بتجميع منطقي للمستوى (Inline grouping).",
+                options: ["صح", "خطأ"],
+                correct: 0,
+                explanation: "صح؛ عنصر <span> هو حاوية سطرية (Inline container) تُستخدم لتجميع أجزاء من النص أو عناصر inline أخرى لتنسيقها."
+            },
+            {
+                id: 6,
+                category: "HTML",
+                question: "أي من عناصر HTML التالية يمكن استخدامه داخل عنصر <table> لتعريف عنوان من أجل الجدول؟",
+                options: ["<tablecaption>", "<caption>", "<table-cap>", "<table-caption>"],
+                correct: 1,
+                explanation: "الوسم القياسي في HTML لإضافة عنوان رئيسي للجدول هو <caption> ويوضع مباشرة بعد وسم <table>."
+            },
+            {
+                id: 7,
+                category: "HTML",
+                question: "ما هو كود الـ HTML الصحيح من أجل إنشاء رابط إلى إيميل محدد؟",
+                options: [
+                    '<a src="mailto:john@gmail.com">email us</a>',
+                    '<a href="mailto:john@gmail.com">email us</a>',
+                    '<a mailto="john@gmail.com">email us</a>',
+                    '<a link="john@gmail.com">email us</a>'
+                ],
+                correct: 1,
+                explanation: "نستخدم السمة href مع البروتوكول mailto: داخل وسم <a> لفتح عميل البريد الإلكتروني."
+            },
+            {
+                id: 8,
+                category: "HTML",
+                question: "أي من عناصر HTML التالية هو عنصر داخلي (Inline element)؟",
+                options: ["<span>", "<br>", "<strong>", "كل ما سبق صحيح"],
+                correct: 3,
+                explanation: "جميع العناصر المذكورة (<span>, <br>, <strong>) هي عناصر سطرية (Inline elements) لا تبدأ سطراً جديداً."
+            },
+            {
+                id: 9,
+                category: "HTML",
+                question: "خاصية action لعنصر <form> تحدد URL للملف من جانب المخدم الذي سيقوم بمعالجة بيانات النموذج عندما يتم إرسالها.",
+                options: ["صح", "خطأ"],
+                correct: 0,
+                explanation: "صح؛ السمة action تحدد مسار السكربت على المخدم (Server-side) الذي يستقبل البيانات ويعالجها."
+            },
+            {
+                id: 10,
+                category: "HTML",
+                question: "ما هو الدخل الصحيح الذي يوافق الـ pattern التالية؟",
+                code: '<input type="text" pattern="[A-Z]{3}-[0-9]{2}">',
+                options: ["CAT-44", "Cat-44", "CAT44", "كل من A و B صحيح"],
+                correct: 0,
+                explanation: "النمط يتطلب 3 أحرف إنجليزية كبيرة حصراً [A-Z]{3} تليها شرطة - ثم رقمين [0-9]{2}، وهذا ينطبق فقط على CAT-44."
+            },
+            {
+                id: 11,
+                category: "HTML",
+                question: "أي من عناصر HTML التالية صحيح لإنشاء زر يقوم بإرسال بيانات النموذج إلى المخدم؟",
+                options: [
+                    '<input type="button">',
+                    '<input type="submit">',
+                    '<button type="submit">',
+                    "كل من B و C صحيح"
+                ],
+                correct: 3,
+                explanation: "كلا الوسمين <input type=\"submit\"> و <button type=\"submit\"> يقومان بإرسال بيانات النموذج (Submit) إلى المخدم."
+            },
+            {
+                id: 12,
+                category: "CSS",
+                question: "أي من المحددات التالية صحيح لتطبيق قواعد CSS على كل العناصر في صفحة الويب؟",
+                options: [".all{color:red;}", "*{color: red;}", "#all{color:red;}", "&all{color:red;}"],
+                correct: 1,
+                explanation: "المحدد الشامل Universal Selector يُرمز له بالنجمة * ويستهدف كافة عناصر الصفحة."
+            },
+            {
+                id: 13,
+                category: "CSS",
+                question: "ما هو الحجم الصحيح لعنصر <span> في خرج الكود التالي؟",
+                code: `<head>\n  <style>\n    body { font-size: 16px; }\n    p { font-size: 32px; }\n    span { font-size: 2em; }\n  </style>\n</head>\n<body>\n  <p><span>hello world</span></p>\n</body>`,
+                options: ["16px", "32px", "48px", "64px"],
+                correct: 3,
+                explanation: "وحدة em نسبية لحجم خط العنصر الأب المباشر (<p>) وهو 32px. إذن 2em = 2 × 32px = 64px."
+            },
+            {
+                id: 14,
+                category: "CSS",
+                question: "ما هو كود الـ CSS الصحيح لجعل النص داخل عنصر <p> بلون أخضر؟",
+                options: [
+                    "p { color: green; }",
+                    "p { color: rgb(0,255,0); }",
+                    "p { color: #00FF00; }",
+                    "كل ما سبق صحيح"
+                ],
+                correct: 3,
+                explanation: "جميع الصيغ الثلاث (اسم اللون green، نظام RGB، والنظام الست عشري #00FF00) تمثل اللون الأخضر بشكل صحيح."
+            },
+            {
+                id: 15,
+                category: "CSS",
+                question: "اربط محددات الـ CSS التالية مع تعاريفها الصحيحة:\n(i) a:link   (ii) a:active   (iii) a:visited\n(a) يحدد الرابط عندما يتم نقره   (b) يحدد الرابط بعد أن يتم نقره   (c) يحدد الرابط قبل أن يتم نقره",
+                options: [
+                    "c-i , a-ii , b-iii",
+                    "b-i , a-ii , c-iii",
+                    "a-i , c-ii , b-iii",
+                    "a-i , b-ii , c-iii"
+                ],
+                correct: 0,
+                explanation: "a:link للرابط غير المزار بعد (c-i)، a:active لحظة النقر على الرابط (a-ii)، و a:visited للرابط الذي تمت زيارته مسبقاً (b-iii)."
+            },
+            {
+                id: 16,
+                category: "CSS",
+                question: 'أي من محددات الـ CSS التالية يتوافق مع أي عنصر <a> والذي خاصية href له تبدأ بـ "mailto"؟',
+                options: [
+                    'a[href^="mailto"]',
+                    'a[href="mailto"]',
+                    'a[href*="mailto"]',
+                    'a[href$="mailto"]'
+                ],
+                correct: 0,
+                explanation: "الرمز ^= يعني (يبدأ بـ)، بينما *= يعني (يحتوي على)، و $= يعني (ينتهي بـ)."
+            },
+            {
+                id: 17,
+                category: "CSS",
+                question: "ما هو كود الـ CSS الصحيح لجعل كل كلمة في النص داخل عنصر <p> تبدأ بحرف كبير؟",
+                options: [
+                    "p { text-style: capitalize; }",
+                    "p { text-transform: capitalize; }",
+                    "p { transform: capitalize; }",
+                    "ليس أي مما سبق"
+                ],
+                correct: 1,
+                explanation: "الخاصية text-transform مع القيمة capitalize تحول الحرف الأول من كل كلمة إلى حرف كبير."
+            },
+            {
+                id: 18,
+                category: "CSS",
+                question: "ما هو الخرج الصحيح للكود التالي؟",
+                code: `<head>\n  <style>\n    body { color: red; }\n    div { color: yellow; }\n    .main { color: blue; }\n    #last { color: orange; }\n  </style>\n</head>\n<body>\n  <div>\n    <p class="main" style="color:green;">first p</p>\n    <p class="main" id="last">second p</p>\n  </div>\n  <div><p>third p</p></div>\n</body>`,
+                options: [
+                    "لون first p هو أزرق، second p هو برتقالي، third p هو أحمر",
+                    "لون first p هو أخضر، second p هو برتقالي، third p هو أحمر",
+                    "لون first p هو أخضر، second p هو برتقالي، third p هو أصفر",
+                    "لون first p هو أخضر، second p هو أزرق، third p هو أصفر"
+                ],
+                correct: 2,
+                explanation: "first p يأخذ التنسيق السطري inline (أخضر)، second p يأخذ محدد id الأقوى (برتقالي)، third p يرث اللون من الأب المباشر div (أصفر)."
+            },
+            {
+                id: 19,
+                category: "CSS",
+                question: "ما هو كود الـ CSS الصحيح الذي يجعل الخط بلون pink على كل عناصر <strong> التي لديها عنصر <p> كأب مباشر لها؟",
+                options: [
+                    "p strong { color: pink; }",
+                    "p + strong { color: pink; }",
+                    "p > strong { color: pink; }",
+                    "p ~ strong { color: pink; }"
+                ],
+                correct: 2,
+                explanation: "محدد الابن المباشر (Child Selector) في CSS هو علامة أكبر من ( > )."
+            },
+            {
+                id: 20,
+                category: "CSS",
+                question: "أي من القيم التالية هي قيم محتملة لخاصية overflow في CSS2.1؟\n(i) visible  (ii) hidden  (iii) fixed  (iv) auto  (v) scroll",
+                options: [
+                    "فقط i, iii, iv",
+                    "فقط ii, iii, iv",
+                    "فقط i, iii",
+                    "فقط i, ii, iv, v"
+                ],
+                correct: 3,
+                explanation: "القيم القياسية لخاصية overflow هي: visible, hidden, scroll, auto (أما fixed فهي قيمة لخاصية position وليست overflow)."
+            },
+            {
+                id: 21,
+                category: "CSS",
+                question: "أي من القيم التالية هي قيم محتملة لخاصية background-repeat في CSS؟\n(i) repeat-x  (ii) repeat-y  (iii) no-repeat  (iv) repeat-xy",
+                options: ["فقط i, ii, iii", "فقط iii, iv", "فقط i, ii", "i, ii, iii, iv"],
+                correct: 0,
+                explanation: "لا توجد قيمة اسمها repeat-xy في CSS؛ التكرار في الاتجاهين يُكتب repeat فقط."
+            },
+            {
+                id: 22,
+                category: "CSS",
+                question: "العنصر الذي له خاصية position: absolute في CSS يحدد مكانه بالنسبة لأقرب سلف له (مُتموضع positioned)؟",
+                options: ["صح", "خطأ"],
+                correct: 0,
+                explanation: "صح؛ العنصر ذو position: absolute يتموضع بالنسبة لأقرب عنصر سلف (Ancestor) يمتلك position غير static (مثل relative أو absolute)."
+            },
+            {
+                id: 23,
+                category: "JS",
+                question: 'ما هو كود الـ JavaScript الصحيح لكتابة عبارة "Hello World" في الـ console؟',
+                options: [
+                    'console.alert("Hello World");',
+                    'console.log("Hello World");',
+                    'document.log("Hello World");',
+                    'console.write("Hello World");'
+                ],
+                correct: 1,
+                explanation: "الدالة console.log() تُستخدم لطباعة الرسائل والمخرجات في وحدة التحكم (Console) الخاصة بالمتصفح."
+            },
+            {
+                id: 24,
+                category: "CSS",
+                question: "ما هو الخرج الصحيح للكود التالي؟",
+                code: `<head>\n  <style>\n    .a { background-color: green; }\n    #c { background-color: yellow; }\n  </style>\n</head>\n<body>\n  <table>\n    <col id="c" />\n    <colgroup class="a">\n      <col style="background-color:red;" />\n      <col />\n    </colgroup>\n    <tr><th>Programming</th><th>Design</th><th>Design</th></tr>\n    <tr><td>PHP</td><td>MySQL</td><td>CSS</td></tr>\n  </table>\n</body>`,
+                options: [
+                    "لون الخلفية للعمود الأول أصفر، الثاني أحمر، الثالث أخضر",
+                    "لون الخلفية للعمود الأول أصفر، الثاني أخضر، الثالث أخضر",
+                    "لون الخلفية للعمود الأول أصفر، الثاني أحمر، الثالث أبيض",
+                    "لون الخلفية للعمود الأول أصفر، الثاني أخضر، الثالث أبيض"
+                ],
+                correct: 0,
+                explanation: "العمود الأول يأخذ #c (أصفر)، العمود الثاني يأخذ التنسيق السطري style (أحمر)، العمود الثالث يرث من colgroup.a (أخضر)."
+            },
+            {
+                id: 25,
+                category: "JS",
+                question: "الطرائق (Methods) للأغراض في JavaScript يتم تخزينها في خصائص الغرض كتوابع (Functions).",
+                options: ["صح", "خطأ"],
+                correct: 0,
+                explanation: "صح؛ في JavaScript، الطريقة (Method) هي ببساطة خاصية (Property) قيمتها عبارة عن دالة (Function)."
+            },
+            {
+                id: 26,
+                category: "JS",
+                question: "أي من العبارات التالية صحيحة حول لغة JavaScript؟",
+                options: [
+                    "JavaScript هي لغة مترجمة (Compiled)",
+                    "يتم تفسير برنامج JavaScript من قبل المستعرض (Interpreted)",
+                    "JavaScript ليست لغة غرضية التوجه",
+                    "كل من B و C صحيح"
+                ],
+                correct: 1,
+                explanation: "JavaScript لغة مفسّرة (Interpreted) ينفذها محرك المتصفح مباشرة، وهي لغة تدعم البرمجة غرضية التوجه."
+            },
+            {
+                id: 27,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var str = "Hello World!";\ndocument.write(str.slice(-8, -3));`,
+                options: ["llo", "o Wor", "o World!", "Hello"],
+                correct: 1,
+                explanation: 'الفهارس السالبة تعد من نهاية النص ("Hello World!" طوله 12): الفهرس -8 هو الحرف "o" في Hello، والفهرس -3 هو "l" في World (غير مشمول)، فالنتيجة هي "o Wor".'
+            },
+            {
+                id: 28,
+                category: "JS",
+                question: "السلسلة النصية (String) يمكن تحويلها إلى مصفوفة (Array) في JavaScript باستخدام طريقة:",
+                options: ["trim()", "substring()", "split()", "convert()"],
+                correct: 2,
+                explanation: "التابع split() يقوم بتقسيم السلسلة النصية بناءً على فاصل محدد وإرجاع مصفوفة."
+            },
+            {
+                id: 29,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var arr = ["a", "b", "c", "d"];\narr.reverse();\narr.push("e");\narr.shift();\ndocument.getElementById("demo").innerHTML = arr;`,
+                options: ["c,b,a,e,d", "c,b,a,e", "b,c,d,e", "d,c,b,a"],
+                correct: 1,
+                explanation: 'reverse() تقلبها إلى ["d","c","b","a"]، push("e") تضيف e في النهاية لتصبح ["d","c","b","a","e"]، shift() تحذف العنصر الأول "d" فتبقى ["c","b","a","e"].'
+            },
+            {
+                id: 30,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var x = "";\ndocument.write(Boolean(x));`,
+                options: ["true", "false", "undefined", "NaN"],
+                correct: 1,
+                explanation: 'السلسلة النصية الفارغة "" تُعتبر قيمة Falsy في JavaScript، لذلك Boolean("") يُرجع false.'
+            },
+            {
+                id: 31,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي (بفرض عدم وجود فراغات بين وسوم li)؟",
+                code: `<ul id="myList"><li>Coffee</li><li>Tea</li><li>Milk</li></ul>\n<script>\n  document.getElementsByTagName("li")[0].id = "first";\n  document.getElementById("first").nextSibling.innerHTML = "Pepsi";\n  var x = document.getElementsByTagName("li")[1].innerHTML;\n  document.write(x);\n<\/script>`,
+                options: ["Coffee", "Tea", "Pepsi", "Milk"],
+                correct: 2,
+                explanation: 'نصل للعنصر li[0] ونعطيه id="first"، ثم nextSibling يشير إلى li[1] ويغير محتواه إلى "Pepsi". (ملاحظة: لو كان هناك مسافة/سطر جديد بين الوسوم لكان nextSibling عقدة نصية ولبقيت Tea).'
+            },
+            {
+                id: 32,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `document.write(Math.round(5.4));\ndocument.write(Math.ceil(5.4));\ndocument.write(Math.floor(5.4));`,
+                options: ["655", "566", "665", "565"],
+                correct: 3,
+                explanation: "Math.round(5.4) تقرب للأقرب وهو 5، Math.ceil(5.4) تقرب للأعلى وهو 6، Math.floor(5.4) تقرب للأسفل وهو 5. الناتج المتلاصق: 565."
+            },
+            {
+                id: 33,
+                category: "JS",
+                question: "اربط أحداث JavaScript التالية مع توصيفها الصحيح:\n(i) onblur  (ii) onmouseup  (iii) ondblclick  (iv) onmouseout\n(a) عند النقر مرتين  (b) عند إبعاد الفأرة عن العنصر  (c) عند فقدان التركيز  (d) عند تحرير زر الفأرة",
+                options: [
+                    "b-iv , a-iii , c-ii , d-i",
+                    "d-iv , a-iii , c-ii , b-i",
+                    "b-iv , a-iii , d-ii , c-i",
+                    "b-iv , d-iii , c-ii , a-i"
+                ],
+                correct: 2,
+                explanation: "onblur لفقدان التركيز (c-i)، onmouseup لتحرير زر الفأرة (d-ii)، ondblclick للنقر المزدوج (a-iii)، onmouseout لإبعاد الفأرة (b-iv)."
+            },
+            {
+                id: 34,
+                category: "JS",
+                question: 'ما هو كود JavaScript الصحيح لتغيير لون عنصر <p> له id="p1"؟',
+                options: [
+                    'document.getElementsByTagName("p1").color = "blue";',
+                    'document.getElementById("p1").style.color = "blue";',
+                    'document.getElementById("p1").color = "blue";',
+                    "ليس أي مما سبق"
+                ],
+                correct: 1,
+                explanation: "نصل للعنصر عبر getElementById ثم نعدل خصائص التنسيق عبر الكائن style.color."
+            },
+            {
+                id: 35,
+                category: "JS",
+                question: "أي من طرائق JavaScript التالية يتم استخدامها لإضافة خاصية تم إنشاؤها بشكل ديناميكي (Attr node) إلى عنصر في هرمية الـ DOM؟",
+                options: [
+                    "appendAttribute()",
+                    "appendChild()",
+                    "setAttributeNode()",
+                    "setAttributeChild()"
+                ],
+                correct: 2,
+                explanation: "التابع setAttributeNode() يُستخدم لإرفاق عقدة سمة (Attribute Node) تم إنشاؤها مسبقاً عبر createAttribute()."
+            },
+            {
+                id: 36,
+                category: "WEB",
+                question: "ما هي الطريقة الأفضل والأكثر أماناً للتحقق من صحة بيانات النموذج (Form Validation)؟",
+                options: [
+                    "التحقق من جانب الزبون باستخدام HTML5 فقط",
+                    "التحقق من جانب المخدم باستخدام JavaScript فقط",
+                    "التحقق من جانب المخدم باستخدام PHP فقط",
+                    "التحقق من جانب الزبون ومن جانب المخدم معاً"
+                ],
+                correct: 3,
+                explanation: "التحقق من جانب الزبون (Client-side) يحسن تجربة المستخدم ويخفف الضغط، بينما التحقق من جانب المخدم (Server-side) ضروري للأمان."
+            },
+            {
+                id: 37,
+                category: "HTML",
+                question: "أي من الشروط التالية يجب تحقيقها لتحميل ملف من جهاز الزبون إلى المخدم؟",
+                options: [
+                    "يجب أن تكون طريقة إرسال النموذج هي GET",
+                    'يجب إضافة خاصية enctype="multipart/form-data" إلى النموذج مع method="post"',
+                    'يجب إضافة <input type="file"> إلى النموذج',
+                    "كل من B و C صحيح"
+                ],
+                correct: 3,
+                explanation: 'لرفع الملفات نحتاج حقل <input type="file"> وتعيين method="post" مع enctype="multipart/form-data".'
+            },
+            {
+                id: 38,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var x = "-15";\ndocument.write(Boolean(x));`,
+                options: ["true", "false", "undefined", "NaN"],
+                correct: 0,
+                explanation: 'أي سلسلة نصية غير فارغة (حتى لو كانت "-15" أو "false" أو "0") تُعتبر Truthy وتُرجع true.'
+            },
+            {
+                id: 39,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var str = "Hello world, welcome to the universe.";\ndocument.write(str.indexOf("e", 5));`,
+                options: ["-1", "1", "14", "19"],
+                correct: 2,
+                explanation: 'البحث عن الحرف "e" بدءاً من الفهرس 5 (حرف w في world) يجد أول "e" في كلمة welcome عند الفهرس 14.'
+            },
+            {
+                id: 40,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var str = "welcome to javascript!";\ndocument.write(str.slice(-5, -2));`,
+                options: ["rip", "ri", "ript!", "script!"],
+                correct: 0,
+                explanation: 'طول النص 22: الفهرس -5 هو "r" (فهرس 17) والفهرس -2 هو "t" (فهرس 20 غير مشمول)، فالناتج هو "rip".'
+            },
+            {
+                id: 41,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var a = "GeeksforGeeks";\ndocument.write(a.substring(4, 5));`,
+                options: ["e", "k", "s", "f"],
+                correct: 2,
+                explanation: 'الفهرس 0:G, 1:e, 2:e, 3:k, 4:s. التابع substring(4, 5) يأخذ المحرف عند الفهرس 4 فقط وهو "s".'
+            },
+            {
+                id: 42,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var arr = ["a", "b", "c", "d"];\narr.push("e");\narr.reverse();\narr.shift();\ndocument.write(arr);`,
+                options: ["c,b,a,e", "d,c,b,a", "e,d,c,b,a", "d,c,b,a,e"],
+                correct: 1,
+                explanation: 'push("e") -> ["a","b","c","d","e"]، reverse() -> ["e","d","c","b","a"]، shift() يحذف أول عنصر ("e") فيتبقى ["d","c","b","a"].'
+            },
+            {
+                id: 43,
+                category: "JS",
+                question: "أي من التوابع التالية يتم استخدامها لاستدعاء تابع من أجل كل عنصر في المصفوفة في JavaScript؟",
+                options: ["each()", "forEach()", "every()", "forEvery()"],
+                correct: 1,
+                explanation: "التابع Array.prototype.forEach() ينفذ دالة معينة مرة واحدة لكل عنصر من عناصر المصفوفة."
+            },
+            {
+                id: 44,
+                category: "JS",
+                question: "أي من طرائق JavaScript التالية يتم استخدامها لإزالة الفراغات من بداية ونهاية أي سلسلة نصية؟",
+                options: ["strip()", "trim()", "slice()", "space()"],
+                correct: 1,
+                explanation: "التابع trim() يزيل المسافات البيضاء (Whitespace) من طرفي السلسلة النصية دون تعديل الوسط."
+            },
+            {
+                id: 45,
+                category: "HTML",
+                question: "ما هو الوسم الذي يعطي حجم الخط الأكبر للعنوان في HTML؟",
+                options: ["<h1>", "<h3>", "<h5>", "<h6>"],
+                correct: 0,
+                explanation: "وسوم العناوين تتدرج من <h1> (الأكبر والأكثر أهمية) إلى <h6> (الأصغر)."
+            },
+            {
+                id: 47,
+                category: "WEB",
+                question: "إن ...... هو معرف لمكان الصفحة أو المورد على موقع الويب.",
+                options: ["HTTP", "IP", "URL", "DNS"],
+                correct: 2,
+                explanation: "URL (Uniform Resource Locator) هو العنوان الفريد لتحديد موقع الموارد على الويب."
+            },
+            {
+                id: 49,
+                category: "HTML",
+                question: "من أجل فتح رابط لصفحة ويب في نفس نافذة أو إطار المتصفح الحالي، ما هي قيمة خاصية target الصحيحة؟",
+                options: ["_blank", "_self", "_parent", "_top"],
+                correct: 1,
+                explanation: "القيمة _self (وهي الافتراضية) تفتح الرابط في نفس الإطار/التبويب، بينما _blank تفتحه في تبويب جديد."
+            },
+            {
+                id: 52,
+                category: "CSS",
+                question: "ما هو الحجم الصحيح لعنصر <span> في خرج الكود التالي؟",
+                code: `<head>\n  <style>\n    body { font-size: 16px; }\n    p { font-size: 32px; }\n    span { font-size: 0.5rem; }\n  </style>\n</head>\n<body>\n  <p><span>hello world</span></p>\n</body>`,
+                options: ["8px", "16px", "32px", "ليس أي مما سبق"],
+                correct: 0,
+                explanation: "وحدة rem (Root em) تعتمد على حجم خط الجذر (html/body = 16px) وليس الأب المباشر. إذن 0.5 × 16px = 8px."
+            },
+            {
+                id: 53,
+                category: "CSS",
+                question: "ما هو الكود الصحيح لإضافة تعليق (Comment) إلى ملف CSS؟",
+                options: [
+                    "'this is a comment",
+                    "//this is a comment",
+                    "/*this is a comment*/",
+                    "//this is a comment//"
+                ],
+                correct: 2,
+                explanation: "التعليقات في CSS تُكتب حصراً بين /* و */."
+            },
+            {
+                id: 59,
+                category: "WEB",
+                question: "أي مما يلي هو المسؤول عن تحويل أسماء النطاقات (Domain Names / URLs) إلى عناوين IP؟",
+                options: ["Hub", "DNS Server", "DHCP Server", "Firewall"],
+                correct: 1,
+                explanation: "مخدم نظام أسماء النطاقات (DNS Server) يترجم الأسماء المقروءة مثل google.com إلى عناوين IP رقمية."
+            },
+            {
+                id: 60,
+                category: "WEB",
+                question: "يشير الخطأ رقم 500 المعاد من المخدم إلى:",
+                options: [
+                    "طلب خاطئ (Bad Request)",
+                    "صفحة الويب المطلوبة تم نقلها من مكانها",
+                    "صفحة الويب المطلوبة غير موجودة",
+                    "خطأ عند المخدم (Internal Server Error)"
+                ],
+                correct: 3,
+                explanation: "أكواد الحالة التي تبدأ بالرقم 5xx تشير إلى أخطاء من طرف المخدم (Server Errors)، و 500 هو خطأ داخلي في المخدم."
+            },
+            {
+                id: 64,
+                category: "HTML",
+                question: "ما هو كود الـ HTML الصحيح من أجل إنشاء رابط للاتصال برقم هاتف محدد؟",
+                options: [
+                    '<a tel="+963988456321">call us</a>',
+                    '<a link="tel:+963988456321">call us</a>',
+                    '<a call="+963988456321">call us</a>',
+                    '<a href="tel:+963988456321">call us</a>'
+                ],
+                correct: 3,
+                explanation: "نستخدم href مع البادئة tel: داخل وسم <a> لإجراء مكالمات هاتفية مباشرة من المتصفح."
+            },
+            {
+                id: 65,
+                category: "HTML",
+                question: "ما هو كود الـ HTML الصحيح من أجل إدراج صورة في صفحة الويب؟",
+                options: [
+                    '<img alt="myImage">image.gif</img>',
+                    '<img src="myImage" alt="image.gif">',
+                    '<img href="image.gif" alt="myImage">',
+                    '<img src="image.gif" alt="myImage">'
+                ],
+                correct: 3,
+                explanation: "وسم <img> هو وسم فارغ (Void element) يستخدم السمة src لمسار الصورة والسمة alt للنص البديل."
+            },
+            {
+                id: 70,
+                category: "CSS",
+                question: "أي من وحدات القياس التالية هي وحدة قياس نسبية (Relative Unit) في CSS3؟",
+                options: ["em", "pt", "in", "cm"],
+                correct: 0,
+                explanation: "وحدة em (وكذلك rem, %, vw, vh) هي وحدات نسبية، بينما pt, in, cm هي وحدات مطلقة (Absolute)."
+            },
+            {
+                id: 71,
+                category: "CSS",
+                question: 'أي من المحددات التالية صحيح لتطبيق قواعد CSS على العنصر الذي له id مساوي لـ "all"؟',
+                options: [".all{color:red;}", "*{color: red;}", "#all{color:red;}", "&all{color:red;}"],
+                correct: 2,
+                explanation: "يُستخدم رمز المربع (#) لاختيار عنصر بناءً على السمة id الخاصة به."
+            },
+            {
+                id: 74,
+                category: "CSS",
+                question: 'أي من محددات الـ CSS التالية يتوافق مع أي عنصر <img> والذي خاصية src له تحوي الكلمة "file" في مكان ما ضمنها؟',
+                options: [
+                    'img[src^="file"]',
+                    'img[src~="file"]',
+                    'img[src*="file"]',
+                    'img[src$="file"]'
+                ],
+                correct: 2,
+                explanation: "المحدد *= يطابق وجود السلسلة الجزئية في أي مكان داخل قيمة الخاصية."
+            },
+            {
+                id: 81,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var count = 1;\nvar nums = [0, 1, 2, 0, 4];\nnums.forEach(num);\nfunction num(item) {\n  if (item) count += 2;\n}\nconsole.log(count);`,
+                options: ["6", "7", "9", "11"],
+                correct: 1,
+                explanation: "العدّاد يبدأ بـ 1. في المصفوفة توجد 3 قيم Truthy غير صفرية (1، 2، 4)، فيتم جمع 2 ثلاث مرات: 1 + 2 + 2 + 2 = 7."
+            },
+            {
+                id: 82,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var c = { greeting: 'Hello' };\nvar d = c;\nd.greeting = 'Hi!';\nconsole.log(c.greeting);`,
+                options: ["Hello", "undefined", "Hi!", "ReferenceError"],
+                correct: 2,
+                explanation: "الأغراض (Objects) في JavaScript تُنسخ بالمرجع (By Reference)، لذا فإن التعديل على d يعدل نفس الكائن الذي يشير إليه c."
+            },
+            {
+                id: 83,
+                category: "JS",
+                question: "ما هو خرج كود الـ JavaScript التالي؟",
+                code: `var d = new Date("May 15, 1983 01:15:00");\ndocument.write(d.getDate());`,
+                options: ["May", "15", "1983", "May 15"],
+                correct: 1,
+                explanation: "التابع getDate() يُعيد يوم الشهر (من 1 إلى 31)، وهو هنا 15 (بينما getDay() يُعيد يوم الأسبوع)."
+            },
+            {
+                id: 88,
+                category: "WEB",
+                question: "أي من العبارات التالية صحيح حول الـ MIME Type؟",
+                options: [
+                    "الـ MIME هو معيار يُستخدم لتوصيف أنواع محتويات الرسائل والملفات على الإنترنت",
+                    "هو اختصار لـ Multipurpose Internet Mail Extensions",
+                    "MIME type لملف تنفيذي هو application/quicktime",
+                    "كل من A و B صحيح"
+                ],
+                correct: 3,
+                explanation: "MIME تعني Multipurpose Internet Mail Extensions وتُستخدم لتحديد نوع البيانات المرسلة عبر الإنترنت (مثل text/html أو application/json)."
+            },
+            {
+                id: 93,
+                category: "WEB",
+                question: "يشير رمز الحالة 301 المعاد من المخدم إلى:",
+                options: [
+                    "صفحة الويب المطلوبة تم نقلها بشكل دائم (Moved Permanently)",
+                    "صفحة الويب المطلوبة غير موجودة",
+                    "خطأ عند المخدم",
+                    "طلب خاطئ"
+                ],
+                correct: 0,
+                explanation: "الكود 301 يعني Moved Permanently (إعادة توجيه دائمة إلى عنوان URL جديد)."
+            },
+            {
+                id: 98,
+                category: "HTML",
+                question: "لإنشاء نموذج لرفع وتحميل الملفات، أي من القيم التالية لخاصيتي method و enctype لعنصر <form> صحيحة لتحقيق ذلك؟",
+                options: [
+                    '<form method="post" enctype="multipart/form-data">',
+                    '<form method="get" enctype="url-encoding">',
+                    '<form method="post" enctype="multipart/form-file">',
+                    '<form method="post" enctype="multipart/url-encoding">'
+                ],
+                correct: 0,
+                explanation: "يجب استخدام method=\"post\" مع enctype=\"multipart/form-data\" لتشفير وإرسال البيانات الثنائية للملفات."
+            },
+            {
+                id: 99,
+                category: "HTML",
+                question: "ما هو كود الـ HTML الصحيح لإضافة عنصر datalist وربطه بحقل الإدخال في النموذج؟",
+                options: [
+                    '<input type="data" list="hob"><datalist id="hob">...</datalist>',
+                    '<input type="text" name="hob"><datalist id="hob">...</datalist>',
+                    '<input type="text" list="hob"><datalist id="hob"><option value="reading"><option value="dancing"></datalist>',
+                    '<input type="text" id="hob"><datalist list="hob">...</datalist>'
+                ],
+                correct: 2,
+                explanation: "يتم ربط حقل <input> بقائمة <datalist> عبر مطابقة قيمة السمة list في حقل الإدخال مع قيمة id في عنصر datalist."
+            },
+            {
+                id: 100,
+                category: "CSS",
+                question: "أي من خصائص الـ CSS التالية قابلة للوراثة (Inherited) افتراضياً من الأب إلى الأبناء؟",
+                options: ["font-weight", "text-align", "margin", "كل من A و B صحيح"],
+                correct: 3,
+                explanation: "خصائص النصوص والخطوط مثل font-weight و text-align و color تورّث للأبناء، بينما خصائص الصندوق مثل margin و padding و border لا تورّث."
+            },
+            {
+                id: 103,
+                category: "JS",
+                question: "ما هو الكود الصحيح لإنشاء تابع (Function) اسمه add في JavaScript؟",
+                options: [
+                    "int add(int x1, int x2) { return x1 + x2; }",
+                    "function add(int x1, int x2) { return x1 + x2; }",
+                    "add(x1, x2) { return x1 + x2; }",
+                    "function add(x1, x2) { return x1 + x2; }"
+                ],
+                correct: 3,
+                explanation: "JavaScript لغة ديناميكية النمط (Dynamically typed) ولا نكتب أنواع البيانات مثل int للوسائط؛ نستخدم الكلمة المفتاحية function فقط."
+            },
+            {
+                id: 106,
+                category: "CSS",
+                question: "أي من المحددات التالية يتم اعتبارها pseudo-class في CSS3؟",
+                options: [":first-child", "::first-letter", "::first-line", "كل من B و C صحيح"],
+                correct: 0,
+                explanation: ":first-child هو Pseudo-class، بينما ::first-letter و ::first-line هما Pseudo-elements."
+            },
+            {
+                id: 107,
+                category: "CSS",
+                question: "أي من القيم التالية صحيحة لخاصية overflow لإخفاء ما تبقى من النص عند عدم ملاءمته مع حجم العنصر مع إضافة شريط تمرير دوماً؟",
+                options: ["overflow: scroll;", "overflow: hidden;", "overflow: auto;", "overflow: clip;"],
+                correct: 0,
+                explanation: "القيمة scroll تُظهر أشرطة التمرير دائماً، بينما auto تُظهرها فقط عند الحاجة (عند تجاوز المحتوى)."
+            },
+            {
+                id: 110,
+                category: "JS",
+                question: "أي من العبارات التالية صحيحة حول الـ DOM في JavaScript؟",
+                options: [
+                    "الـ DOM هو واجهة برمجية من أجل إضافة، حذف، تعديل، والحصول على عناصر HTML",
+                    "يتم إنشاء نموذج الـ DOM كشجرة من الأغراض (Objects) جذرها الغرض document",
+                    "أنواع العقد في الـ DOM هي Element, Attribute, Text, Comment",
+                    "كل ما سبق صحيح"
+                ],
+                correct: 3,
+                explanation: "جميع العبارات تصف بدقة بنية ووظيفة نموذج كائن المستند (Document Object Model - DOM)."
+            },
+            {
+                id: 111,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `var count = 0;\nvar nums = [0, false, 2, "s", null, undefined];\nnums.forEach(num);\nfunction num(item) {\n  if (item) count += 2;\n}\nconsole.log(count);`,
+                options: ["2", "4", "8", "12"],
+                correct: 1,
+                explanation: 'القيم 0 و false و null و undefined كلها Falsy. القيم Truthy فقط هما 2 و "s"، إذن count = 2 + 2 = 4.'
+            },
+            {
+                id: 112,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `console.log(Math.round(5.7));\nconsole.log(Number("5N"));\nconsole.log(Boolean("s"));`,
+                options: ["6 , 5 , false", "6 , NaN , true", "5 , NaN , false", "6 , NaN , false"],
+                correct: 1,
+                explanation: 'Math.round(5.7) = 6، تحويل سلسلة تحتوي حروفاً غير رقمية Number("5N") يعطي NaN، و Boolean("s") يعطي true.'
+            },
+            {
+                id: 115,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `function Animal(type) {\n  this.type = type;\n  this.sayType = function() { console.log(this.type); };\n}\nvar a1 = new Animal("cat");\nvar a2 = new Animal("dog");\nconsole.log(a1.sayType == a2.sayType);`,
+                options: ["true", "false"],
+                correct: 1,
+                explanation: "false؛ لأنه في نمط Constructor Function بدون Prototype، يتم إنشاء نسخة مستقلة جديدة في الذاكرة من الدالة sayType لكل كائن."
+            },
+            {
+                id: 116,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `var colors = new Array();\nvar count = colors.push("blue");\ncount = colors.unshift("red", "green", "black");\ncount = colors.unshift("yellow");\nvar item = colors.pop();\nconsole.log(item);`,
+                options: ["black", "red", "blue", "yellow"],
+                correct: 2,
+                explanation: 'push("blue") تضع "blue" في النهاية. unshift تضيف في البداية فتصبح المصفوفة ["yellow","red","green","black","blue"]. ثم pop() تسحب وتُرجع العنصر الأخير وهو "blue".'
+            },
+            {
+                id: 120,
+                category: "JS",
+                question: "ما هو كود الـ JavaScript الصحيح لإعادة قيمة حقل الـ fname في صفحة الـ HTML التالية؟",
+                code: `<form id="myForm">\n  Fname: <input type="text" name="fname"><br>\n  Lname: <input type="text" name="lname">\n</form>`,
+                options: [
+                    'document.getElementById("myForm").elements[0].value;',
+                    'document.forms[0].elements["fname"].value;',
+                    'document.forms[0]["fname"].value;',
+                    "كل ما سبق صحيح"
+                ],
+                correct: 3,
+                explanation: "جميع الطرق الثلاث صحيحة للوصول إلى أول عنصر داخل النموذج وقراءة قيمته عبر الخاصية value."
+            },
+            {
+                id: 122,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `function Animal() {}\nAnimal.prototype.type = "Dog";\nAnimal.prototype.sayType = function() { console.log(this.type); };\nvar a1 = new Animal();\nvar a2 = new Animal();\nconsole.log(a1.sayType == a2.sayType);`,
+                options: ["true", "false"],
+                correct: 0,
+                explanation: "true؛ لأن الدالة sayType مُعرّفة على الـ Prototype، وبالتالي يتشارك الكائنان a1 و a2 نفس المرجع للدالة في الذاكرة."
+            },
+            {
+                id: 127,
+                category: "WEB",
+                question: "أي من العبارات التالية صحيح حول طلبات GET في HTTP؟",
+                options: [
+                    "يتم استخدام طلبات GET للحصول على مورد موجود عند عنوان URL محدد",
+                    "يتم إرسال طلب GET عند النقر على رابط أو كتابة عنوان URL في نافذة المستعرض",
+                    "يتم إرسال بيانات النموذج باستخدام طلبات GET عبر الـ URL الخاص بالطلب (Query String)",
+                    "كل ما سبق صحيح"
+                ],
+                correct: 3,
+                explanation: "جميع الخيارات صحيحة وتلخص خصائص وطريقة عمل طلبات HTTP GET."
+            },
+            {
+                id: 135,
+                category: "WEB",
+                question: "يشير رمز الحالة 303 المعاد من المخدم إلى:",
+                options: [
+                    "طلب خاطئ",
+                    "خطأ عند المخدم",
+                    "صفحة الويب المطلوبة غير موجودة",
+                    "صفحة الويب المطلوبة تم نقلها من مكانها (See Other)"
+                ],
+                correct: 3,
+                explanation: "الكود 303 (See Other) هو أحد أكواد إعادة التوجيه (3xx) ويدل على توجيه المتصفح إلى عنوان URL آخر."
+            },
+            {
+                id: 136,
+                category: "CSS",
+                question: "أي من خصائص الـ CSS تستخدم من أجل تنسيق القائمة غير المرتبة (Unordered List)؟\n(i) list-style-type  (ii) list-style-image  (iii) list-type  (iv) list-color",
+                options: ["فقط i, ii, iii", "فقط i, ii, iv", "فقط i", "فقط i, ii"],
+                correct: 3,
+                explanation: "الخصائص القياسية للقوائم في CSS هي list-style-type و list-style-image و list-style-position."
+            },
+            {
+                id: 142,
+                category: "CSS",
+                question: "ما هو كود الـ CSS الصحيح لجعل لون خلفية الأسطر ذات الترتيب الزوجي ضمن جزء الـ body للجدول بلون أخضر؟",
+                options: [
+                    "tbody tr:nth-child(odd) { background-color: #00FF00; }",
+                    "tbody tr:nthChild(even) { background-color: green; }",
+                    "tbody td:nth-child(odd) { background-color: #00FF00; }",
+                    "tbody tr:nth-child(even) { background-color: green; }"
+                ],
+                correct: 3,
+                explanation: "نستخدم المحدد :nth-child(even) على السطر tr داخل tbody لتنسيق الأسطر الزوجية."
+            },
+            {
+                id: 144,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `console.log(Math.round(5.4));\nconsole.log(Number(" 5 "));\nconsole.log(Boolean(-5));`,
+                options: ["5 , 5 , true", "true , NaN , 5", "false , NaN , 5", "6 , 5 , true"],
+                correct: 0,
+                explanation: 'Math.round(5.4) = 5، و Number(" 5 ") يتجاهل الفراغات الجانبية ويعطي الرقم 5، و Boolean(-5) يعطي true لأن أي رقم غير الصفر هو Truthy.'
+            },
+            {
+                id: 145,
+                category: "JS",
+                question: "السيئة الأساسية لطريقة Factory Pattern لإنشاء الأغراض في JavaScript:",
+                options: [
+                    "يتم إنشاء الطرائق في كل مرة يتم فيها أخذ مثيل من الغرض مما يسبب هدراً في الذاكرة",
+                    "الكود غير منظم بشكل صحيح",
+                    "لا تعالج قضية هوية الغرض (Object Identification / instanceof)",
+                    "كل من A و C صحيح"
+                ],
+                correct: 3,
+                explanation: "نمط المصنع (Factory Pattern) يكرر إنشاء التوابع في الذاكرة لكل كائن ولا يحدد نوع الكائن المنشأ (instanceof)."
+            },
+            {
+                id: 151,
+                category: "WEB",
+                question: "المصطلح URL هو اختصار لـ:",
+                options: [
+                    "Uniform Resource Locator",
+                    "Unified Resource Locator",
+                    "Uniform Resource Launcher",
+                    "Unified Resource Launcher"
+                ],
+                correct: 0,
+                explanation: "URL هو اختصار لـ Uniform Resource Locator (مُحدّد موقع الموارد الموحد)."
+            },
+            {
+                id: 165,
+                category: "CSS",
+                question: "ما هو كود الـ CSS الصحيح لجعل النص داخل عنصر <p> بأحرف كبيرة لكن بحجم أصغر من الحجم الافتراضي للنص؟",
+                options: [
+                    "p { text-style: small-caps; }",
+                    "p { font-variant: small-caps; }",
+                    "p { text-transform: small-caps; }",
+                    "p { text-variant: small-caps; }"
+                ],
+                correct: 1,
+                explanation: "الخاصية font-variant: small-caps تعرض الأحرف الصغيرة كأحرف كبيرة مصغّرة."
+            },
+            {
+                id: 166,
+                category: "CSS",
+                question: "أي من القيم التالية صحيحة لخاصية overflow لإخفاء ما تبقى من النص عند عدم ملاءمته مع حجم العنصر الذي يحتويه مع إضافة شريط تمرير عند الحاجة فقط؟",
+                options: ["overflow: scroll;", "overflow: hidden;", "overflow: auto;", "overflow: clip;"],
+                correct: 2,
+                explanation: "القيمة auto تضيف أشرطة التمرير تلقائياً فقط عندما يتجاوز المحتوى أبعاد الحاوية."
+            },
+            {
+                id: 169,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `console.log(Number("5 23"));\nconsole.log(Boolean(""));\nconsole.log(typeof(3.14));`,
+                options: [
+                    "5 , false , number",
+                    "NaN , false , number",
+                    "5 , true , number",
+                    "NaN , false , float"
+                ],
+                correct: 1,
+                explanation: 'وجود مسافة داخل النص "5 23" يجعل Number() يعيد NaN، و Boolean("") يعيد false، ونوع الأعداد العشرية والصحيحة في JS هو "number".'
+            },
+            {
+                id: 170,
+                category: "JS",
+                question: "ما هي أنواع الصناديق المنبثقة (Popup Boxes) المدعومة قياسياً في JavaScript؟\n(i) prompt  (ii) alert  (iii) information  (iv) confirm",
+                options: ["فقط i, ii, iii", "فقط i, ii, iv", "i, ii, iii, iv", "فقط i, ii"],
+                correct: 1,
+                explanation: "تدعم JavaScript ثلاثة أنواع قياسية من الصناديق المنبثقة: alert() و confirm() و prompt()."
+            },
+            {
+                id: 172,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `var str = "Web Applications";\nconsole.log(str.substring(4, -5));`,
+                options: ['"Applica"', '"Web "', '"Applicat"', '""'],
+                correct: 1,
+                explanation: 'في دالة substring(start, end)، أي قيمة سالبة تُعامل كأنها 0، وإذا كان start > end يتم تبديلهما تلقائياً؛ فتصبح substring(0, 4) والتي تُعيد "Web ".'
+            },
+            {
+                id: 173,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `var str = "Internet and web Applications";\nconsole.log(str.slice(-9, -5));\nconsole.log(str.split(" "));`,
+                options: [
+                    'licat و ["Internet"], ["and"], ["web"], ["Applications"]',
+                    'lica و ["Internet"], ["and"], ["web"], ["Applications"]',
+                    'lica و ["Internet", "and", "web", "Applications"]',
+                    'licat و ["Internet", "and", "web", "Applications"]'
+                ],
+                correct: 2,
+                explanation: 'str.slice(-9, -5) يقتطع الأحرف من -9 إلى -5 من كلمة Applications وهي "lica"، و str.split(" ") يقسم الجملة إلى مصفوفة واحدة من 4 كلمات.'
+            },
+            {
+                id: 174,
+                category: "JS",
+                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
+                code: `var count = 1;\nvar nums = [0, false, 2, "s", 4, null];\nnums.forEach(num);\nfunction num(item) {\n  if (item) count += 2;\n}\nconsole.log(count);`,
+                options: ["5", "7", "9", "11"],
+                correct: 1,
+                explanation: 'العدّاد يبدأ بـ 1. العناصر Truthy في المصفوفة هي 3 عناصر فقط (2، "s"، 4)، فيتم جمع 2 ثلاث مرات: 1 + 6 = 7.'
+            }
+        ];
+
+        // Application State
+        let questions = [...ORIGINAL_QUESTIONS];
+        let userAnswers = {}; // { questionId: selectedOptionIndex }
+        let currentCategory = "ALL";
+        let currentMode = "quiz"; // 'quiz' | 'study'
+        let searchQuery = "";
+
+        // Category Metadata
+        const CATEGORY_BADGES = {
+            WEB: { label: "الويب و HTTP", classes: "bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-300 border-sky-200 dark:border-sky-800" },
+            HTML: { label: "HTML5", classes: "bg-orange-100 text-orange-700 dark:bg-orange-950/60 dark:text-orange-300 border-orange-200 dark:border-orange-800" },
+            CSS: { label: "CSS3", classes: "bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border-blue-200 dark:border-blue-800" },
+            JS: { label: "JavaScript", classes: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-800" }
+        };
+
+        // Escape HTML for safe code display
+        function escapeHTML(str) {
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Toggle Dark/Light Theme
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const icon = document.getElementById("themeIcon");
+            if (html.classList.contains("dark")) {
+                html.classList.remove("dark");
+                icon.className = "fa-solid fa-moon text-base";
+            } else {
+                html.classList.add("dark");
+                icon.className = "fa-solid fa-sun text-base";
+            }
+        }
+
+        // Switch between Quiz Mode and Study Mode
+        function setMode(mode) {
+            currentMode = mode;
+            const btnQuiz = document.getElementById("btnQuizMode");
+            const btnStudy = document.getElementById("btnStudyMode");
+
+            if (mode === "quiz") {
+                btnQuiz.className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-indigo-600 text-white shadow";
+                btnStudy.className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600";
+            } else {
+                btnStudy.className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-emerald-600 text-white shadow";
+                btnQuiz.className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600";
+            }
+            renderQuestions();
+        }
+
+        // Filter by Category
+        function setCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll(".cat-btn").forEach(btn => {
+                if (btn.dataset.cat === cat) {
+                    btn.className = "cat-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-indigo-600 text-white shadow-sm transition";
+                } else {
+                    btn.className = "cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition";
+                }
+            });
+            renderQuestions();
+        }
+
+        // Search Handler
+        function applyFilters() {
+            searchQuery = document.getElementById("searchInput").value.trim().toLowerCase();
+            renderQuestions();
+        }
+
+        // Select an Option
+        function selectOption(questionId, optionIndex) {
+            if (currentMode === "study") return; // Study mode already shows answers
+            if (userAnswers[questionId] !== undefined) return; // Lock once answered in quiz mode
+
+            userAnswers[questionId] = optionIndex;
+            updateStats();
+            renderQuestions();
+        }
+
+        // Reset Single Question
+        function resetSingleQuestion(questionId) {
+            delete userAnswers[questionId];
+            updateStats();
+            renderQuestions();
+        }
+
+        // Shuffle Questions
+        function shuffleQuestions() {
+            for (let i = questions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [questions[i], questions[j]] = [questions[j], questions[i]];
+            }
+            renderQuestions();
+        }
+
+        // Reset All Answers
+        function resetQuiz() {
+            userAnswers = {};
+            questions = [...ORIGINAL_QUESTIONS];
+            updateStats();
+            renderQuestions();
+        }
+
+        // Update Dashboard Statistics & Progress Bar
+        function updateStats() {
+            const total = ORIGINAL_QUESTIONS.length;
+            let correct = 0;
+            let wrong = 0;
+
+            ORIGINAL_QUESTIONS.forEach(q => {
+                if (userAnswers[q.id] !== undefined) {
+                    if (userAnswers[q.id] === q.correct) correct++;
+                    else wrong++;
+                }
+            });
+
+            const answeredCount = correct + wrong;
+            const progressPercent = total > 0 ? Math.round((answeredCount / total) * 100) : 0;
+
+            document.getElementById("statTotal").textContent = total;
+            document.getElementById("statCorrect").textContent = correct;
+            document.getElementById("statWrong").textContent = wrong;
+            document.getElementById("statPercent").textContent = `${progressPercent}%`;
+            document.getElementById("topProgressBar").style.width = `${progressPercent}%`;
+        }
+
+        // Render Filtered Questions
+        function renderQuestions() {
+            const container = document.getElementById("questionsList");
+            const emptyState = document.getElementById("emptyState");
+
+            const filtered = questions.filter(q => {
+                const matchesCat = currentCategory === "ALL" || q.category === currentCategory;
+                const matchesSearch = !searchQuery || 
+                    q.question.toLowerCase().includes(searchQuery) ||
+                    (q.code && q.code.toLowerCase().includes(searchQuery)) ||
+                    q.options.some(opt => opt.toLowerCase().includes(searchQuery)) ||
+                    (`سؤال ${q.id}`).includes(searchQuery) ||
+                    String(q.id) === searchQuery;
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = "";
+                emptyState.classList.remove("hidden");
+                return;
+            }
+
+            emptyState.classList.add("hidden");
+            const optionLetters = ["A", "B", "C", "D"];
+
+            container.innerHTML = filtered.map((q) => {
+                const badge = CATEGORY_BADGES[q.category];
+                const userChoice = userAnswers[q.id];
+                const isAnswered = userChoice !== undefined;
+                const showSolution = currentMode === "study" || isAnswered;
+
+                // Determine card border accent
+                let cardBorder = "border-slate-200 dark:border-slate-800";
+                if (isAnswered && currentMode === "quiz") {
+                    cardBorder = userChoice === q.correct 
+                        ? "border-emerald-400 dark:border-emerald-600/70" 
+                        : "border-rose-400 dark:border-rose-600/70";
+                }
+
+                // Render Code Snippet if exists
+                const codeBlockHTML = q.code ? `
+                    <div class="my-4" dir="ltr">
+                        <div class="flex items-center justify-between bg-slate-800 text-slate-400 text-xs px-3 py-1.5 rounded-t-xl border-b border-slate-700 font-mono">
+                            <span>Code Snippet</span>
+                            <span class="flex gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+                            </span>
+                        </div>
+                        <pre class="code-block !rounded-t-none !mt-0"><code>${escapeHTML(q.code)}</code></pre>
+                    </div>
+                ` : "";
+
+                // Render Options
+                const optionsHTML = q.options.map((opt, idx) => {
+                    let btnStyle = "bg-slate-50 dark:bg-slate-800/70 border-slate-200 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/30";
+                    let badgeStyle = "bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-600";
+                    let statusIcon = "";
+
+                    if (showSolution) {
+                        if (idx === q.correct) {
+                            btnStyle = "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-900 dark:text-emerald-200 font-bold ring-1 ring-emerald-500/40";
+                            badgeStyle = "bg-emerald-600 text-white border-emerald-600";
+                            statusIcon = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 text-lg mr-auto"></i>`;
+                        } else if (isAnswered && idx === userChoice && userChoice !== q.correct) {
+                            btnStyle = "bg-rose-50 dark:bg-rose-950/40 border-rose-500 text-rose-900 dark:text-rose-200 font-bold";
+                            badgeStyle = "bg-rose-600 text-white border-rose-600";
+                            statusIcon = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400 text-lg mr-auto"></i>`;
+                        } else {
+                            btnStyle = "bg-slate-50/60 dark:bg-slate-800/30 border-slate-200/70 dark:border-slate-800 opacity-70";
+                        }
+                    }
+
+                    // Detect if option is predominantly English/Code so it renders cleanly
+                    const isCodeOption = /^[a-zA-Z0-9<>{}\[\]()._#*$^~="'/\\:;\-+,\s!]+$/.test(opt);
+
+                    return `
+                        <button onclick="selectOption(${q.id}, ${idx})" 
+                                ${showSolution ? "disabled" : ""}
+                                class="w-full text-right p-3.5 rounded-xl border transition-all flex items-center gap-3 ${btnStyle} ${showSolution ? 'cursor-default' : 'cursor-pointer active:scale-[0.99]'}">
+                            <span class="w-8 h-8 rounded-lg border flex-shrink-0 flex items-center justify-center font-mono text-xs font-bold ${badgeStyle}">
+                                ${optionLetters[idx] || idx + 1}
+                            </span>
+                            <span class="text-sm sm:text-base leading-relaxed ${isCodeOption ? 'font-mono text-left' : ''}" ${isCodeOption ? 'dir="ltr"' : ''}>
+                                ${escapeHTML(opt)}
+                            </span>
+                            ${statusIcon}
+                        </button>
+                    `;
+                }).join("");
+
+                // Explanation Box
+                const explanationHTML = showSolution ? `
+                    <div class="mt-4 p-4 rounded-xl bg-indigo-50/80 dark:bg-indigo-950/30 border border-indigo-200/80 dark:border-indigo-800/60 text-sm animate-fade-in">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-bold text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-lightbulb text-amber-500"></i> التوضيح والحل الدقيق:
+                            </span>
+                            ${isAnswered && currentMode === "quiz" ? `
+                                <button onclick="resetSingleQuestion(${q.id})" class="text-xs text-slate-500 hover:text-indigo-600 underline">
+                                    إعادة محاولة السؤال
+                                </button>
+                            ` : ""}
+                        </div>
+                        <p class="text-slate-700 dark:text-slate-300 leading-relaxed">${escapeHTML(q.explanation)}</p>
+                    </div>
+                ` : "";
+
+                return `
+                    <article class="bg-white dark:bg-slate-900 rounded-2xl p-5 sm:p-6 border ${cardBorder} shadow-sm transition-all animate-fade-in">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="px-3 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono text-xs font-extrabold">
+                                    سؤال #${q.id}
+                                </span>
+                                <span class="px-3 py-1 rounded-lg border text-xs font-bold ${badge.classes}">
+                                    ${badge.label}
+                                </span>
+                            </div>
+                            ${isAnswered && currentMode === "quiz" ? (
+                                userChoice === q.correct 
+                                    ? `<span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2.5 py-1 rounded-lg"><i class="fa-solid fa-check ml-1"></i>إجابة صحيحة</span>`
+                                    : `<span class="text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 px-2.5 py-1 rounded-lg"><i class="fa-solid fa-xmark ml-1"></i>إجابة خاطئة</span>`
+                            ) : ""}
+                        </div>
+
+                        <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-relaxed whitespace-pre-line">
+                            ${escapeHTML(q.question)}
+                        </h2>
+
+                        ${codeBlockHTML}
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+                            ${optionsHTML}
+                        </div>
+
+                        ${explanationHTML}
+                    </article>
+                `;
+            }).join("");
+        }
+
+        // Summary Modal Functions
+        function showSummaryModal() {
+            const total = ORIGINAL_QUESTIONS.length;
+            let correct = 0;
+            let wrong = 0;
+
+            ORIGINAL_QUESTIONS.forEach(q => {
+                if (userAnswers[q.id] !== undefined) {
+                    if (userAnswers[q.id] === q.correct) correct++;
+                    else wrong++;
+                }
+            });
+
+            const answered = correct + wrong;
+            const accuracy = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+
+            document.getElementById("modalScoreCircle").textContent = `${accuracy}%`;
+            document.getElementById("modalAnswered").textContent = `${answered} من ${total}`;
+            document.getElementById("modalCorrect").textContent = correct;
+            document.getElementById("modalWrong").textContent = wrong;
+
+            let gradeMsg = "ابدأ بحل الأسئلة لمعرفة مستواك!";
+            if (answered > 0) {
+                if (accuracy >= 90) gradeMsg = "ممتاز جداً! أداء استثنائي في برمجة الويب 🌟";
+                else if (accuracy >= 75) gradeMsg = "جيد جداً! لديك أساس قوي وممتاز 👏";
+                else if (accuracy >= 50) gradeMsg = "جيد، راجع الشروحات لتثبيت المعلومات 💪";
+                else gradeMsg = "تحتاج إلى مراجعة إضافية، جرب وضع الدراسة 📚";
+            }
+            document.getElementById("modalGradeText").textContent = gradeMsg;
+
+            const modal = document.getElementById("summaryModal");
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+        }
+
+        function closeSummaryModal() {
+            const modal = document.getElementById("summaryModal");
+            modal.classList.add("hidden");
+            modal.classList.remove("flex");
+        }
+
+        // Initialize App
+        window.onload = function() {
+            updateStats();
+            renderQuestions();
+        };
+    </script>
+</body>
+</html>
