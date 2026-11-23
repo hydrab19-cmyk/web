@@ -8,7 +8,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts: Cairo & Tajawal for Arabic, JetBrains Mono for Code -->
+    <!-- Google Fonts: Cairo for Arabic, JetBrains Mono for Code -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -24,16 +24,6 @@
                     fontFamily: {
                         sans: ['Cairo', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#eef2ff',
-                            100: '#e0e7ff',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            900: '#312e81',
-                        }
                     }
                 }
             }
@@ -41,7 +31,6 @@
     </script>
 
     <style>
-        /* Custom scrollbar and smooth transitions */
         body {
             transition: background-color 0.3s ease, color 0.3s ease;
         }
@@ -61,15 +50,6 @@
             border: 1px solid #334155;
             box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.25);
         }
-        /* Syntax highlighting subtle classes */
-        .tok-tag { color: #f472b6; }
-        .tok-attr { color: #38bdf8; }
-        .tok-str { color: #a3e635; }
-        .tok-kw { color: #c084fc; }
-        .tok-num { color: #fb923c; }
-        .tok-com { color: #94a3b8; font-style: italic; }
-        
-        /* Custom animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -101,7 +81,6 @@
 
             <!-- Live Score & Controls -->
             <div class="flex items-center gap-2 sm:gap-3">
-                <!-- Mode Switcher -->
                 <div class="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center border border-slate-200 dark:border-slate-700">
                     <button id="btnQuizMode" onclick="setMode('quiz')" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-indigo-600 text-white shadow">
                         <i class="fa-solid fa-pen-to-square ml-1"></i> وضع الاختبار
@@ -111,7 +90,6 @@
                     </button>
                 </div>
 
-                <!-- Theme Toggle -->
                 <button onclick="toggleDarkMode()" title="تبديل المظهر" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-amber-400 border border-slate-200 dark:border-slate-700 transition">
                     <i id="themeIcon" class="fa-solid fa-moon text-base"></i>
                 </button>
@@ -173,14 +151,12 @@
         <!-- Search & Filter Controls -->
         <section class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm mb-6 space-y-4">
             <div class="flex flex-col md:flex-row gap-3 justify-between">
-                <!-- Search Input -->
                 <div class="relative flex-1">
                     <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                    <input type="text" id="searchInput" oninput="applyFilters()" placeholder="ابحث عن سؤال، وسم HTML، خاصية CSS، أو دالة JS..." 
+                    <input type="text" id="searchInput" oninput="applyFilters()" placeholder="ابحث عن سؤال، وسم HTML، أو خاصية CSS..." 
                            class="w-full pr-10 pl-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-950 outline-none text-sm transition">
                 </div>
 
-                <!-- Action Buttons -->
                 <div class="flex flex-wrap items-center gap-2">
                     <button onclick="shuffleQuestions()" class="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-slate-700 dark:text-slate-200 hover:text-indigo-600 text-xs sm:text-sm font-bold border border-slate-200 dark:border-slate-700 transition flex items-center gap-2">
                         <i class="fa-solid fa-shuffle"></i> خلط الأسئلة
@@ -194,7 +170,7 @@
                 </div>
             </div>
 
-            <!-- Category Pills -->
+            <!-- Category Pills (Without JS) -->
             <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar" id="categoryTabs">
                 <button onclick="setCategory('ALL')" data-cat="ALL" class="cat-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-indigo-600 text-white shadow-sm transition">
                     <i class="fa-solid fa-layer-group ml-1"></i> الكل
@@ -208,16 +184,11 @@
                 <button onclick="setCategory('CSS')" data-cat="CSS" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
                     <i class="fa-brands fa-css3-alt ml-1 text-blue-500"></i> CSS3
                 </button>
-                <button onclick="setCategory('JS')" data-cat="JS" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
-                    <i class="fa-brands fa-js ml-1 text-amber-400"></i> JavaScript & DOM
-                </button>
             </div>
         </section>
 
         <!-- Questions Container -->
-        <div id="questionsList" class="space-y-5">
-            <!-- Rendered dynamically via JS -->
-        </div>
+        <div id="questionsList" class="space-y-5"></div>
 
         <!-- Empty Search State -->
         <div id="emptyState" class="hidden text-center py-16 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
@@ -278,19 +249,7 @@
         تم استخراج وتدقيق جميع الأسئلة البرمجية بعناية من <span class="font-bold text-indigo-600 dark:text-indigo-400">بنك برمجة الويب - ITP</span>
     </footer>
 
-    <!-- Comprehensive Solved Question Bank Script -->
     <script>
-        /**
-         * Complete, accurately verified question bank extracted from "نموذج ويب.pdf" (ITP Web Programming).
-         * Every question includes:
-         * - id: Original question number from the PDF
-         * - category: 'WEB' | 'HTML' | 'CSS' | 'JS'
-         * - question: Arabic question prompt
-         * - code: Optional clean LTR code snippet (formatted & syntax-safe)
-         * - options: Array of choices
-         * - correct: 0-based index of the verified correct option
-         * - explanation: Accurate Arabic explanation detailing why the answer is correct
-         */
         const ORIGINAL_QUESTIONS = [
             {
                 id: 1,
@@ -532,19 +491,6 @@
                 explanation: "صح؛ العنصر ذو position: absolute يتموضع بالنسبة لأقرب عنصر سلف (Ancestor) يمتلك position غير static (مثل relative أو absolute)."
             },
             {
-                id: 23,
-                category: "JS",
-                question: 'ما هو كود الـ JavaScript الصحيح لكتابة عبارة "Hello World" في الـ console؟',
-                options: [
-                    'console.alert("Hello World");',
-                    'console.log("Hello World");',
-                    'document.log("Hello World");',
-                    'console.write("Hello World");'
-                ],
-                correct: 1,
-                explanation: "الدالة console.log() تُستخدم لطباعة الرسائل والمخرجات في وحدة التحكم (Console) الخاصة بالمتصفح."
-            },
-            {
                 id: 24,
                 category: "CSS",
                 question: "ما هو الخرج الصحيح للكود التالي؟",
@@ -557,119 +503,6 @@
                 ],
                 correct: 0,
                 explanation: "العمود الأول يأخذ #c (أصفر)، العمود الثاني يأخذ التنسيق السطري style (أحمر)، العمود الثالث يرث من colgroup.a (أخضر)."
-            },
-            {
-                id: 25,
-                category: "JS",
-                question: "الطرائق (Methods) للأغراض في JavaScript يتم تخزينها في خصائص الغرض كتوابع (Functions).",
-                options: ["صح", "خطأ"],
-                correct: 0,
-                explanation: "صح؛ في JavaScript، الطريقة (Method) هي ببساطة خاصية (Property) قيمتها عبارة عن دالة (Function)."
-            },
-            {
-                id: 26,
-                category: "JS",
-                question: "أي من العبارات التالية صحيحة حول لغة JavaScript؟",
-                options: [
-                    "JavaScript هي لغة مترجمة (Compiled)",
-                    "يتم تفسير برنامج JavaScript من قبل المستعرض (Interpreted)",
-                    "JavaScript ليست لغة غرضية التوجه",
-                    "كل من B و C صحيح"
-                ],
-                correct: 1,
-                explanation: "JavaScript لغة مفسّرة (Interpreted) ينفذها محرك المتصفح مباشرة، وهي لغة تدعم البرمجة غرضية التوجه."
-            },
-            {
-                id: 27,
-                category: "JS",
-                question: "ما هو خرج كود الـ JavaScript التالي؟",
-                code: `var str = "Hello World!";\ndocument.write(str.slice(-8, -3));`,
-                options: ["llo", "o Wor", "o World!", "Hello"],
-                correct: 1,
-                explanation: 'الفهارس السالبة تعد من نهاية النص ("Hello World!" طوله 12): الفهرس -8 هو الحرف "o" في Hello، والفهرس -3 هو "l" في World (غير مشمول)، فالنتيجة هي "o Wor".'
-            },
-            {
-                id: 28,
-                category: "JS",
-                question: "السلسلة النصية (String) يمكن تحويلها إلى مصفوفة (Array) في JavaScript باستخدام طريقة:",
-                options: ["trim()", "substring()", "split()", "convert()"],
-                correct: 2,
-                explanation: "التابع split() يقوم بتقسيم السلسلة النصية بناءً على فاصل محدد وإرجاع مصفوفة."
-            },
-            {
-                id: 29,
-                category: "JS",
-                question: "ما هو خرج كود الـ JavaScript التالي؟",
-                code: `var arr = ["a", "b", "c", "d"];\narr.reverse();\narr.push("e");\narr.shift();\ndocument.getElementById("demo").innerHTML = arr;`,
-                options: ["c,b,a,e,d", "c,b,a,e", "b,c,d,e", "d,c,b,a"],
-                correct: 1,
-                explanation: 'reverse() تقلبها إلى ["d","c","b","a"]، push("e") تضيف e في النهاية لتصبح ["d","c","b","a","e"]، shift() تحذف العنصر الأول "d" فتبقى ["c","b","a","e"].'
-            },
-            {
-                id: 30,
-                category: "JS",
-                question: "ما هو خرج كود الـ JavaScript التالي؟",
-                code: `var x = "";\ndocument.write(Boolean(x));`,
-                options: ["true", "false", "undefined", "NaN"],
-                correct: 1,
-                explanation: 'السلسلة النصية الفارغة "" تُعتبر قيمة Falsy في JavaScript، لذلك Boolean("") يُرجع false.'
-            },
-            {
-                id: 31,
-                category: "JS",
-                question: "ما هو خرج كود الـ JavaScript التالي (بفرض عدم وجود فراغات بين وسوم li)؟",
-                code: `<ul id="myList"><li>Coffee</li><li>Tea</li><li>Milk</li></ul>\n<script>\n  document.getElementsByTagName("li")[0].id = "first";\n  document.getElementById("first").nextSibling.innerHTML = "Pepsi";\n  var x = document.getElementsByTagName("li")[1].innerHTML;\n  document.write(x);\n<\/script>`,
-                options: ["Coffee", "Tea", "Pepsi", "Milk"],
-                correct: 2,
-                explanation: 'نصل للعنصر li[0] ونعطيه id="first"، ثم nextSibling يشير إلى li[1] ويغير محتواه إلى "Pepsi". (ملاحظة: لو كان هناك مسافة/سطر جديد بين الوسوم لكان nextSibling عقدة نصية ولبقيت Tea).'
-            },
-            {
-                id: 32,
-                category: "JS",
-                question: "ما هو خرج كود الـ JavaScript التالي؟",
-                code: `document.write(Math.round(5.4));\ndocument.write(Math.ceil(5.4));\ndocument.write(Math.floor(5.4));`,
-                options: ["655", "566", "665", "565"],
-                correct: 3,
-                explanation: "Math.round(5.4) تقرب للأقرب وهو 5، Math.ceil(5.4) تقرب للأعلى وهو 6، Math.floor(5.4) تقرب للأسفل وهو 5. الناتج المتلاصق: 565."
-            },
-            {
-                id: 33,
-                category: "JS",
-                question: "اربط أحداث JavaScript التالية مع توصيفها الصحيح:\n(i) onblur  (ii) onmouseup  (iii) ondblclick  (iv) onmouseout\n(a) عند النقر مرتين  (b) عند إبعاد الفأرة عن العنصر  (c) عند فقدان التركيز  (d) عند تحرير زر الفأرة",
-                options: [
-                    "b-iv , a-iii , c-ii , d-i",
-                    "d-iv , a-iii , c-ii , b-i",
-                    "b-iv , a-iii , d-ii , c-i",
-                    "b-iv , d-iii , c-ii , a-i"
-                ],
-                correct: 2,
-                explanation: "onblur لفقدان التركيز (c-i)، onmouseup لتحرير زر الفأرة (d-ii)، ondblclick للنقر المزدوج (a-iii)، onmouseout لإبعاد الفأرة (b-iv)."
-            },
-            {
-                id: 34,
-                category: "JS",
-                question: 'ما هو كود JavaScript الصحيح لتغيير لون عنصر <p> له id="p1"؟',
-                options: [
-                    'document.getElementsByTagName("p1").color = "blue";',
-                    'document.getElementById("p1").style.color = "blue";',
-                    'document.getElementById("p1").color = "blue";',
-                    "ليس أي مما سبق"
-                ],
-                correct: 1,
-                explanation: "نصل للعنصر عبر getElementById ثم نعدل خصائص التنسيق عبر الكائن style.color."
-            },
-            {
-                id: 35,
-                category: "JS",
-                question: "أي من طرائق JavaScript التالية يتم استخدامها لإضافة خاصية تم إنشاؤها بشكل ديناميكي (Attr node) إلى عنصر في هرمية الـ DOM؟",
-                options: [
-                    "appendAttribute()",
-                    "appendChild()",
-                    "setAttributeNode()",
-                    "setAttributeChild()"
-                ],
-                correct: 2,
-                explanation: "التابع setAttributeNode() يُستخدم لإرفاق عقدة سمة (Attribute Node) تم إنشاؤها مسبقاً عبر createAttribute()."
             },
             {
                 id: 36,
@@ -696,67 +529,6 @@
                 ],
                 correct: 3,
                 explanation: 'لرفع الملفات نحتاج حقل <input type="file"> وتعيين method="post" مع enctype="multipart/form-data".'
-            },
-            {
-                id: 38,
-                category: "JS",
-                question: "ما هو خرج كود الـ JavaScript التالي؟",
-                code: `var x = "-15";\ndocument.write(Boolean(x));`,
-                options: ["true", "false", "undefined", "NaN"],
-                correct: 0,
-                explanation: 'أي سلسلة نصية غير فارغة (حتى لو كانت "-15" أو "false" أو "0") تُعتبر Truthy وتُرجع true.'
-            },
-            {
-                id: 39,
-                category: "JS",
-                question: "ما هو خرج كود الـ JavaScript التالي؟",
-                code: `var str = "Hello world, welcome to the universe.";\ndocument.write(str.indexOf("e", 5));`,
-                options: ["-1", "1", "14", "19"],
-                correct: 2,
-                explanation: 'البحث عن الحرف "e" بدءاً من الفهرس 5 (حرف w في world) يجد أول "e" في كلمة welcome عند الفهرس 14.'
-            },
-            {
-                id: 40,
-                category: "JS",
-                question: "ما هو خرج كود الـ JavaScript التالي؟",
-                code: `var str = "welcome to javascript!";\ndocument.write(str.slice(-5, -2));`,
-                options: ["rip", "ri", "ript!", "script!"],
-                correct: 0,
-                explanation: 'طول النص 22: الفهرس -5 هو "r" (فهرس 17) والفهرس -2 هو "t" (فهرس 20 غير مشمول)، فالناتج هو "rip".'
-            },
-            {
-                id: 41,
-                category: "JS",
-                question: "ما هو خرج كود الـ JavaScript التالي؟",
-                code: `var a = "GeeksforGeeks";\ndocument.write(a.substring(4, 5));`,
-                options: ["e", "k", "s", "f"],
-                correct: 2,
-                explanation: 'الفهرس 0:G, 1:e, 2:e, 3:k, 4:s. التابع substring(4, 5) يأخذ المحرف عند الفهرس 4 فقط وهو "s".'
-            },
-            {
-                id: 42,
-                category: "JS",
-                question: "ما هو خرج كود الـ JavaScript التالي؟",
-                code: `var arr = ["a", "b", "c", "d"];\narr.push("e");\narr.reverse();\narr.shift();\ndocument.write(arr);`,
-                options: ["c,b,a,e", "d,c,b,a", "e,d,c,b,a", "d,c,b,a,e"],
-                correct: 1,
-                explanation: 'push("e") -> ["a","b","c","d","e"]، reverse() -> ["e","d","c","b","a"]، shift() يحذف أول عنصر ("e") فيتبقى ["d","c","b","a"].'
-            },
-            {
-                id: 43,
-                category: "JS",
-                question: "أي من التوابع التالية يتم استخدامها لاستدعاء تابع من أجل كل عنصر في المصفوفة في JavaScript؟",
-                options: ["each()", "forEach()", "every()", "forEvery()"],
-                correct: 1,
-                explanation: "التابع Array.prototype.forEach() ينفذ دالة معينة مرة واحدة لكل عنصر من عناصر المصفوفة."
-            },
-            {
-                id: 44,
-                category: "JS",
-                question: "أي من طرائق JavaScript التالية يتم استخدامها لإزالة الفراغات من بداية ونهاية أي سلسلة نصية؟",
-                options: ["strip()", "trim()", "slice()", "space()"],
-                correct: 1,
-                explanation: "التابع trim() يزيل المسافات البيضاء (Whitespace) من طرفي السلسلة النصية دون تعديل الوسط."
             },
             {
                 id: 45,
@@ -881,33 +653,6 @@
                 explanation: "المحدد *= يطابق وجود السلسلة الجزئية في أي مكان داخل قيمة الخاصية."
             },
             {
-                id: 81,
-                category: "JS",
-                question: "ما هو خرج كود الـ JavaScript التالي؟",
-                code: `var count = 1;\nvar nums = [0, 1, 2, 0, 4];\nnums.forEach(num);\nfunction num(item) {\n  if (item) count += 2;\n}\nconsole.log(count);`,
-                options: ["6", "7", "9", "11"],
-                correct: 1,
-                explanation: "العدّاد يبدأ بـ 1. في المصفوفة توجد 3 قيم Truthy غير صفرية (1، 2، 4)، فيتم جمع 2 ثلاث مرات: 1 + 2 + 2 + 2 = 7."
-            },
-            {
-                id: 82,
-                category: "JS",
-                question: "ما هو خرج كود الـ JavaScript التالي؟",
-                code: `var c = { greeting: 'Hello' };\nvar d = c;\nd.greeting = 'Hi!';\nconsole.log(c.greeting);`,
-                options: ["Hello", "undefined", "Hi!", "ReferenceError"],
-                correct: 2,
-                explanation: "الأغراض (Objects) في JavaScript تُنسخ بالمرجع (By Reference)، لذا فإن التعديل على d يعدل نفس الكائن الذي يشير إليه c."
-            },
-            {
-                id: 83,
-                category: "JS",
-                question: "ما هو خرج كود الـ JavaScript التالي؟",
-                code: `var d = new Date("May 15, 1983 01:15:00");\ndocument.write(d.getDate());`,
-                options: ["May", "15", "1983", "May 15"],
-                correct: 1,
-                explanation: "التابع getDate() يُعيد يوم الشهر (من 1 إلى 31)، وهو هنا 15 (بينما getDay() يُعيد يوم الأسبوع)."
-            },
-            {
                 id: 88,
                 category: "WEB",
                 question: "أي من العبارات التالية صحيح حول الـ MIME Type؟",
@@ -968,19 +713,6 @@
                 explanation: "خصائص النصوص والخطوط مثل font-weight و text-align و color تورّث للأبناء، بينما خصائص الصندوق مثل margin و padding و border لا تورّث."
             },
             {
-                id: 103,
-                category: "JS",
-                question: "ما هو الكود الصحيح لإنشاء تابع (Function) اسمه add في JavaScript؟",
-                options: [
-                    "int add(int x1, int x2) { return x1 + x2; }",
-                    "function add(int x1, int x2) { return x1 + x2; }",
-                    "add(x1, x2) { return x1 + x2; }",
-                    "function add(x1, x2) { return x1 + x2; }"
-                ],
-                correct: 3,
-                explanation: "JavaScript لغة ديناميكية النمط (Dynamically typed) ولا نكتب أنواع البيانات مثل int للوسائط؛ نستخدم الكلمة المفتاحية function فقط."
-            },
-            {
                 id: 106,
                 category: "CSS",
                 question: "أي من المحددات التالية يتم اعتبارها pseudo-class في CSS3؟",
@@ -991,82 +723,10 @@
             {
                 id: 107,
                 category: "CSS",
-                question: "أي من القيم التالية صحيحة لخاصية overflow لإخفاء ما تبقى من النص عند عدم ملاءمته مع حجم العنصر مع إضافة شريط تمرير دوماً؟",
+                question: "أي من القيم التالية صحيحة لخاصية overflow لإخفاء ما تبقى من النص عند عدم ملاءمته مع حجم العنصر الذي يحتويه مع إضافة شريط تمرير دوماً؟",
                 options: ["overflow: scroll;", "overflow: hidden;", "overflow: auto;", "overflow: clip;"],
                 correct: 0,
                 explanation: "القيمة scroll تُظهر أشرطة التمرير دائماً، بينما auto تُظهرها فقط عند الحاجة (عند تجاوز المحتوى)."
-            },
-            {
-                id: 110,
-                category: "JS",
-                question: "أي من العبارات التالية صحيحة حول الـ DOM في JavaScript؟",
-                options: [
-                    "الـ DOM هو واجهة برمجية من أجل إضافة، حذف، تعديل، والحصول على عناصر HTML",
-                    "يتم إنشاء نموذج الـ DOM كشجرة من الأغراض (Objects) جذرها الغرض document",
-                    "أنواع العقد في الـ DOM هي Element, Attribute, Text, Comment",
-                    "كل ما سبق صحيح"
-                ],
-                correct: 3,
-                explanation: "جميع العبارات تصف بدقة بنية ووظيفة نموذج كائن المستند (Document Object Model - DOM)."
-            },
-            {
-                id: 111,
-                category: "JS",
-                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
-                code: `var count = 0;\nvar nums = [0, false, 2, "s", null, undefined];\nnums.forEach(num);\nfunction num(item) {\n  if (item) count += 2;\n}\nconsole.log(count);`,
-                options: ["2", "4", "8", "12"],
-                correct: 1,
-                explanation: 'القيم 0 و false و null و undefined كلها Falsy. القيم Truthy فقط هما 2 و "s"، إذن count = 2 + 2 = 4.'
-            },
-            {
-                id: 112,
-                category: "JS",
-                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
-                code: `console.log(Math.round(5.7));\nconsole.log(Number("5N"));\nconsole.log(Boolean("s"));`,
-                options: ["6 , 5 , false", "6 , NaN , true", "5 , NaN , false", "6 , NaN , false"],
-                correct: 1,
-                explanation: 'Math.round(5.7) = 6، تحويل سلسلة تحتوي حروفاً غير رقمية Number("5N") يعطي NaN، و Boolean("s") يعطي true.'
-            },
-            {
-                id: 115,
-                category: "JS",
-                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
-                code: `function Animal(type) {\n  this.type = type;\n  this.sayType = function() { console.log(this.type); };\n}\nvar a1 = new Animal("cat");\nvar a2 = new Animal("dog");\nconsole.log(a1.sayType == a2.sayType);`,
-                options: ["true", "false"],
-                correct: 1,
-                explanation: "false؛ لأنه في نمط Constructor Function بدون Prototype، يتم إنشاء نسخة مستقلة جديدة في الذاكرة من الدالة sayType لكل كائن."
-            },
-            {
-                id: 116,
-                category: "JS",
-                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
-                code: `var colors = new Array();\nvar count = colors.push("blue");\ncount = colors.unshift("red", "green", "black");\ncount = colors.unshift("yellow");\nvar item = colors.pop();\nconsole.log(item);`,
-                options: ["black", "red", "blue", "yellow"],
-                correct: 2,
-                explanation: 'push("blue") تضع "blue" في النهاية. unshift تضيف في البداية فتصبح المصفوفة ["yellow","red","green","black","blue"]. ثم pop() تسحب وتُرجع العنصر الأخير وهو "blue".'
-            },
-            {
-                id: 120,
-                category: "JS",
-                question: "ما هو كود الـ JavaScript الصحيح لإعادة قيمة حقل الـ fname في صفحة الـ HTML التالية؟",
-                code: `<form id="myForm">\n  Fname: <input type="text" name="fname"><br>\n  Lname: <input type="text" name="lname">\n</form>`,
-                options: [
-                    'document.getElementById("myForm").elements[0].value;',
-                    'document.forms[0].elements["fname"].value;',
-                    'document.forms[0]["fname"].value;',
-                    "كل ما سبق صحيح"
-                ],
-                correct: 3,
-                explanation: "جميع الطرق الثلاث صحيحة للوصول إلى أول عنصر داخل النموذج وقراءة قيمته عبر الخاصية value."
-            },
-            {
-                id: 122,
-                category: "JS",
-                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
-                code: `function Animal() {}\nAnimal.prototype.type = "Dog";\nAnimal.prototype.sayType = function() { console.log(this.type); };\nvar a1 = new Animal();\nvar a2 = new Animal();\nconsole.log(a1.sayType == a2.sayType);`,
-                options: ["true", "false"],
-                correct: 0,
-                explanation: "true؛ لأن الدالة sayType مُعرّفة على الـ Prototype، وبالتالي يتشارك الكائنان a1 و a2 نفس المرجع للدالة في الذاكرة."
             },
             {
                 id: 127,
@@ -1116,28 +776,6 @@
                 explanation: "نستخدم المحدد :nth-child(even) على السطر tr داخل tbody لتنسيق الأسطر الزوجية."
             },
             {
-                id: 144,
-                category: "JS",
-                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
-                code: `console.log(Math.round(5.4));\nconsole.log(Number(" 5 "));\nconsole.log(Boolean(-5));`,
-                options: ["5 , 5 , true", "true , NaN , 5", "false , NaN , 5", "6 , 5 , true"],
-                correct: 0,
-                explanation: 'Math.round(5.4) = 5، و Number(" 5 ") يتجاهل الفراغات الجانبية ويعطي الرقم 5، و Boolean(-5) يعطي true لأن أي رقم غير الصفر هو Truthy.'
-            },
-            {
-                id: 145,
-                category: "JS",
-                question: "السيئة الأساسية لطريقة Factory Pattern لإنشاء الأغراض في JavaScript:",
-                options: [
-                    "يتم إنشاء الطرائق في كل مرة يتم فيها أخذ مثيل من الغرض مما يسبب هدراً في الذاكرة",
-                    "الكود غير منظم بشكل صحيح",
-                    "لا تعالج قضية هوية الغرض (Object Identification / instanceof)",
-                    "كل من A و C صحيح"
-                ],
-                correct: 3,
-                explanation: "نمط المصنع (Factory Pattern) يكرر إنشاء التوابع في الذاكرة لكل كائن ولا يحدد نوع الكائن المنشأ (instanceof)."
-            },
-            {
                 id: 151,
                 category: "WEB",
                 question: "المصطلح URL هو اختصار لـ:",
@@ -1170,79 +808,21 @@
                 options: ["overflow: scroll;", "overflow: hidden;", "overflow: auto;", "overflow: clip;"],
                 correct: 2,
                 explanation: "القيمة auto تضيف أشرطة التمرير تلقائياً فقط عندما يتجاوز المحتوى أبعاد الحاوية."
-            },
-            {
-                id: 169,
-                category: "JS",
-                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
-                code: `console.log(Number("5 23"));\nconsole.log(Boolean(""));\nconsole.log(typeof(3.14));`,
-                options: [
-                    "5 , false , number",
-                    "NaN , false , number",
-                    "5 , true , number",
-                    "NaN , false , float"
-                ],
-                correct: 1,
-                explanation: 'وجود مسافة داخل النص "5 23" يجعل Number() يعيد NaN، و Boolean("") يعيد false، ونوع الأعداد العشرية والصحيحة في JS هو "number".'
-            },
-            {
-                id: 170,
-                category: "JS",
-                question: "ما هي أنواع الصناديق المنبثقة (Popup Boxes) المدعومة قياسياً في JavaScript؟\n(i) prompt  (ii) alert  (iii) information  (iv) confirm",
-                options: ["فقط i, ii, iii", "فقط i, ii, iv", "i, ii, iii, iv", "فقط i, ii"],
-                correct: 1,
-                explanation: "تدعم JavaScript ثلاثة أنواع قياسية من الصناديق المنبثقة: alert() و confirm() و prompt()."
-            },
-            {
-                id: 172,
-                category: "JS",
-                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
-                code: `var str = "Web Applications";\nconsole.log(str.substring(4, -5));`,
-                options: ['"Applica"', '"Web "', '"Applicat"', '""'],
-                correct: 1,
-                explanation: 'في دالة substring(start, end)، أي قيمة سالبة تُعامل كأنها 0، وإذا كان start > end يتم تبديلهما تلقائياً؛ فتصبح substring(0, 4) والتي تُعيد "Web ".'
-            },
-            {
-                id: 173,
-                category: "JS",
-                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
-                code: `var str = "Internet and web Applications";\nconsole.log(str.slice(-9, -5));\nconsole.log(str.split(" "));`,
-                options: [
-                    'licat و ["Internet"], ["and"], ["web"], ["Applications"]',
-                    'lica و ["Internet"], ["and"], ["web"], ["Applications"]',
-                    'lica و ["Internet", "and", "web", "Applications"]',
-                    'licat و ["Internet", "and", "web", "Applications"]'
-                ],
-                correct: 2,
-                explanation: 'str.slice(-9, -5) يقتطع الأحرف من -9 إلى -5 من كلمة Applications وهي "lica"، و str.split(" ") يقسم الجملة إلى مصفوفة واحدة من 4 كلمات.'
-            },
-            {
-                id: 174,
-                category: "JS",
-                question: "ما هو الخرج الصحيح لكود الـ JavaScript التالي؟",
-                code: `var count = 1;\nvar nums = [0, false, 2, "s", 4, null];\nnums.forEach(num);\nfunction num(item) {\n  if (item) count += 2;\n}\nconsole.log(count);`,
-                options: ["5", "7", "9", "11"],
-                correct: 1,
-                explanation: 'العدّاد يبدأ بـ 1. العناصر Truthy في المصفوفة هي 3 عناصر فقط (2، "s"، 4)، فيتم جمع 2 ثلاث مرات: 1 + 6 = 7.'
             }
         ];
 
-        // Application State
         let questions = [...ORIGINAL_QUESTIONS];
-        let userAnswers = {}; // { questionId: selectedOptionIndex }
+        let userAnswers = {};
         let currentCategory = "ALL";
-        let currentMode = "quiz"; // 'quiz' | 'study'
+        let currentMode = "quiz";
         let searchQuery = "";
 
-        // Category Metadata
         const CATEGORY_BADGES = {
             WEB: { label: "الويب و HTTP", classes: "bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-300 border-sky-200 dark:border-sky-800" },
             HTML: { label: "HTML5", classes: "bg-orange-100 text-orange-700 dark:bg-orange-950/60 dark:text-orange-300 border-orange-200 dark:border-orange-800" },
-            CSS: { label: "CSS3", classes: "bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border-blue-200 dark:border-blue-800" },
-            JS: { label: "JavaScript", classes: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-800" }
+            CSS: { label: "CSS3", classes: "bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border-blue-200 dark:border-blue-800" }
         };
 
-        // Escape HTML for safe code display
         function escapeHTML(str) {
             return str
                 .replace(/&/g, "&amp;")
@@ -1252,7 +832,6 @@
                 .replace(/'/g, "&#039;");
         }
 
-        // Toggle Dark/Light Theme
         function toggleDarkMode() {
             const html = document.documentElement;
             const icon = document.getElementById("themeIcon");
@@ -1265,7 +844,6 @@
             }
         }
 
-        // Switch between Quiz Mode and Study Mode
         function setMode(mode) {
             currentMode = mode;
             const btnQuiz = document.getElementById("btnQuizMode");
@@ -1281,7 +859,6 @@
             renderQuestions();
         }
 
-        // Filter by Category
         function setCategory(cat) {
             currentCategory = cat;
             document.querySelectorAll(".cat-btn").forEach(btn => {
@@ -1294,30 +871,26 @@
             renderQuestions();
         }
 
-        // Search Handler
         function applyFilters() {
             searchQuery = document.getElementById("searchInput").value.trim().toLowerCase();
             renderQuestions();
         }
 
-        // Select an Option
         function selectOption(questionId, optionIndex) {
-            if (currentMode === "study") return; // Study mode already shows answers
-            if (userAnswers[questionId] !== undefined) return; // Lock once answered in quiz mode
+            if (currentMode === "study") return;
+            if (userAnswers[questionId] !== undefined) return;
 
             userAnswers[questionId] = optionIndex;
             updateStats();
             renderQuestions();
         }
 
-        // Reset Single Question
         function resetSingleQuestion(questionId) {
             delete userAnswers[questionId];
             updateStats();
             renderQuestions();
         }
 
-        // Shuffle Questions
         function shuffleQuestions() {
             for (let i = questions.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -1326,7 +899,6 @@
             renderQuestions();
         }
 
-        // Reset All Answers
         function resetQuiz() {
             userAnswers = {};
             questions = [...ORIGINAL_QUESTIONS];
@@ -1334,7 +906,6 @@
             renderQuestions();
         }
 
-        // Update Dashboard Statistics & Progress Bar
         function updateStats() {
             const total = ORIGINAL_QUESTIONS.length;
             let correct = 0;
@@ -1357,7 +928,6 @@
             document.getElementById("topProgressBar").style.width = `${progressPercent}%`;
         }
 
-        // Render Filtered Questions
         function renderQuestions() {
             const container = document.getElementById("questionsList");
             const emptyState = document.getElementById("emptyState");
@@ -1388,7 +958,6 @@
                 const isAnswered = userChoice !== undefined;
                 const showSolution = currentMode === "study" || isAnswered;
 
-                // Determine card border accent
                 let cardBorder = "border-slate-200 dark:border-slate-800";
                 if (isAnswered && currentMode === "quiz") {
                     cardBorder = userChoice === q.correct 
@@ -1396,7 +965,6 @@
                         : "border-rose-400 dark:border-rose-600/70";
                 }
 
-                // Render Code Snippet if exists
                 const codeBlockHTML = q.code ? `
                     <div class="my-4" dir="ltr">
                         <div class="flex items-center justify-between bg-slate-800 text-slate-400 text-xs px-3 py-1.5 rounded-t-xl border-b border-slate-700 font-mono">
@@ -1411,7 +979,6 @@
                     </div>
                 ` : "";
 
-                // Render Options
                 const optionsHTML = q.options.map((opt, idx) => {
                     let btnStyle = "bg-slate-50 dark:bg-slate-800/70 border-slate-200 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/30";
                     let badgeStyle = "bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-600";
@@ -1431,7 +998,6 @@
                         }
                     }
 
-                    // Detect if option is predominantly English/Code so it renders cleanly
                     const isCodeOption = /^[a-zA-Z0-9<>{}\[\]()._#*$^~="'/\\:;\-+,\s!]+$/.test(opt);
 
                     return `
@@ -1449,7 +1015,6 @@
                     `;
                 }).join("");
 
-                // Explanation Box
                 const explanationHTML = showSolution ? `
                     <div class="mt-4 p-4 rounded-xl bg-indigo-50/80 dark:bg-indigo-950/30 border border-indigo-200/80 dark:border-indigo-800/60 text-sm animate-fade-in">
                         <div class="flex items-center justify-between mb-1">
@@ -1500,7 +1065,6 @@
             }).join("");
         }
 
-        // Summary Modal Functions
         function showSummaryModal() {
             const total = ORIGINAL_QUESTIONS.length;
             let correct = 0;
@@ -1541,7 +1105,6 @@
             modal.classList.remove("flex");
         }
 
-        // Initialize App
         window.onload = function() {
             updateStats();
             renderQuestions();
